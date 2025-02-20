@@ -10,7 +10,10 @@ const restoAccSchema = new mongoose.Schema({
     tags: { type: String, required: true },
     nReviews: { type: Number, required: true, default: 0 },
     rating: { type: Number, required: true, default: 0 },
-    pfp: { data: Buffer, contentType: String, required: true }
+    pfp: {
+        data: { type: Buffer, required: true },
+        contentType: { type: String, required: true }
+      }
 });
 
 const replySchema = new mongoose.Schema({

@@ -1,9 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const Customer = require('../models/customer');
+const Customer = require('../model/customer');
+
+// Render a customer page
+router.get('/', (req, res) => {
+    res.render('customer', { title: 'Customer Page' });
+});
 
 // Get all customers
-router.get('/', async (req, res) => {
+router.get('/all', async (req, res) => {
     const customers = await Customer.find();
     res.json(customers);
 });
@@ -44,6 +49,10 @@ router.post('/reports/submit', async (req, res) => {
 
     res.status(201).json({ message: 'Report submitted successfully', customer });
 });
+
+
+
+
 
 
 module.exports = router;

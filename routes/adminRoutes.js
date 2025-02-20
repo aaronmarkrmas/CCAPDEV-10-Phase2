@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const Admin = require('../models/admin');
-const Customer = require('../models/customer');
+const Admin = require('../model/admin');
+const Customer = require('../model/customer');
 
 // Get admin info
 router.get('/', async (req, res) => {
