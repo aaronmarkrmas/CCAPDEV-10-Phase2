@@ -5,6 +5,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
+const path = require('path'); 
 const adminRoutes = require('./routes/adminRoutes');
 const customerRoutes = require('./routes/customerRoutes');
 const restoRoutes = require('./routes/restaurantRoutes');
