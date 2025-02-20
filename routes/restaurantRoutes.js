@@ -2,6 +2,14 @@ const express = require('express');
 const router = express.Router();
 const Restaurant = require('../model/restaurant');
 
+/*
+app.get('/logout', (req, res) => {
+  req.session.destroy(); // Ends the session
+  res.redirect('/login'); // Redirects to the login page
+});
+*/
+
+
 // Get all restaurants
 router.get('/', async (req, res) => {
     const restaurants = await Restaurant.find();
