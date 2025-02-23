@@ -27,15 +27,15 @@ const connectDB = async () => {
       });
     } catch (err) {
       console.error('MongoDB connection error:', err);
-      setTimeout(connectDB, 5000); //retry: 5s interval
+      setTimeout(connectDB, 5000); 
     }
   };  
 
 connectDB();
 
 //middlewares
-app.use(express.urlencoded({extended: false})); // used to parse URL-encoded data.  request body will only accept key-value pairs
-app.use(express.json());                        // parses JSON data from incoming requests.
+app.use(express.urlencoded({extended: false})); 
+app.use(express.json());                        
 
 app.use(session({
     secret: 'my_secret_key',
@@ -51,9 +51,10 @@ app.use((req, res, next) => {
   }
 );
 
-//set template engine
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+  //set template engine
+  app.set("view engine", "ejs");
+  app.set("views", path.join(__dirname, "view"));
+  app.use(express.static(path.join(__dirname, "public")));
 
 // Route prefixes
 app.use('/admin', adminRoutes);
@@ -64,6 +65,24 @@ app.get('/', (req, res) => {
   res.render('landingPage'); // Renders landingPage.ejs from the /views folder
 });
 
+app.get("/restaurant", (req, res) => {
+  console.log("Rendering resto_account.ejs"); // Debugging log
+
+  const restaurant = {
+    restoName: "Bloemen Bites",
+    email: "contact@bloemenbites.com",
+    tags: ["Italian", "Vegan-Friendly", "Casual Dining"],
+    description: "A cozy place serving delicious Italian and vegan-friendly dishes.",
+    rating: 4.7,
+  };
+
+  res.render("resto_account", { restaurant });
+});
+
+
+
 app.listen(PORT, () => {
   console.log(`Server started at http://localhost:${PORT}`);
 });
+
+
