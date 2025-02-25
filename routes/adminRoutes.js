@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Admin = require('../model/admin');
-const Customer = require('../model/customer');
+//const Customer = require('../model/customer');
 
+/*
 // Get admin info
 router.get('/', async (req, res) => {
     const admins = await Admin.find();
@@ -70,5 +71,6 @@ router.put('/reports/:reportId/resolve', async (req, res) => {
         res.status(500).json({ message: 'Error resolving report', error });
     }
 });
+*/
 
 module.exports = router;

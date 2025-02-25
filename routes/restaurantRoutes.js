@@ -3,7 +3,6 @@ const multer = require('multer');
 const router = express.Router();
 const { Restaurant, Reply } = require('../model/restaurant');
 
-// Set up multer for file uploads (storing images in memory)
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -36,6 +35,7 @@ router.post('/create', upload.single('profilePhoto'), async (req, res) => {
     }
 });
 
+/*
 // Get restaurant profile (excluding password)
 router.get('/profile/:restoName', async (req, res) => {
     try {
@@ -130,5 +130,10 @@ router.get('/replies/:reviewId', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch replies' });
     }
 });
+
+app.get("/restaurant/edit-profile", (req, res) => {
+    res.render("resto_edit_profile", { restaurant: req.session.restaurant });
+});
+*/
 
 module.exports = router;

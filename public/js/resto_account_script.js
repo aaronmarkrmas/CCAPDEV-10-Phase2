@@ -146,36 +146,17 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     // Handle Profile Picture Update
-    editPfpButton.addEventListener("click", async function () {
-        const fileInput = document.createElement("input");
-        fileInput.type = "file";
-        fileInput.accept = "image/*";
-        fileInput.addEventListener("change", async function () {
-            const file = fileInput.files[0];
-            if (file) {
-                const formData = new FormData();
-                formData.append("profilePhoto", file);
-
-                try {
-                    const response = await fetch(`/restaurant/update-profile-pic/${encodeURIComponent(restoName)}`, {
-                        method: "POST",
-                        body: formData
-                    });
-
-                    const result = await response.json();
-                    if (response.ok) {
-                        profilePhoto.src = result.newProfilePicUrl;
-                    } else {
-                        alert("Failed to update profile picture.");
-                    }
-                } catch (error) {
-                    console.error("Error updating profile picture:", error);
-                }
-            }
-        });
-
-        fileInput.click();
+    document.addEventListener("DOMContentLoaded", () => {
+        const editProfileBtn = document.querySelector(".editpfp-button");
+        
+        if (editProfileBtn) {
+            editProfileBtn.addEventListener("click", () => {
+                const restoName = encodeURIComponent("<%= restaurant.restoName %>"); 
+                window.location.href = `/restaurant/edit-profile?name=${restoName}`;
+            });
+        }
     });
+    
 
     fetchRestaurantData();
 });

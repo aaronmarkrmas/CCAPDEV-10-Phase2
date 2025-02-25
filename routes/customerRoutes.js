@@ -8,6 +8,7 @@ const path = require('path');
 const storage = multer.memoryStorage(); // Store file as Buffer in memory
 const upload = multer({ storage: storage });
 
+/*
 // Render a customer page
 router.get('/', (req, res) => {
     res.render('customer', { title: 'Customer Page' });
@@ -64,14 +65,14 @@ router.get('/profile/:id', async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
-/*
+
     HOW TO USE:
     <div class="profile-container">
         <img src="/customer/profile-pic/<%= customer._id %>" alt="Profile Picture" class="profile-pic">
         <h2><%= customer.username %></h2>
         <p><%= customer.bio %></p>
     </div>
-*/
+
 
 
 // Add a new review
@@ -135,7 +136,7 @@ router.post('/reports/submit', async (req, res) => {
     res.status(201).json({ message: 'Report submitted successfully', customer });
 });
 
-
+*/
 
 
 
