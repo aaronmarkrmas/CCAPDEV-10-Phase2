@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Customer = require('../model/customer');
+const Customer = require('../CCAPDEV-10-Phase2/model/customer');
 const multer = require('multer');
 const path = require('path'); 
 

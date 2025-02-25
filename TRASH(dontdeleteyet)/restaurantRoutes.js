@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const router = express.Router();
-const { Restaurant, Reply } = require('../model/restaurant');
+const { Restaurant, Reply } = require('../CCAPDEV-10-Phase2/model/restaurant');
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });

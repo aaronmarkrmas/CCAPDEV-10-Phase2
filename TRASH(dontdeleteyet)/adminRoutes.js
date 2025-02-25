@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Admin = require('../model/admin');
+const Admin = require('../CCAPDEV-10-Phase2/model/admin');
 //const Customer = require('../model/customer');
 
 /*
