@@ -24,9 +24,9 @@ Examples:
 
 
 Resto:
-    createResto
-    editProfile
-    deletePost
+    createResto /
+    editProfile 
+    deleteReply
     addReply
     getResto
     getAllResto
@@ -37,8 +37,8 @@ Resto:
 Customer:
     getReview (include the reply)
     addReview
-    addLike (includes remove)
-    addDislike (includes remove)
+    addLikeDislike (includes remove)
+    getLikesDislikes
     editProfile  
     searchUser
     searchResto
