@@ -5,8 +5,15 @@ const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const path = require('path'); 
+const Grid = require('gridfs-stream');
+const { GridFsStorage } = require('multer-gridfs-storage');
+const multer = require('multer');
+const crypto = require('crypto');
+require('dotenv').config();
+
 //const routes...
 
+//init express
 const app = express();
 
 //env
@@ -29,6 +36,31 @@ const connectDB = async () => {
   };  
 
 connectDB();
+
+// Initialize GridFS
+let gfs;
+conn.once('open', () => {
+    gfs = Grid(conn.db, mongoose.mongo);
+    gfs.collection('uploads');
+});
+
+// Set up GridFS Storage
+const storage = new GridFsStorage({
+  url: process.env.MONGO_URI,
+  file: (req, file) => {
+      return new Promise((resolve, reject) => {
+          crypto.randomBytes(16, (err, buf) => {
+              if (err) return reject(err);
+              const filename = buf.toString('hex') + path.extname(file.originalname);
+              resolve({ filename, bucketName: 'uploads' });
+          });
+      });
+  }
+});
+const upload = multer({ storage });
+
+// Export gfs and upload for use in routes
+module.exports = { gfs, upload };
 
 //middlewares
 app.use(express.urlencoded({extended: false})); 
@@ -53,7 +85,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "view"));
 app.use(express.static(path.join(__dirname, "public")));
 
-// Route prefixes
+// Import routes
 
 app.listen(PORT, () => {
   console.log(`Server started at http://localhost:${PORT}`);
