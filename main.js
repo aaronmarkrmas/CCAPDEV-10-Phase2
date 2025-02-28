@@ -1,22 +1,29 @@
 // npm start [server starter]
-require('dotenv').config();
+// MOST IMPORTANT FILE!!! 
+// if edited, submit a pull request 
 
-const express = require('express');
-const mongoose = require('mongoose');
-const session = require('express-session');
-const path = require('path'); 
-const Grid = require('gridfs-stream');
-const { GridFsStorage } = require('multer-gridfs-storage');
-const multer = require('multer');
-const crypto = require('crypto');
+require("dotenv").config();
+
+const express = require("express");
+const mongoose = require("mongoose");
+const session = require("express-session");
+const path = require("path");
+const { GridFsStorage } = require("multer-gridfs-storage");
+const multer = require("multer");
+const crypto = require("crypto");
 
 // Init Express
 const app = express();
 
 // Environment Variables
 const PORT = process.env.PORT || 4000;
-const MONGO_URI = process.env.MONGO_URI; 
-  //fix the URL
+const MONGO_URI = process.env.MONGO_URI;
+
+// Ensure MongoDB URI is set
+if (!MONGO_URI) {
+    console.error("MONGO_URI is not set in .env file!");
+    process.exit(1);
+}
 
 // Database Connection
 const connectDB = async () => {
@@ -25,53 +32,66 @@ const connectDB = async () => {
             useNewUrlParser: true,
             useUnifiedTopology: true
         });
-        console.log('Connected to the database...');
+        console.log("Connected to the database...");
     } catch (err) {
-        console.error('MongoDB connection error:', err);
-        setTimeout(connectDB, 5000); // retry after 5s
+        console.error("MongoDB connection error:", err);
+        setTimeout(connectDB, 5000); // Retry after 5s
     }
-};  
+};
 
 connectDB();
 
 // Mongoose Connection
 const conn = mongoose.connection;
-let gfs;
 
-// Init GridFS 
-conn.once('open', () => {
-    console.log('Database connected successfully');
-    gfs = Grid(conn.db, mongoose.mongo);
-    gfs.collection('uploads');
-});
+let gfs, gridfsBucket, upload;
 
-// Set up GridFS Storage
-const storage = new GridFsStorage({
-    url: MONGO_URI,
-    file: (req, file) => {
-        return new Promise((resolve, reject) => {
-            crypto.randomBytes(16, (err, buf) => {
-                if (err) return reject(err);
-                const filename = buf.toString('hex') + path.extname(file.originalname);
-                resolve({ filename, bucketName: 'uploads' });
-            });
+// Wrap initialization inside a Promise
+const initGridFS = new Promise((resolve, reject) => {
+    conn.once("open", () => {
+        console.log("Database connected successfully");
+
+        // Initialize GridFSBucket
+        gridfsBucket = new mongoose.mongo.GridFSBucket(conn.db, { bucketName: "uploads" });
+        gfs = gridfsBucket;
+
+        // Initialize GridFsStorage
+        const storage = new GridFsStorage({
+            db: conn.db,
+            file: (req, file) => {
+                return new Promise((resolve, reject) => {
+                    crypto.randomBytes(16, (err, buf) => {
+                        if (err) return reject(err);
+                        const filename = buf.toString("hex") + path.extname(file.originalname);
+                        resolve({ filename, bucketName: "uploads" });
+                    });
+                });
+            }
         });
-    }
-});
-const upload = multer({ storage });
 
-// Export gfs and upload for use in routes
-module.exports = { gfs, upload };
+        upload = multer({ storage });
+
+        console.log("GridFS storage initialized");
+        resolve({ gfs, upload, gridfsBucket }); // Resolve when done
+    });
+
+    conn.on("error", (err) => reject(err)); // Reject if there's an error
+});
+
+// Export `initGridFS`
+module.exports = { initGridFS };
 
 // Middlewares
-app.use(express.urlencoded({ extended: false })); 
-app.use(express.json());                        
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
-app.use(session({
-    secret: 'my_secret_key',
-    saveUninitialized: true,
-    resave: false,
-}));
+app.use(
+    session({
+        secret: "my_secret_key",
+        saveUninitialized: true,
+        resave: false
+    })
+);
 
 app.use((req, res, next) => {
     res.locals.message = req.session.message;
