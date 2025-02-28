@@ -18,34 +18,46 @@ Examples:
     ra_getReports
     rr_createAccount
 
+Element: [ / ] - Done
 
 Resto:
     createResto /
-    editProfile 
-    deleteReply
+    editRestoProfile /
+    getRestoEmail /
+    deleteReply 
     addReply
+    deleteReply
+    getReply
     getResto
     getAllResto
     getRating
+    deactRestoAcc
     *add more if necessary*
 
 
 Customer:
     getReview (include the reply)
     addReview
+    getReview (using review text or username)
+    deleteReview
+    editReview
     addLikeDislike (includes remove)
     getLikesDislikes
-    editProfile  
+    editCustProfile / 
     searchUser
     searchResto
     searchRestoByTag (using tag buttons)
-    seachReview (using review text or username)
+    deactAccount 
+    getCustEmail /
+    getCustUsername /
     *add more if necessary*
 
 Admin: 
     resolveReport
-    deactRestoAcc
-    deactCustAcc
+    deactRestoAcc (can be reactivated but after 30 days, the account will be deleted)
+    deactCustAcc  (can be reactivated but after 30 days, the account will be deleted)
+    reactRestoAcc
+    reactCustAcc 
     getAllReports
     deleteReply
     deleteReview

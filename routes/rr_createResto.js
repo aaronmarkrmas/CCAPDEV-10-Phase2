@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { upload } = require('../main');
-const { Restaurant, Reply } = require('../CCAPDEV-10-Phase2/model/restaurant');
+const { Restaurant } = require('../CCAPDEV-10-Phase2/model/restaurant');
 
 // create new resto
 router.post('/create', upload.single('profilePhoto'), async (req, res) => {
