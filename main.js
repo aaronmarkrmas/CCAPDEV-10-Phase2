@@ -1,6 +1,6 @@
 // npm start [server starter]
 // MOST IMPORTANT FILE!!! 
-// if edited, submit a pull request 
+// if edited, submit a pull request  
 
 require("dotenv").config();
 
@@ -28,10 +28,7 @@ if (!MONGO_URI) {
 // Database Connection
 const connectDB = async () => {
     try {
-        await mongoose.connect(MONGO_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        });
+        await mongoose.connect(MONGO_URI, {});
         console.log("Connected to the database...");
     } catch (err) {
         console.error("MongoDB connection error:", err);
