@@ -102,12 +102,12 @@ app.set("views", path.join(__dirname, "view"));
 app.use(express.static(path.join(__dirname, "public")));
 
 // Import routes
-// app.use('/yourRoute', require('./routes/yourRoutes')); // Uncomment & modify accordingly
+// app.use('/yourRoute', require('./routes/yourRoutes')); 
 const rr_editRestoProfile = require('./routes/rr_editRestoProfile');
 app.use(rr_editRestoProfile);
 
 
-conn.once("open", async () => {
+/*conn.once("open", async () => {
     try {
         await conn.db.collection("Restaurant").insertOne({
             email: "sample@restaurant.com",
@@ -122,7 +122,7 @@ conn.once("open", async () => {
     } catch (err) {
         console.error("Error inserting sample restaurant:", err);
     }
-});
+});*/
 
 
 
