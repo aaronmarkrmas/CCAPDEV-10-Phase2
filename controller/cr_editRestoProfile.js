@@ -1,4 +1,4 @@
-const { Restaurant } = require('../CCAPDEV-10-Phase2/model/restaurant');
+const { Restaurant } = require('../model/restaurant');
 
 exports.updateProfile = async (req, res) => {
     try {
@@ -20,7 +20,7 @@ exports.updateProfile = async (req, res) => {
 
         await restaurant.save();
 
-        res.render("restoProfile", { restaurant });
+        res.render("editRestoProfile", { restaurant });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Failed to update restaurant profile" });

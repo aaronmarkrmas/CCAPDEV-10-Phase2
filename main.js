@@ -103,8 +103,32 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Import routes
 // app.use('/yourRoute', require('./routes/yourRoutes')); // Uncomment & modify accordingly
+const rr_editRestoProfile = require('./routes/rr_editRestoProfile');
+app.use(rr_editRestoProfile);
+
+
+conn.once("open", async () => {
+    try {
+        await conn.db.collection("Restaurant").insertOne({
+            email: "sample@restaurant.com",
+            restoName: "Sample Restaurant",
+            password: "hashedpassword123",
+            phone: "123-456-7890",
+            description: "A great place to dine in.",
+            location: "123 Main Street, City",
+            pfp: "default.jpg"
+        });
+        console.log("Sample restaurant inserted successfully");
+    } catch (err) {
+        console.error("Error inserting sample restaurant:", err);
+    }
+});
+
+
 
 // Start Server
 app.listen(PORT, () => {
     console.log(`Server started at http://localhost:${PORT}`);
 });
+
+
