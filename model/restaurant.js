@@ -5,7 +5,6 @@ const restoAccSchema = new mongoose.Schema({
     _id: String,
     restoName: { type: String, required: true },
     password: { type: String, required: true },
-    location: { type: String, required: true, default: 'Br. Bloemen Food Hall' },
     phone: { type: String, required: true },
     description: { type: String, required: true },
     tags: { type: String, required: true },
