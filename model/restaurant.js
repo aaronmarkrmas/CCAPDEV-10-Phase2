@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 
+//_id is the email. we named it _id for it to not generate another _id
 const restoAccSchema = new mongoose.Schema({
-    email: { type: String, required: true },
+    _id: String,
     restoName: { type: String, required: true },
     password: { type: String, required: true },
     location: { type: String, required: true, default: 'Br. Bloemen Food Hall' },
@@ -15,10 +16,10 @@ const restoAccSchema = new mongoose.Schema({
         data: { type: Buffer, required: true },
         contentType: { type: String, required: true }
       }
-});
+}, { collection: "restaurants"}); 
 
 const replySchema = new mongoose.Schema({
-    replyId: { type: String, required: true },
+    _id: String, //restoID
     reviewId: { type: String, required: true },
     restoName: { type: String, required: true },
     datePosted: { type: Date, required: true, default: Date.now },
@@ -27,6 +28,6 @@ const replySchema = new mongoose.Schema({
 });
 
 module.exports = {
-    Restaurant: mongoose.model('Restaurant', restoAccSchema),
-    Reply: mongoose.model('Reply', replySchema)
+    restaurants: mongoose.model('restaurants', restoAccSchema),
+    replies: mongoose.model('replies', replySchema)
 };
