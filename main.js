@@ -12,7 +12,7 @@ const { GridFsStorage } = require("multer-gridfs-storage");
 const multer = require("multer");
 const crypto = require("crypto");
 
-// Init Express
+// Init Express     
 const app = express();
 
 // Environment Variables
@@ -21,22 +21,17 @@ const MONGO_URI = process.env.MONGO_URI;
 
 // Ensure MongoDB URI is set
 if (!MONGO_URI) {
-    console.error("MONGO_URI is not set in .env file!");
+    console.error("ERROR: MONGO_URI is not set in .env file!");
     process.exit(1);
 }
 
 // Database Connection
-const connectDB = async () => {
-    try {
-        await mongoose.connect(MONGO_URI, {});
-        console.log("Connected to the database...");
-    } catch (err) {
+mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log("Connected to the database..."))
+    .catch((err) => {
         console.error("MongoDB connection error:", err);
-        setTimeout(connectDB, 5000); // Retry after 5s
-    }
-};
-
-connectDB();
+        process.exit(1); // Exit instead of retrying indefinitely
+    });
 
 // Mongoose Connection
 const conn = mongoose.connection;
@@ -54,11 +49,14 @@ const initGridFS = new Promise((resolve, reject) => {
 
         // Initialize GridFsStorage
         const storage = new GridFsStorage({
-            url: MONGO_URI,  
+            url: MONGO_URI,
             file: (req, file) => {
                 return new Promise((resolve, reject) => {
                     crypto.randomBytes(16, (err, buf) => {
-                        if (err) return reject(err);
+                        if (err) {
+                            console.error("Error generating filename:", err);
+                            return reject(err);
+                        }
                         const filename = buf.toString("hex") + path.extname(file.originalname);
                         resolve({ filename, bucketName: "uploads" });
                     });
@@ -66,16 +64,18 @@ const initGridFS = new Promise((resolve, reject) => {
             }
         });
 
+        storage.on("connection", () => console.log("✅ GridFS storage initialized"));
+        storage.on("error", (err) => console.error("❌ GridFS Storage Error:", err));
+
         upload = multer({ storage });
 
-        console.log("GridFS storage initialized");
         resolve({ gfs, upload, gridfsBucket });
     });
 
     conn.on("error", (err) => reject(err));
 });
 
-// Export **Before Using app.use**
+// Export `initGridFS`
 module.exports = { initGridFS };
 
 // Middlewares
@@ -111,8 +111,8 @@ initGridFS.then(({ upload }) => {
 
     // Start Server **after GridFS is Ready**
     app.listen(PORT, () => {
-        console.log(`Server started at http://localhost:${PORT}`);
+        console.log(`🚀 Server started at http://localhost:${PORT}`);
     });
 }).catch(err => {
-    console.error("Error initializing GridFS:", err);
+    console.error("❌ Error initializing GridFS:", err);
 });
