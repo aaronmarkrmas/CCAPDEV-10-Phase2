@@ -64,8 +64,8 @@ const initGridFS = new Promise((resolve, reject) => {
             }
         });
 
-        storage.on("connection", () => console.log("✅ GridFS storage initialized"));
-        storage.on("error", (err) => console.error("❌ GridFS Storage Error:", err));
+        storage.on("connection", () => console.log("GridFS storage initialized"));
+        storage.on("error", (err) => console.error("GridFS Storage Error:", err));
 
         upload = multer({ storage });
 
@@ -109,10 +109,10 @@ initGridFS.then(({ upload }) => {
     const rr_editRestoProfile = require('./routes/rr_editRestoProfile');
     app.use('/restaurant', rr_editRestoProfile);
 
-    // Start Server **after GridFS is Ready**
+    // Start Server **after GridFS is Ready**   
     app.listen(PORT, () => {
-        console.log(`🚀 Server started at http://localhost:${PORT}`);
+        console.log(`Server started at http://localhost:${PORT}`);
     });
 }).catch(err => {
-    console.error("❌ Error initializing GridFS:", err);
+    console.error("Error initializing GridFS:", err);
 });
