@@ -30,7 +30,7 @@ mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log("Connected to the database..."))
     .catch((err) => {
         console.error("MongoDB connection error:", err);
-        process.exit(1); // Exit instead of retrying indefinitely
+        process.exit(1); 
     });
 
 // Mongoose Connection
@@ -58,11 +58,16 @@ const initGridFS = new Promise((resolve, reject) => {
                             return reject(err);
                         }
                         const filename = buf.toString("hex") + path.extname(file.originalname);
-                        resolve({ filename, bucketName: "uploads" });
+                        resolve({
+                            filename,
+                            bucketName: "uploads",
+                            metadata: { uploadedAt: new Date() } 
+                        });
                     });
                 });
             }
         });
+        
 
         storage.on("connection", () => console.log("GridFS storage initialized"));
         storage.on("error", (err) => console.error("GridFS Storage Error:", err));
@@ -104,6 +109,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // Ensure GridFS is initialized **before** routes are registered
 initGridFS.then(({ upload }) => {
     app.locals.upload = upload;
+    module.exports = { initGridFS, upload }; 
 
     // Import routes
     const rr_editRestoProfile = require('./routes/rr_editRestoProfile');
@@ -116,3 +122,4 @@ initGridFS.then(({ upload }) => {
 }).catch(err => {
     console.error("Error initializing GridFS:", err);
 });
+

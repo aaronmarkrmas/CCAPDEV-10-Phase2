@@ -44,14 +44,17 @@ exports.updateProfile = async (req, res) => {
             return res.status(404).json({ error: "Restaurant not found" });
         }
 
-        // ✅ If a new profile picture is uploaded, update it separately
         if (req.file) {
+            if (!req.file.id) {
+                console.error("GridFS upload error: File ID is missing.");
+                return res.status(500).json({ error: "File upload failed." });
+            }
             updatedRestaurant.pfp = {
-                data: req.file.id,  // Ensure this is defined
+                data: req.file.id,
                 contentType: req.file.mimetype
             };
             await updatedRestaurant.save();
-        }
+        }                
 
         console.log("Profile updated successfully:", updatedRestaurant);
 
