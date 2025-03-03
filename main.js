@@ -111,9 +111,13 @@ initGridFS.then(({ upload }) => {
     app.locals.upload = upload;
     module.exports = { initGridFS, upload }; 
 
-    // Import routes
-    const rr_editRestoProfile = require('./routes/rr_editRestoProfile');
-    app.use('/restaurant', rr_editRestoProfile);
+// Import routes
+const rr_editRestoProfile = require('./routes/rr_editRestoProfile');
+app.use('/restaurant', rr_editRestoProfile);
+
+const rr_sideBar = require("./routes/rr_sideBar");
+app.use("/restaurant", rr_sideBar); 
+
 
     // Start Server **after GridFS is Ready**   
     app.listen(PORT, () => {
