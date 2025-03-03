@@ -38,25 +38,22 @@
     <div class="profile-details">
         <h2 id="user-name"><%= restaurant.restoName %></h2>
         <p id="user-email"><%= restaurant.email %></p>
-      <div class="tags">
-        <% if (Array.isArray(restaurant.tags)) { %>
-            <% restaurant.tags.forEach(tag => { %>
+        <div class="tags">
+          <% 
+          let tagsArray = Array.isArray(restaurant.tags) ? restaurant.tags : restaurant.tags.split(",").map(tag => tag.trim());
+          tagsArray.forEach(tag => { 
+          %>
               <span class="tag"><%= tag %></span>
-            <% }); %>
-          <% } else { %>
-            <span class="tag"><%= restaurant.tags %></span>
-          <% } %>
+          <% }); %>
       </div>
       <div class="description">
-        <p id="user-description"><%= restaurant.description %></p>
+        <p id="user-description" ><%= restaurant.description %></p>
     </div>
       <!-- Rating Section -->
-      <div class="rating">
-        <div id="rating-stars">
-          <!-- Static stars will be dynamically populated -->
-        </div>
-        <span id="rating-number"><%= restaurant.rating.toFixed(1) %></span> <!-- Display rating -->
-      </div>
+    <div class="rating">
+      <div id="rating-stars"></div> <!-- Stars will be dynamically inserted -->
+      <span id="rating-number"></span> <!-- Rating number will be dynamically updated -->
+    </div>
     </div>
   </div>
 
@@ -69,5 +66,11 @@
 </div>
 
 <script src="/js/restoProfile_script.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const rating = <%= restaurant.rating %>; 
+        displayRating(rating); 
+    });
+</script>
 </body>
 </html>

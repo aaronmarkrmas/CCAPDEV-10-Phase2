@@ -1,6 +1,4 @@
-
-    
-    function displayRating(rating) {
+function displayRating(rating) {
       const starsContainer = document.getElementById('rating-stars');
       const ratingNumber = document.getElementById('rating-number');
       starsContainer.innerHTML = ''; // Clear existing stars
