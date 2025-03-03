@@ -29,10 +29,12 @@
   <div class="profile-section">
     <!-- Profile Photo and Button -->
     <div class="profile-photo-section">
-        <img id="profile-photo" src="/profile-pics/<%= restaurant.restoName %>.jpg" alt="Profile Photo">
-      <button class="editpfp-button">Edit Profile</button>
+      <img id="profile-photo" src="/profile-pics/<%= restaurant.restoName %>.jpg" alt="Profile Photo">
+      <button class="editpfp-button" onclick="window.location.href='/restaurant/<%= encodeURIComponent(restaurant._id) %>/updateProfile'">
+        Edit Profile
+      </button>
       <h2 id="reviews">Reviews</h2>
-    </div>
+    </div>  
 
     <!-- Profile Details -->
     <div class="profile-details">
@@ -67,10 +69,10 @@
 
 <script src="/js/restoProfile_script.js"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const rating = <%= restaurant.rating %>; 
-        displayRating(rating); 
-    });
+  document.addEventListener("DOMContentLoaded", function() {
+      displayRating(<%= restaurant.rating %>);
+  });
 </script>
+
 </body>
 </html>

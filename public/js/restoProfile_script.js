@@ -27,7 +27,11 @@ function displayRating(rating) {
       // Display the rating number next to stars
       ratingNumber.innerText = ` ${rating.toFixed(1)}`; // Format to 1 decimal place
     }
-    
+
+    function redirectToEditProfile() {
+    const email = "<%= encodeURIComponent(restaurant._id) %>"; // Ensure email is correctly encoded
+    window.location.href = `/restaurant/${email}/updateProfile`;
+    }
     
     function addReviewPost(
       userPhoto,
@@ -150,100 +154,34 @@ function displayRating(rating) {
       reviewsContainer.appendChild(postContainer);
     }
     
-    // Example usage of the addReviewPost function with replies
-    addReviewPost(
-      'images/user1_pfp.png',
-      'John Doe',
-      'Sandwich Corner',
-      '2025-01-26',
-      false,
-      4,
-      '"Great experience, will come again!"',
-      1,
-      "I tried the Grilled Chicken Pesto Sandwich, and it was absolutely amazing! The bread was perfectly toasted, with a golden crunch on the outside and a soft, fluffy inside. The chicken was tender and well-seasoned, and the pesto added a fresh, herby flavor that tied everything together beautifully. The portion size was just right, and the sandwich came with a side of crispy potato chips, which was a nice touch.",
-      [
-        { type: 'img', src: 'images/food1.png', alt: 'Sandwich Image 1' },
-        { type: 'img', src: 'images/food2.png', alt: 'Sandwich Image 2' },
-        { type: 'img', src: 'images/food3.png', alt: 'Chips Image' },
-        { type: 'video', src: 'images/food4.mp4', alt: 'Review Video' },
-      ],
-      [
-        {
-          restoUser: 'images/pfp.png',
-          restoUserName: 'Sandwich Corner',
-          replyDatePosted: '2025-01-28',
-          replyEdited: false,
-          replyText: 'We appreciate your review!',
-        },
-      ]
-    );
-    
-    addReviewPost('images/user2_pfp.png', 'Dawg Snoop', 'Sandwich Corner', '2025-01-25', true, 5, '"Absolutely amazing burgers!"', 2, "I tried the Grilled Chicken Pesto Sandwich, and it was absolutely amazing! The bread was perfectly toasted, with a golden crunch on the outside and a soft, fluffy inside.The chicken was tender and well-seasoned, and the pesto added a fresh, herby flavor that tied everything together beautifully. The portion size was just right, and the sandwich came with a side of crispy potato chips, which was a nice touch.",
-      [
-          { type: 'img', src: 'images/food1.png', alt: 'Sandwich Image 1' },
-          { type: 'img', src: 'images/food2.png', alt: 'Sandwich Image 2' },
-          { type: 'img', src: 'images/food3.png', alt: 'Chips Image' },
-          { type: 'video', src: 'images/food4.mp4', alt: 'Review Video' },
-      ]
-    );
-    addReviewPost('images/user3_pfp.png', 'Jane Smith', 'Sandwich Corner', '2025-01-25', true, 3, '"Very delicious fries!"', 3,  "I tried the Grilled Chicken Pesto Sandwich, and it was absolutely amazing! The bread was perfectly toasted, with a golden crunch on the outside and a soft, fluffy inside.The chicken was tender and well-seasoned, and the pesto added a fresh, herby flavor that tied everything together beautifully. The portion size was just right, and the sandwich came with a side of crispy potato chips, which was a nice touch.",
-      [
-          { type: 'img', src: 'images/food1.png', alt: 'Sandwich Image 1' },
-          { type: 'img', src: 'images/food2.png', alt: 'Sandwich Image 2' },
-          { type: 'img', src: 'images/food3.png', alt: 'Chips Image' },
-          { type: 'video', src: 'images/food4.mp4', alt: 'Review Video' },
-      ]
-    );
-    
-    
-    addReviewPost(
-      'images/user5_pfp.png',
-      'Jane Smith',
-      'Pasta Haven',
-      '2025-01-27',
-      true,
-      5,
-      '"Best pasta Ive ever had!"',
-      3,
-      "I ordered the Truffle Mushroom Fettuccine, and it was phenomenal! The pasta was cooked to perfection, and the truffle sauce was rich and creamy without being overwhelming. The mushrooms were fresh and added a wonderful earthy taste. The portion size was generous, and the garlic bread on the side was a perfect complement. Definitely a must-try!",
-      [
-        { type: 'img', src: 'images/pasta1.png', alt: 'Truffle Mushroom Fettuccine' },
-        { type: 'img', src: 'images/pasta2.png', alt: 'Garlic Bread' },
-        { type: 'video', src: 'images/pasta3.mp4', alt: 'Pasta Review Video' },
-      ],
-      [
-        {
-          restoUser: 'images/pfp.png',
-          restoUserName: 'Sandwich Corner',
-          replyDatePosted: '2025-01-29',
-          replyEdited: false,
-          replyText: 'Thank you for your kind words! We hope to see you again soon!',
-        },
-      ]
-    );
-    
-    addReviewPost(
-      'images/user4_pfp.png',
-      'Michael Lee',
-      'Burger Bros',
-      '2025-01-28',
-      false,
-      3,
-      '"Decent burger, but nothing special."',
-      2,
-      "Tried the Double Cheese Smash Burger. The patty was juicy, but I felt the seasoning was lacking. The bun was soft, but a bit too greasy for my liking. The fries were crispy and well-seasoned, which was the highlight of my meal. Overall, it was an okay experience, but I’ve had better burgers elsewhere.",
-      [
-        { type: 'img', src: 'images/burger1.png', alt: 'Double Cheese Smash Burger' },
-        { type: 'img', src: 'images/fries.png', alt: 'Crispy Fries' },
-      ],
-      [
-        {
-          restoUser: 'images/pfp.png',
-          restoUserName: 'Sandwich Corner',
-          replyDatePosted: '2025-01-30',
-          replyEdited: false,
-          replyText: 'Thanks for the feedback! Well work on improving our flavors!',
-        },
-      ]
-    );
-    
+
+    document.addEventListener("DOMContentLoaded", async function () {
+    const email = document.getElementById("user-email").innerText.trim(); // Get email from the profile
+    console.log("Fetching reviews for:", email);
+
+    try {
+        const response = await fetch(`/restaurant/${encodeURIComponent(email)}/reviews`);
+        if (!response.ok) throw new Error("Failed to fetch reviews");
+
+        const reviews = await response.json();
+        console.log("Reviews received:", reviews);
+
+        reviews.forEach((review) => {
+            addReviewPost(
+                review.userPhoto,
+                review.userName,
+                review.restaurantName,
+                review.date,
+                review.edited,
+                review.rating,
+                review.title,
+                review.postId,
+                review.reviewText,
+                review.media,
+                review.replyData
+            );
+        });
+    } catch (error) {
+        console.error("Error loading reviews:", error);
+    }
+});

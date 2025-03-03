@@ -118,8 +118,11 @@ app.use('/restaurant', rr_editRestoProfile);
 const rr_sideBar = require("./routes/rr_sideBar");
 app.use("/restaurant", rr_sideBar); 
 
+const reviewRoutes = require('./routes/r_getRestoReviews');
+app.use('/restaurant', reviewRoutes);
 
-    // Start Server **after GridFS is Ready**   
+
+    // Start Server **after GridFS is Ready**     
     app.listen(PORT, () => {
         console.log(`Server started at http://localhost:${PORT}`);
     });
