@@ -26,7 +26,7 @@ if (!MONGO_URI) {
 }
 
 // Database Connection
-mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(MONGO_URI)
     .then(() => console.log("Connected to the database..."))
     .catch((err) => {
         console.error("MongoDB connection error:", err);

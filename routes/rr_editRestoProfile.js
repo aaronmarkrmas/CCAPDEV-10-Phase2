@@ -27,6 +27,4 @@ router.post("/:email/updateProfile", ensureUploadInitialized, (req, res, next) =
     req.app.locals.upload.single("pfp")(req, res, next);
 }, restaurantController.updateProfile);
 
-
-
 module.exports = router;
