@@ -24,12 +24,12 @@
     </div>
   </div>
   
-  <!-- Main Content Area -->
+  <!-- Main Content Area --> 
 <div class="content">
   <div class="profile-section">
     <!-- Profile Photo and Button -->
     <div class="profile-photo-section">
-      <img id="profile-photo" src="/profile-pics/<%= restaurant.restoName %>.jpg" alt="Profile Photo">
+      <img id="profile-photo" src="/profile-pics/<%= restaurant._id.replace('@', '_') %>.png" alt="Profile Photo">
       <button class="editpfp-button" onclick="window.location.href='/restaurant/<%= encodeURIComponent(restaurant._id) %>/updateProfile'">
         Edit Profile
       </button>
@@ -72,6 +72,11 @@
   document.addEventListener("DOMContentLoaded", function() {
       displayRating(<%= restaurant.rating %>);
   });
+
+    const restaurantId = "<%= restaurant._id %>"; 
+    fetch(`/reviews/${encodeURIComponent(restaurantId)}`)
+        .then(response => response.json())
+        .then(reviews => console.log("Reviews:", reviews));
 </script>
 
 </body>

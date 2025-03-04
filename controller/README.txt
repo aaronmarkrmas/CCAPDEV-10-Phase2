@@ -3,6 +3,7 @@
 disregard the current controller file 
 
 File Naming Format:
+c_ for any
 cc_ for customerRoutes
 ca_ for adminRoutes
 cr_ for restaurantRoutes

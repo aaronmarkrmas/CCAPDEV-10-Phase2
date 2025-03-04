@@ -153,33 +153,38 @@ function displayRating(rating) {
     
       reviewsContainer.appendChild(postContainer);
     }
-    
 
-    document.addEventListener("DOMContentLoaded", async function () {
-      const restaurantId = "<%= restaurant._id %>";
-  
-      try {
-          const response = await fetch(`/reviews/${restaurantId}`);
-          if (!response.ok) throw new Error("Failed to fetch reviews");
-  
-          const reviews = await response.json();
-          reviews.forEach(review => {
-              addReviewPost(
-                  "/images/default-user.png",
-                  review.customerName,
-                  "<%= restaurant.restoName %>",
-                  new Date(review.datePosted).toLocaleDateString(),
-                  review.edited,
-                  review.rating,
-                  review.reviewText,
-                  review._id,
-                  review.reviewText,
-                  review.media.map(url => ({ type: "img", src: url })),
-                  review.replies
-              );
-          });
-      } catch (error) {
-          console.error("Error loading reviews:", error);
-      }
-  });
-  
+document.addEventListener("DOMContentLoaded", async function () {
+    const restaurantId = "<%= restaurant.email %>"; // ✅ Use unencoded email
+
+    try {
+        const response = await fetch(`/reviews/${restaurantId}`);
+        if (!response.ok) throw new Error("Failed to fetch reviews");
+
+        const reviews = await response.json();
+        console.log("Fetched Reviews:", reviews);
+
+        if (!reviews.length) {
+            document.getElementById("reviews-container").innerHTML = "<p>No reviews yet.</p>";
+            return;
+        }
+
+        const reviewsList = document.getElementById("reviews-list");
+        reviewsList.innerHTML = ""; // Clear existing reviews
+
+        reviews.forEach(review => {
+            addReviewPost(
+                "/images/default-user.png", // Default profile pic
+                review.customerName,
+                "Restaurant Name",
+                new Date(review.datePosted).toLocaleDateString(),
+                review.edited || false,
+                review.rating,
+                review.reviewText,
+                review._id
+            );
+        });
+    } catch (error) {
+        console.error("Error loading reviews:", error);
+    }
+});

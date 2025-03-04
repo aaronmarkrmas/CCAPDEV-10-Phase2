@@ -17,16 +17,6 @@ const restoAccSchema = new mongoose.Schema({
       }
 }, { collection: "restaurants"}); 
 
-const replySchema = new mongoose.Schema({
-    _id: String, //restoID
-    reviewId: { type: String, required: true },
-    restoName: { type: String, required: true },
-    datePosted: { type: Date, required: true, default: Date.now },
-    isEdited: { type: Boolean, required: true, default: false },
-    dateEdited: { type: Date }
-});
-
 module.exports = {
-    restaurants: mongoose.model('restaurants', restoAccSchema),
-    replies: mongoose.model('replies', replySchema)
+    restaurants: mongoose.model('restaurants', restoAccSchema)
 };

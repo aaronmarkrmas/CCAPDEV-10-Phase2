@@ -1,6 +1,7 @@
 // npm start [server starter]
 // MOST IMPORTANT FILE!!! 
 // if edited, submit a pull request  
+// if your changes in main crashes the server, dont commit
 
 require("dotenv").config();
 
@@ -118,14 +119,15 @@ app.use('/restaurant', rr_editRestoProfile);
 const rr_sideBar = require("./routes/rr_sideBar");
 app.use("/restaurant", rr_sideBar); 
 
-const reviewRoutes = require('./routes/r_getRestoReviews');
-app.use('/restaurant', reviewRoutes);
+const r_getRestoReviews = require("./routes/r_getRestoReviews");
+app.use("/", r_getRestoReviews); 
 
 
-    // Start Server **after GridFS is Ready**     
-    app.listen(PORT, () => {
-        console.log(`Server started at http://localhost:${PORT}`);
-    });
+
+// Start Server **after GridFS is Ready**     
+app.listen(PORT, () => {
+    console.log(`Server started at http://localhost:${PORT}`);
+});
 }).catch(err => {
     console.error("Error initializing GridFS:", err);
 });

@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const reviewController = require("../controller/c_getRestoReviews");
 const multer = require("multer");
-
 const upload = multer({ dest: "uploads/" }); // Store uploaded files in /uploads directory
 
 

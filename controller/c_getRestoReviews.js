@@ -1,11 +1,10 @@
 //can be used by resto, customer, and admin
 
-const Review = require('../model/customer'); 
+const { reviews } = require('../model/review'); 
 const { v4: uuidv4 } = require("uuid"); 
 
-// GET: Fetch all reviews for a restaurant
 
-exports.postReview = async (req, res) => {
+exports.postReview = async (req, res) => { 
     try {
         const { restaurantId, customerName, rating, reviewText } = req.body;
         const media = req.files ? req.files.map(file => file.path) : []; // Array of media file paths
@@ -14,7 +13,7 @@ exports.postReview = async (req, res) => {
             return res.status(400).json({ error: "All fields are required" });
         }
 
-        const newReview = new Review({
+        const newReview = new reviews({
             _id: uuidv4(), // Generate unique review ID
             restaurantId,
             customerName,
@@ -31,14 +30,27 @@ exports.postReview = async (req, res) => {
         console.error("Error posting review:", error);
         res.status(500).json({ error: "Failed to post review" });
     }
-};
+}; 
 
 exports.getReviewsByRestaurant = async (req, res) => {
     try {
-        const { restaurantId } = req.params;
+        let restaurantId = req.params.restaurantId;
+        console.log("Raw restaurantId:", restaurantId);
 
-        const reviews = await Review.find({ restaurantId });
-        res.json(reviews);
+        // ✅ Decode safely
+        try {
+            restaurantId = decodeURIComponent(restaurantId);
+        } catch (err) {
+            console.error("URI Decoding Error:", err);
+            return res.status(400).json({ error: "Invalid restaurant ID format" });
+        }
+
+        console.log("Decoded restaurantId:", restaurantId);
+
+        const review = await reviews.find({ restaurantId });
+        console.log("Reviews found:", review);
+
+        res.json(review);
     } catch (error) {
         console.error("Error fetching reviews:", error);
         res.status(500).json({ error: "Failed to fetch reviews" });
