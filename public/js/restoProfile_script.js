@@ -156,32 +156,30 @@ function displayRating(rating) {
     
 
     document.addEventListener("DOMContentLoaded", async function () {
-    const email = document.getElementById("user-email").innerText.trim(); // Get email from the profile
-    console.log("Fetching reviews for:", email);
-
-    try {
-        const response = await fetch(`/restaurant/${encodeURIComponent(email)}/reviews`);
-        if (!response.ok) throw new Error("Failed to fetch reviews");
-
-        const reviews = await response.json();
-        console.log("Reviews received:", reviews);
-
-        reviews.forEach((review) => {
-            addReviewPost(
-                review.userPhoto,
-                review.userName,
-                review.restaurantName,
-                review.date,
-                review.edited,
-                review.rating,
-                review.title,
-                review.postId,
-                review.reviewText,
-                review.media,
-                review.replyData
-            );
-        });
-    } catch (error) {
-        console.error("Error loading reviews:", error);
-    }
-});
+      const restaurantId = "<%= restaurant._id %>";
+  
+      try {
+          const response = await fetch(`/reviews/${restaurantId}`);
+          if (!response.ok) throw new Error("Failed to fetch reviews");
+  
+          const reviews = await response.json();
+          reviews.forEach(review => {
+              addReviewPost(
+                  "/images/default-user.png",
+                  review.customerName,
+                  "<%= restaurant.restoName %>",
+                  new Date(review.datePosted).toLocaleDateString(),
+                  review.edited,
+                  review.rating,
+                  review.reviewText,
+                  review._id,
+                  review.reviewText,
+                  review.media.map(url => ({ type: "img", src: url })),
+                  review.replies
+              );
+          });
+      } catch (error) {
+          console.error("Error loading reviews:", error);
+      }
+  });
+  
