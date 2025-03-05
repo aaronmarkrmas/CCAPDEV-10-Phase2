@@ -122,11 +122,17 @@ app.use("/restaurant", rr_sideBar);
 const r_getRestoReviews = require("./routes/r_getRestoReviews");
 app.use("/", r_getRestoReviews); 
 
-// const r_login = require("./routes/r_login");
-// app.use("/", r_login);
+ const r_login = require("./routes/r_login");
+ app.use("/", r_login);
 
+const r_homepage = require('./routes/r_getRestos');
+app.use('/', r_homepage);
 
+const r_SuLi = require('./routes/r_suli');
+app.use('/', r_SuLi);
 
+const r_accounttype_creation = require('./routes/r_accounttype_creation');
+app.use('/',r_accounttype_creation);
 
 // Start Server **after GridFS is Ready**     
 app.listen(PORT, () => {
