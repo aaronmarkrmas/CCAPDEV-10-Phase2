@@ -1,6 +1,7 @@
 const { restaurants } = require("../model/restaurant");
 const { reviews } = require("../model/review");
 const { customers } = require("../model/customer");
+const { replies } = require("../model/reply");
 
 exports.viewProfile = async (req, res) => {
     try {
@@ -20,26 +21,36 @@ exports.viewProfile = async (req, res) => {
         // Fetch reviews associated with the restaurant
         const restaurantReviews = await reviews.find({ restaurantId: email });
 
+        // Extract customer emails from reviews
         const customerEmails = restaurantReviews.map(review => review.customerEmail);
-        const customersData = await customers.find({ email: { $in: customerEmails } }, "email username pfp");
+        const customersData = await customers.find(
+            { email: { $in: customerEmails } }, 
+            "email username pfp"
+        );
 
         // Convert customer pfp & username into lookup dictionaries
         const customerPfps = {};
-        const customerUsernames = {};  // ✅ NEW: Store usernames
+        const customerUsernames = {};
 
         customersData.forEach(customer => {
-            if (customer.pfp && customer.pfp.data) {
-                customerPfps[customer.email] = `data:${customer.pfp.contentType};base64,${customer.pfp.data.toString("base64")}`;
-            } else {
-                customerPfps[customer.email] = "/images/default-user.png"; // Default pfp
-            }
+            customerPfps[customer.email] = customer.pfp && customer.pfp.data 
+                ? `data:${customer.pfp.contentType};base64,${customer.pfp.data.toString("base64")}` 
+                : "/images/default-user.png"; // Default pfp
 
-            customerUsernames[customer.email] = customer.username;  // ✅ Store username
+            customerUsernames[customer.email] = customer.username;
         });
 
-        console.log("Customers fetched:", customersData.length);  // ✅ Debugging
+        console.log("Customers fetched:", customersData.length);
         console.log("Customer usernames:", customerUsernames);
         console.log("Reviews fetched:", restaurantReviews.length);
+
+        const repliesMap = {};
+        for (const review of restaurantReviews) {
+            const reviewReplies = await replies.find({ reviewId: review._id });
+            repliesMap[review._id] = reviewReplies; // Store replies in an object
+        }
+
+        console.log("Replies fetched:", Object.keys(repliesMap).length); 
 
         // Send all data to frontend
         res.render("restoProfile", { 
@@ -47,7 +58,8 @@ exports.viewProfile = async (req, res) => {
             tags: tagsArray,
             reviews: restaurantReviews,
             customerPfps,
-            customerUsernames // ✅ NEW: Pass usernames to EJS
+            customerUsernames,
+            repliesMap 
         });
 
     } catch (error) {

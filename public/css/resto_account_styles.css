@@ -252,6 +252,7 @@ body {
     display: flex;
     align-items: center;
     gap: 5px; /* Gap between pfp and info */
+    margin-top: -30px;
 }
 
 .review-user-photo {
@@ -295,15 +296,30 @@ body {
 }
 
 .reply-link {
-    font-size: 0.9rem;
+    font-size: 0.7rem;
     color: #0073e6;
     cursor: pointer;
     font-family: "Poppins", serif;
     font-weight: 400;
     font-style: normal;
+    margin-left: 835px;
 }
 
 .reply-link:hover {
+    text-decoration: underline;
+}
+
+.edit-reply-link {
+    font-size: 0.7rem;
+    color: #0073e6;
+    cursor: pointer;
+    font-family: "Poppins", serif;
+    font-weight: 400;
+    font-style: normal;
+    margin-left: 825px;
+}
+
+.edit-reply-link:hover {
     text-decoration: underline;
 }
   
@@ -357,6 +373,7 @@ body {
     font-family: "Poppins", serif;
     font-style: normal;
     text-align: left;
+    margin-top: 30px;
   }
   
   .reply-post .review-meta {
@@ -366,6 +383,8 @@ body {
     font-weight: 400;
     font-style: normal;
     text-align: left;
+    margin-top: 54px;
+    margin-left: -140px;
   }
   
   .reply-post .review-text {

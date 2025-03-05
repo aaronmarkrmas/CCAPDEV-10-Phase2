@@ -67,7 +67,19 @@
       <% } else { %>
           <% reviews.forEach(review => { %>
               <div class="review-post">
-                  <div class="review-post-details">
+                      <% if (repliesMap[review._id] && repliesMap[review._id].length > 0) { %>
+                        <!-- If a reply exists, show 'Edit Reply' button -->
+                        <a href="/restaurant/<%= encodeURIComponent(restaurant._id) %>/review/<%= encodeURIComponent(review._id) %>/edit-reply" class="edit-reply-link">
+                            Edit Reply
+                        </a>
+                      <% } else { %>
+                        <!-- If no reply exists, show 'Reply' button -->
+                        <a href="/restaurant/<%= encodeURIComponent(restaurant._id) %>/review/<%= encodeURIComponent(review._id) %>/reply" class="reply-link">
+                            Reply
+                        </a>
+                      <% } %>
+                       
+                      <div class="review-post-details">
                       <img class="review-user-photo" src="<%= customerPfps[review.customerEmail] %>" alt="User Photo">
                       <div class="review-info">
                         <p class="review-user-name"><%= customerUsernames[review.customerEmail] %></p>
@@ -103,27 +115,23 @@
                   <% } %>
   
                   <!-- Reply Section -->
-                  <% if (review.replies.length > 0) { %>
-                      <div class="reply-container">
-                          <% review.replies.forEach(reply => { %>
-                              <div class="reply-post">
-                                  <div class="review-post-details">
-                                      <div class="reply-header">
-                                          <p class="review-user-name"><%= reply.restoUserName %></p>
-                                          <p class="review-meta"><%= new Date(reply.replyDatePosted).toLocaleDateString() %> 
-                                              <% if (reply.replyEdited) { %>| Edited<% } %>
-                                          </p>
-                                      </div>
-                                  </div>
-                                  <p class="review-text"><%= reply.replyText %></p>
-                              </div>
-                          <% }); %>
-                          <!-- Reply Button (Redirect to restoReplyPage) -->
-                          <button class="reply-button" onclick="redirectToReplyPage('<%= restaurant._id %>', '<%= review._id %>')">
-                            Reply
-                        </button>
-                      </div>
-                  <% } %>
+                  <% if (repliesMap[review._id] && repliesMap[review._id].length > 0) { %>
+                    <div class="reply-container">
+                        <% repliesMap[review._id].forEach(reply => { %>
+                            <div class="reply-post">
+                                <div class="review-post-details">
+                                    <div class="reply-header">
+                                        <p class="review-user-name"><%= reply.restoName %></p>
+                                        <p class="review-meta"><%= new Date(reply.datePosted).toLocaleDateString() %> 
+                                            <% if (reply.isEdited) { %>| Edited<% } %>
+                                        </p>
+                                    </div>
+                                </div>
+                                <p class="review-text"><%= reply.replyText %></p>
+                            </div>
+                        <% }); %>
+                    </div>
+                <% } %>
               </div>
           <% }); %>
       <% } %>

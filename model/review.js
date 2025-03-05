@@ -12,12 +12,6 @@ const reviewSchema = new mongoose.Schema({
     media: [{ type: String }], // Array of image/video URLs
     datePosted: { type: Date, default: Date.now }, // Timestamp
     edited: { type: Boolean, default: false }, // Edited status
-    replies: [{
-        restoUserName: String, // Restaurant reply name
-        replyText: String, // Reply content
-        replyDatePosted: { type: Date, default: Date.now },
-        replyEdited: { type: Boolean, default: false }
-    }]
 }, { collection: "reviews" });
 
 module.exports = {

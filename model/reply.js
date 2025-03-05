@@ -6,7 +6,8 @@ const replySchema = new mongoose.Schema({
     restoName: { type: String, required: true },
     datePosted: { type: Date, required: true, default: Date.now },
     isEdited: { type: Boolean, required: true, default: false },
-    dateEdited: { type: Date }
+    dateEdited: { type: Date },
+    replyText: { type: String, required: true}
 });
 
 module.exports = {
