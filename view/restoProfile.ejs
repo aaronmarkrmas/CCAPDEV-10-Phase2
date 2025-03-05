@@ -39,7 +39,7 @@
     <!-- Profile Details -->
     <div class="profile-details">
         <h2 id="user-name"><%= restaurant.restoName %></h2>
-        <p id="user-email"><%= restaurant.email %></p>
+        <p id="user-email"><%= restaurant._id %></p>
         <div class="tags">
           <% 
           let tagsArray = Array.isArray(restaurant.tags) ? restaurant.tags : restaurant.tags.split(",").map(tag => tag.trim());

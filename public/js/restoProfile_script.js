@@ -9,7 +9,7 @@ function displayRating(rating) {
   // Add filled stars
   for (let i = 0; i < roundedRating; i++) {
       const star = document.createElement('i');
-      star.className = 'fa-solid fa-star';
+      star.className = 'fa-solid fa-star';fixed the resto emial display 
       star.style.color = '#ffcd3c';
       star.style.fontSize = '24px';
       starsContainer.appendChild(star);
