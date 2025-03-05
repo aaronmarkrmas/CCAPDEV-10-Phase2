@@ -10,34 +10,56 @@
     <link rel="stylesheet" href="login_page_style.css">
 </head>
 <body>
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="logo">
-        <img src="/images/logo.png" alt="Bloemen Bites Logo">
-        </div>
-        <div class="navigation">
-            <a href="/logout">
-                <i class="fa-solid fa-arrow-right-from-bracket" style="color: #fc6467;"></i>
-                <p>Logout</p>
-            </a>
-        </div>
-    </div>
-
     <!-- Main Content Area --> 
     <div class="login-container">
         <h2>Login</h2>
-        <input id="email" placeholder="Email" required>
-        <input id="password" placeholder="Password" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" required>
         <button>login</button>
         <p class="signup-text">No account yet? <a href="signup.html">Sign up</a></p> <!-- Link to signup page -->
     </div>
-    <script src="login_page_script.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded",function(){
-            document.querySelector("button").addEventListener("click",function(){
-                let email = $("#email").val();
-                let password = $("password").val();
-                //for loop to go over list of users
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("login-btn").addEventListener("click", async function () {
+                let email = document.getElementById("email").value;
+                let password = document.getElementById("password").value;
+    
+                if (!email || !password) {
+                    alert("Please enter both email and password.");
+                    return;
+                }
+    
+                try {
+                    // Send login request to the server
+                    let response = await fetch("/login", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ email, password })
+                    });
+    
+                    let result = await response.json();
+    
+                    if (!response.ok) {
+                        alert(result.error);
+                        return;
+                    }
+    
+                    alert("Login successful!");
+    
+                    // Redirect based on user type
+                    if (result.userType === "customer") {
+                        //window.location.href = "/customer-dashboard";
+                    } else if (result.userType === "restaurant") {
+                        //window.location.href = "/restaurant-dashboard";
+                    } else if (result.userType === "admin") {
+                        //window.location.href = "/admin-dashboard";
+                    }
+                } catch (error) {
+                    console.error("Login error:", error);
+                    alert("An error occurred. Please try again later.");
+                }
             });
         });
     </script>
