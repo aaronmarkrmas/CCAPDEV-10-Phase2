@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const loginController = require("../controllers/cr_login");
+const loginController = require("../controller/cr_login");
 
 // Route to check if an email exists in any model
 router.get("/login/check-email", loginController.checkEmail);

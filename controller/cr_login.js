@@ -1,7 +1,7 @@
-const customers = require("../models/customerModel");
-const restaurants = require("../models/restaurantModel");
-const admins = require("../models/adminModel");
-const bcrypt = require("bcrypt");
+const {customers} = require("../model/customer");
+const {restaurants} = require("../model/restaurant");
+const {admins} = require("../model/admin");
+const {bcrypt} = require("bcrypt");
 
 exports.checkEmail = async (req, res) => {
     try {

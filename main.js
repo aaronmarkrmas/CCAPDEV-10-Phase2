@@ -122,8 +122,8 @@ app.use("/restaurant", rr_sideBar);
 const r_getRestoReviews = require("./routes/r_getRestoReviews");
 app.use("/", r_getRestoReviews); 
 
-const r_login = require("./routes/r_login");
-app.use("/", r_login);
+// const r_login = require("./routes/r_login");
+// app.use("/", r_login);
 
 
 
