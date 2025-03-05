@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const reviewSchema = new mongoose.Schema({
     _id: String, // Unique ID for the review
     restaurantId: { type: String, required: true }, // The restaurant being reviewed
-    customerName: { type: String, required: true }, // Name of the reviewer
+    customerEmail: { type: String, required: true }, // Name of the reviewer
     rating: { type: Number, required: true, min: 1, max: 5 }, // Rating (1-5)
     reviewText: { type: String, required: true }, // Review content
     like: { type: Number, required: true, default: 0 },

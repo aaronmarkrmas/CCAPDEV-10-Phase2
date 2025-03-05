@@ -62,8 +62,73 @@
   <!-- New Reviews Container -->
   <div id="reviews-container" class="reviews-container">
     <div id="reviews-list" class="reviews-list">
-      <!-- Review posts will be dynamically inserted here -->
-    </div>
+      <% if (reviews.length === 0) { %>
+          <p>No reviews yet.</p>
+      <% } else { %>
+          <% reviews.forEach(review => { %>
+              <div class="review-post">
+                  <div class="review-post-details">
+                      <img class="review-user-photo" src="<%= customerPfps[review.customerEmail] %>" alt="User Photo">
+                      <div class="review-info">
+                        <p class="review-user-name"><%= customerUsernames[review.customerEmail] %></p>
+                        <p class="review-meta"><%= new Date(review.datePosted).toLocaleDateString() %> 
+                              <% if (review.edited) { %>| Edited<% } %>
+                          </p>
+                          <div class="review-rating">
+                              <% for (let i = 0; i < Math.floor(review.rating); i++) { %>
+                                  <i class="fa-solid fa-star" style="color: #ffcd3c;"></i>
+                              <% } %>
+                              <% for (let i = Math.floor(review.rating); i < 5; i++) { %>
+                                  <i class="fa-regular fa-star" style="color: #ccc;"></i>
+                              <% } %>
+                          </div>
+                      </div>
+                  </div>
+                  <h1 class="review-title">Customer Review</h1>
+                  <p class="review-text"><%= review.reviewText %></p>
+  
+                  <!-- Media Section -->
+                  <% if (review.media.length > 0) { %>
+                      <div class="media-section">
+                          <% review.media.forEach(mediaItem => { %>
+                              <% if (mediaItem.endsWith('.mp4')) { %>
+                                  <video controls width="100px" height="100px">
+                                      <source src="<%= mediaItem %>" type="video/mp4">
+                                  </video>
+                              <% } else { %>
+                                  <img src="<%= mediaItem %>" width="100px" height="100px" style="border-radius: 8px;">
+                              <% } %>
+                          <% }); %>
+                      </div>
+                  <% } %>
+  
+                  <!-- Reply Section -->
+                  <% if (review.replies.length > 0) { %>
+                      <div class="reply-container">
+                          <% review.replies.forEach(reply => { %>
+                              <div class="reply-post">
+                                  <div class="review-post-details">
+                                      <div class="reply-header">
+                                          <p class="review-user-name"><%= reply.restoUserName %></p>
+                                          <p class="review-meta"><%= new Date(reply.replyDatePosted).toLocaleDateString() %> 
+                                              <% if (reply.replyEdited) { %>| Edited<% } %>
+                                          </p>
+                                      </div>
+                                  </div>
+                                  <p class="review-text"><%= reply.replyText %></p>
+                              </div>
+                          <% }); %>
+                          <!-- Reply Button (Redirect to restoReplyPage) -->
+                          <button class="reply-button" onclick="redirectToReplyPage('<%= restaurant._id %>', '<%= review._id %>')">
+                            Reply
+                        </button>
+                      </div>
+                  <% } %>
+              </div>
+          <% }); %>
+      <% } %>
+  </div>
+
   </div>
 </div>
 
