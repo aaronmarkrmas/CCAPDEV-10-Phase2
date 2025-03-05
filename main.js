@@ -122,15 +122,11 @@ app.use("/restaurant", rr_sideBar);
 const r_getRestoReviews = require("./routes/r_getRestoReviews");
 app.use("/", r_getRestoReviews); 
 
-<<<<<<< Updated upstream
-// const r_login = require("./routes/r_login");
-// app.use("/", r_login);
+ const r_login = require("./routes/r_login");
+ app.use("/", r_login);
 
-
-=======
 const r_homepage = require('./routes/r_getRestos');
 app.use('/', r_homepage);
->>>>>>> Stashed changes
 
 const r_SuLi = require('./routes/r_suli');
 app.use('/', r_SuLi);
