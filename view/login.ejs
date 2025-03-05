@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="login_page_style.css">
+</head>
+<body>
+    <!-- Main Content Area --> 
+    <div class="login-container">
+        <h2>Login</h2>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button>login</button>
+        <p class="signup-text">No account yet? <a href="signup.html">Sign up</a></p> <!-- Link to signup page -->
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("login-btn").addEventListener("click", async function () {
+                let email = document.getElementById("email").value;
+                let password = document.getElementById("password").value;
+    
+                if (!email || !password) {
+                    alert("Please enter both email and password.");
+                    return;
+                }
+    
+                try {
+                    // Send login request to the server
+                    let response = await fetch("/login", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ email, password })
+                    });
+    
+                    let result = await response.json();
+    
+                    if (!response.ok) {
+                        alert(result.error);
+                        return;
+                    }
+    
+                    alert("Login successful!");
+    
+                    // Redirect based on user type
+                    if (result.userType === "customer") {
+                        //window.location.href = "/customer-dashboard";
+                    } else if (result.userType === "restaurant") {
+                        //window.location.href = "/restaurant-dashboard";
+                    } else if (result.userType === "admin") {
+                        //window.location.href = "/admin-dashboard";
+                    }
+                } catch (error) {
+                    console.error("Login error:", error);
+                    alert("An error occurred. Please try again later.");
+                }
+            });
+        });
+    </script>
+  </div>
+</body>
+</html>
