@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Edit Restaurant Profile</title>
@@ -7,73 +7,87 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../public/css/edit_resto_profile_style.css">
+  <link rel="stylesheet" href="/css/edit_resto_profile_style.css">
 </head>
 <body>
+
   <!-- Sidebar -->
   <div class="sidebar">
     <div class="logo">
-      <img src="../public/images/logo.png" alt="Bloemen Bites Logo">
+      <img src="/images/logo.png" alt="Bloemen Bites Logo">
     </div>
     <div class="navigation">
-      <a onclick="openProfile()">
+      <a href="/restaurant/<%= encodeURIComponent(restaurant._id) %>/profile">
         <i class="fa-solid fa-user" style="color: #003399;"></i>
         <p>Profile</p>
-      </a>
-      <a onclick="logout()">
+      </a>     
+      <a href="/restoLogin">
         <i class="fa-solid fa-arrow-right-from-bracket" style="color: #fc6467;"></i>
         <p>Logout</p>
-      </a>
+      </a>    
     </div>
   </div>
 
   <!-- Main Content Area -->
   <div class="content">
-    <h1 id="edit_profile">Edit Profile</h1>
-    <form id="edit-profile-form" action="/restaurant/<%= restaurant.email %>/updateProfile" method="POST" enctype="multipart/form-data">
+    <h1>Edit Profile</h1>
+    
+    <form id="edit-profile-form" 
+          action="/restaurant/<%= encodeURIComponent(restaurant._id) %>/updateProfile" 
+          method="POST" 
+          enctype="multipart/form-data">
+      
       <!-- Profile Picture -->
       <div class="form-group">
           <label for="profile-picture">Profile Picture</label>
           <div class="profile-picture-container">
-              <img id="profile-picture-preview" src="<%= restaurant.pfp ? '/uploads/' + restaurant.pfp : '/images/pfp.png' %>" alt="Profile Picture">
+              <img id="profile-picture-preview" 
+                   src="<%= restaurant.pfp && restaurant.pfp.data 
+                         ? 'data:' + restaurant.pfp.contentType + ';base64,' + restaurant.pfp.data.toString('base64') 
+                         : '/images/pfp.png' %>" 
+                   alt="Profile Picture">
               <input type="file" id="profile-picture" name="pfp" accept="image/*" onchange="previewImage(event)">
           </div>
       </div>
-  
+
       <!-- Username -->
       <div class="form-group">
-          <label for="username">Username</label>
-          <textarea id="username" name="restoName" rows="1"><%= restaurant.restoName || '' %></textarea>
+          <label for="restoName">Username</label>
+          <input type="text" id="restoName" name="restoName" value="<%= restaurant.restoName || '' %>">
       </div>
-  
+
       <!-- Description -->
       <div class="form-group">
           <label for="description">Description</label>
-          <textarea id="description" name="description" rows="5"><%= restaurant.description || '' %></textarea>
+          <textarea id="description" name="description"><%= restaurant.description || '' %></textarea>
       </div>
-  
+
       <!-- Location -->
       <div class="form-group">
           <label for="location">Location</label>
-          <textarea id="location" name="location" rows="1"><%= restaurant.location || '' %></textarea>
+          <input type="text" id="location" name="location" value="<%= restaurant.location || '' %>">
       </div>
-  
+
       <!-- Contact Number -->
       <div class="form-group">
-          <label for="contact">Contact Number</label>
-          <textarea id="contact" name="phone" rows="1"><%= restaurant.phone || '' %></textarea>
+          <label for="phone">Contact Number</label>
+          <input type="text" id="phone" name="phone" value="<%= restaurant.phone || '' %>">
       </div>
-  
+
       <!-- Password -->
       <div class="form-group">
           <label for="password">Update Password</label>
-          <textarea id="password" name="password" rows="1"></textarea>
+          <input type="password" id="password" name="password">
       </div>
-  
+
       <!-- Submit Button -->
       <button type="submit">Save Changes</button>
-  </form>  
+    </form>
+
   </div>
-  <script src="../public/js/edit_resto_profile_script.js"></script>
+
+  <!-- Reference External JS File -->
+  <script src="/js/editRestoProfile_script.js"></script>
+
 </body>
 </html>
