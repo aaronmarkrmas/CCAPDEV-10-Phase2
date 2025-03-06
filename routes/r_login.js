@@ -2,10 +2,10 @@ const express = require("express");
 const router = express.Router();
 const loginController = require("../controller/cr_login");
 
-// Route to check if an email exists in any model
-router.get("/login/check-email", loginController.checkEmail);
+// Route to render the login page
+router.get("/login", loginController.getLoginPage);
 
-// Route to handle login submission (POST request)    
-router.post("/login", loginController.handleLogin);
+// Route to handle user authentication
+router.post("/login", loginController.authenticateUser);
 
 module.exports = router;
