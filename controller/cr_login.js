@@ -1,37 +1,16 @@
-const {customers} = require("../model/customer");
-const {restaurants} = require("../model/restaurant");
-const {admins} = require("../model/admin");
-const {bcrypt} = require("bcrypt");
+const { customers } = require("../model/customer");
+const { restaurants } = require("../model/restaurant");
+const { admins } = require("../model/admin");
+const bcrypt = require("bcrypt");
 
-exports.checkEmail = async (req, res) => {
-    try {
-        const { email } = req.query;
-        if (!email) return res.status(400).json({ error: "Email is required" });
-
-        let user = await customers.findOne({ email: email });
-        let userType = "customer";
-
-        if (!user) {
-            user = await restaurants.findOne({ email: email });
-            userType = "restaurant";
-        }
-
-        if (!user) {
-            user = await admins.findOne({ email: email });
-            userType = "admin";
-        }
-
-        if (!user) return res.status(404).json({ error: "Email not found" });
-
-        res.json({ email: user.email, password: user.password, userType: userType });
-    } catch (error) {
-        res.status(500).json({ error: "Server error" });
-    }
+exports.getLoginPage = (req, res) => {
+    res.render("login");
 };
 
-exports.handleLogin = async (req, res) => {
+exports.authenticateUser = async (req, res) => {
     try {
         const { email, password } = req.body;
+        if (!email) return res.status(400).json({ error: "Email is required" });
 
         let user = await customers.findOne({ email });
         let userType = "customer";
@@ -48,17 +27,21 @@ exports.handleLogin = async (req, res) => {
 
         if (!user) return res.status(404).json({ error: "Email not found" });
 
-        // Compare hashed password
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(401).json({ error: "Incorrect password" });
+        // If password is provided, handle login
+        if (password) {
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch) return res.status(401).json({ error: "Incorrect password" });
 
-        // Store user session
-        req.session.user = {
-            email: user.email,
-            userType: userType
-        };
+            req.session.user = {
+                email: user.email,
+                userType: userType
+            };
 
-        res.json({ success: true, userType: userType });
+            return res.json({ success: true, userType: userType });
+        }
+
+        // If no password is provided, just return email details
+        res.json({ email: user.email, userType: userType });
     } catch (error) {
         res.status(500).json({ error: "Server error" });
     }
