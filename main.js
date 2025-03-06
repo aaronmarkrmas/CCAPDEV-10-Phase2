@@ -134,8 +134,11 @@ app.use('/', r_SuLi);
 const r_accounttype_creation = require('./routes/r_accounttype_creation');
 app.use('/',r_accounttype_creation);
 
-const replyRoutes = require("./routes/r_deleteReply");
-app.use(replyRoutes);
+const r_replyResto = require('./routes/r_replyResto'); // Import reply routes
+app.use('/', r_replyResto); // Use the reply routes
+
+const r_deleteReply = require("./routes/r_deleteReply");
+app.use(r_deleteReply);
 
 // Start Server **after GridFS is Ready**     
 app.listen(PORT, () => {

@@ -8,27 +8,22 @@ exports.viewProfile = async (req, res) => {
         const { email } = req.params;
         console.log(`Fetching profile for: ${email}`);
 
-        // Fetch restaurant details
         const restaurant = await restaurants.findOne({ _id: email });
         if (!restaurant) {
             console.log("Restaurant not found!");
             return res.status(404).json({ error: "Restaurant not found" });
         }
 
-        // Convert tags string to array
         const tagsArray = restaurant.tags.split(",").map(tag => tag.trim());
 
-        // Fetch reviews associated with the restaurant
         const restaurantReviews = await reviews.find({ restaurantId: email });
 
-        // Extract customer emails from reviews
         const customerEmails = restaurantReviews.map(review => review.customerEmail);
         const customersData = await customers.find(
             { email: { $in: customerEmails } }, 
             "email username pfp"
         );
 
-        // Convert customer pfp & username into lookup dictionaries
         const customerPfps = {};
         const customerUsernames = {};
 

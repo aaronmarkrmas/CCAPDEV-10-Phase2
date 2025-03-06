@@ -298,11 +298,15 @@ body {
 .reply-link {
     font-size: 0.7rem;
     color: #0073e6;
-    cursor: pointer;
     font-family: "Poppins", serif;
     font-weight: 400;
     font-style: normal;
     margin-left: 835px;
+    display: inline-block !important; 
+    cursor: pointer !important;
+    text-decoration: underline !important;
+    position: relative;
+    z-index: 100;
 }
 
 .reply-link:hover {
@@ -419,7 +423,7 @@ body {
     font-style: normal;
     text-align: left;
     margin-top: 54px;
-    margin-left: -140px;
+    margin-left: -302px;
   }
   
   .reply-post .review-text {
