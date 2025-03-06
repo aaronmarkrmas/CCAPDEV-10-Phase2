@@ -134,6 +134,9 @@ app.use('/', r_SuLi);
 const r_accounttype_creation = require('./routes/r_accounttype_creation');
 app.use('/',r_accounttype_creation);
 
+const replyRoutes = require("./routes/r_deleteReply");
+app.use(replyRoutes);
+
 // Start Server **after GridFS is Ready**     
 app.listen(PORT, () => {
     console.log(`Server started at http://localhost:${PORT}`);
