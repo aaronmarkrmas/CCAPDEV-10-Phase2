@@ -73,8 +73,6 @@ body {
     background-color: white;
     border-radius: 10px;
     margin-right: 40px;
-
-    width: 950px;
 }
   
   .review-post {
@@ -86,6 +84,9 @@ body {
     border-radius: 8px;
     background-color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 920px;
+    margin-left: 17px;
+    margin-bottom: 30px;
   }
 
    .media-section {
@@ -217,8 +218,9 @@ body {
     cursor: pointer;
     transition: background-color 0.2s ease;
     position: absolute;
-    bottom: 8px;
-    right: 20px;
+    bottom: 20px;
+    right: 58px;
+
   }
 
   .reply-container button:hover {

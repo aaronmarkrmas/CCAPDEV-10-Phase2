@@ -18,7 +18,7 @@
         <i class="fa-solid fa-user" style="color: #003399;"></i>
         <p>Profile</p>
       </a>
-      <a href="/logout">
+      <a href="/suli">
         <i class="fa-solid fa-arrow-right-from-bracket" style="color: #fc6467;"></i>
         <p>Logout</p>
       </a>
@@ -32,16 +32,40 @@
     <!-- Review Container -->
     <div class="review-container">
       <div class="review-post">
-        <div class="review-details">
+        <div class="review-post-details">
           <img class="review-user-photo" src="<%= customerPfps[review.customerEmail] || '/images/default-user.png' %>" alt="User Photo">
           <div class="review-info">
             <p class="review-user-name"><%= customerUsernames[review.customerEmail] %></p>
             <p class="review-meta"><%= new Date(review.datePosted).toLocaleDateString() %> 
               <% if (review.edited) { %> | Edited <% } %>
             </p>
+            <div class="review-rating">
+                <% for (let i = 0; i < Math.floor(review.rating); i++) { %>
+                    <i class="fa-solid fa-star" style="color: #ffcd3c;"></i>
+                <% } %>
+                <% for (let i = Math.floor(review.rating); i < 5; i++) { %>
+                    <i class="fa-regular fa-star" style="color: #ccc;"></i>
+                <% } %>
+            </div>
           </div>
         </div>
+        <h1 class="review-title"><%= review.reviewTitle %></h1>
         <p class="review-text"><%= review.reviewText %></p>
+
+        <!-- Media Section -->
+        <% if (review.media.length > 0) { %>
+          <div class="media-section">
+            <% review.media.forEach(mediaItem => { %>
+              <% if (mediaItem.endsWith('.mp4')) { %>
+                <video controls width="100px" height="100px">
+                  <source src="<%= mediaItem %>" type="video/mp4">
+                </video>
+              <% } else { %>
+                <img src="<%= mediaItem %>" width="100px" height="100px" style="border-radius: 8px;">
+              <% } %>
+            <% }); %>
+          </div>
+        <% } %>
       </div>
     </div>
 
@@ -54,8 +78,6 @@
       </div>
     </form>
   </div>
-
-  <script src="/js/restoReply_script.js"></script>
 
 </body>
 </html>
