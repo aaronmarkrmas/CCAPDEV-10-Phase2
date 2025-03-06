@@ -16,12 +16,12 @@ exports.authenticateUser = async (req, res) => {
         let userType = "customer";
 
         if (!user) {
-            user = await restaurants.findOne({ email });
+            user = await restaurants.findOne({ _id: email });
             userType = "restaurant";
         }
 
         if (!user) {
-            user = await admins.findOne({ email });
+            user = await admins.findOne({ _id: email });
             userType = "admin";
         }
 
@@ -29,11 +29,19 @@ exports.authenticateUser = async (req, res) => {
 
         // If password is provided, handle login
         if (password) {
+            console.log("Inputted Password (Plain Text):", password); // Log raw input
+            console.log("Stored Password Hash:", user.password); // Log hashed password from DB
+
             const isMatch = await bcrypt.compare(password, user.password);
-            if (!isMatch) return res.status(401).json({ error: "Incorrect password" });
+            if (!isMatch) {
+                console.log("Password mismatch! ❌");
+                return res.status(401).json({ error: "Incorrect password" });
+            }
+
+            console.log("Password matched! ✅");
 
             req.session.user = {
-                email: user.email,
+                email: user.email || user._id, // Ensure email consistency
                 userType: userType
             };
 
@@ -41,8 +49,11 @@ exports.authenticateUser = async (req, res) => {
         }
 
         // If no password is provided, just return email details
-        res.json({ email: user.email, userType: userType });
+        res.json({ email: user.email || user._id, userType: userType });
+
     } catch (error) {
+        console.error("Authentication error:", error);
         res.status(500).json({ error: "Server error" });
     }
 };
+
