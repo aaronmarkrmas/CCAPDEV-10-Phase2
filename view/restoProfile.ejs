@@ -75,7 +75,7 @@
               
                       <!-- Dropdown (Initially Hidden) -->
                       <div class="reply-options-dropdown" id="dropdown-<%= review._id %>" style="display: none; position: absolute; top: 20px; right: 0; background: white; border: 1px solid #ccc; padding: 5px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
-                        <a href="/restaurant/<%= encodeURIComponent(restaurant._id) %>/review/<%= encodeURIComponent(review._id) %>/edit-reply" class="edit-reply-option">
+                        <a href="/restaurant/<%= encodeURIComponent(restaurant._id) %>/review/<%= encodeURIComponent(review._id) %>/reply/<%= encodeURIComponent(repliesMap[review._id][0]._id) %>/edit-reply" class="edit-reply-option">
                           Edit Reply
                         </a>
                         <a href="#" class="delete-reply-option" data-review-id="<%= review._id %>">

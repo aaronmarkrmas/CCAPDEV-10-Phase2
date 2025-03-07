@@ -107,7 +107,6 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "view"));
 app.use(express.static(path.join(__dirname, "public")));
 
-// Ensure GridFS is initialized **before** routes are registered
 initGridFS.then(({ upload }) => {
     app.locals.upload = upload;
     module.exports = { initGridFS, upload }; 
@@ -134,13 +133,15 @@ app.use('/', r_SuLi);
 const r_accounttype_creation = require('./routes/r_accounttype_creation');
 app.use('/',r_accounttype_creation);
 
-const r_replyResto = require('./routes/r_replyResto'); // Import reply routes
-app.use('/', r_replyResto); // Use the reply routes
+const r_replyResto = require('./routes/r_replyResto'); 
+app.use('/', r_replyResto); 
 
 const r_deleteReply = require("./routes/r_deleteReply");
 app.use(r_deleteReply);
 
-// Start Server **after GridFS is Ready**     
+const r_editReply = require("./routes/rr_editReply");
+app.use("/", r_editReply);
+
 app.listen(PORT, () => {
     console.log(`Server started at http://localhost:${PORT}`);
 });

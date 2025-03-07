@@ -128,7 +128,6 @@ function updateProfile(photo, name, email, tags, description, rating = 0) {
       .catch((error) => console.error("Error deleting reply:", error));
   }
   
-  // Function to edit a reply (redirect to edit page)
   function editReply(reviewId) {
     window.location.href = `/restaurant/review/${reviewId}/edit-reply`;
   }

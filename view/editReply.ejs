@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Reply</title>
+  <script src="https://kit.fontawesome.com/e9d3d528d3.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="/css/resto_reply_style.css">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">
+      <img src="/images/logo.png" alt="Bloemen Bites Logo">
+    </div>
+    <div class="navigation">
+      <a href="/restaurant/<%= encodeURIComponent(restaurant._id) %>/profile">
+        <i class="fa-solid fa-user" style="color: #003399;"></i>
+        <p>Profile</p>
+      </a>
+      <a href="/logout">
+        <i class="fa-solid fa-arrow-right-from-bracket" style="color: #fc6467;"></i>
+        <p>Logout</p>
+      </a>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="content">
+    <h2>Edit Your Reply</h2>
+
+    <!-- Review Container -->
+    <div class="review-post">
+      <div class="review-post-details">
+        <img class="review-user-photo" src="<%= customerPfps[review.customerEmail] || '/images/default-user.png' %>" alt="User Photo">
+        <div class="review-info">
+          <p class="review-user-name"><%= customerUsernames[review.customerEmail] %></p>
+          <p class="review-meta"><%= new Date(review.datePosted).toLocaleDateString() %> 
+            <% if (review.edited) { %> | Edited <% } %>
+          </p>
+          <div class="review-rating">
+            <% for (let i = 0; i < Math.floor(review.rating); i++) { %>
+                <i class="fa-solid fa-star" style="color: #ffcd3c;"></i>
+            <% } %>
+            <% for (let i = Math.floor(review.rating); i < 5; i++) { %>
+                <i class="fa-regular fa-star" style="color: #ccc;"></i>
+            <% } %>
+        </div>
+        </div>
+      </div>
+      <h1 class="review-title"><%= review.reviewTitle %></h1>
+      <p class="review-text"><%= review.reviewText %></p>
+    </div>
+
+    <!-- Edit Reply Container -->
+    <% if (reply) { %>
+      <form action="/restaurant/<%= encodeURIComponent(restaurant._id) %>/review/<%= encodeURIComponent(review._id) %>/reply/<%= encodeURIComponent(reply._id) %>/edit-reply" method="POST">
+        <div class="reply-container">
+          <label for="reply-textbox">Edit Your Reply:</label>
+          <textarea id="reply-textbox" name="replyText" required><%= reply.replyText %></textarea>
+          <button id="submit-reply-btn" type="submit">Update Reply</button>
+        </div>
+      </form>
+    <% } else { %>
+      <p class="no-reply">No reply found for this review.</p>
+    <% } %>
+
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const replyTextbox = document.getElementById("reply-textbox");
+      const submitButton = document.getElementById("submit-reply-btn");
+
+      function checkInput() {
+        submitButton.disabled = replyTextbox.value.trim() === "";
+      }
+
+      replyTextbox.addEventListener("input", checkInput);
+      checkInput();
+    });
+  </script>
+
+</body>
+</html>
