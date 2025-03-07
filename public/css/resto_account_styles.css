@@ -298,30 +298,69 @@ body {
 .reply-link {
     font-size: 0.7rem;
     color: #0073e6;
-    cursor: pointer;
     font-family: "Poppins", serif;
     font-weight: 400;
     font-style: normal;
     margin-left: 835px;
+    display: inline-block !important; 
+    cursor: pointer !important;
+    text-decoration: underline !important;
+    position: relative;
+    z-index: 100;
 }
 
 .reply-link:hover {
     text-decoration: underline;
 }
 
-.edit-reply-link {
+.ellipsis-container {
     font-size: 0.7rem;
-    color: #0073e6;
     cursor: pointer;
     font-family: "Poppins", serif;
     font-weight: 400;
     font-style: normal;
-    margin-left: 825px;
+    margin-left: 250px;
 }
 
-.edit-reply-link:hover {
-    text-decoration: underline;
+
+.reply-options-icon {
+    font-size: 18px;
+    cursor: pointer;
 }
+
+.reply-options-dropdown {
+    display: none;
+    position: absolute;
+    top: 20px;
+    right: 0;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    z-index: 1000;
+}
+
+.reply-options-dropdown a,
+.reply-options-dropdown button {
+    display: block;
+    width: 100%;
+    padding: 8px 12px;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
+}
+
+.reply-options-dropdown a:hover,
+.reply-options-dropdown button:hover {
+    background-color: #f0f0f0;
+}
+
+
+
   
 .review-title {
     margin-top: 10px;
@@ -384,7 +423,7 @@ body {
     font-style: normal;
     text-align: left;
     margin-top: 54px;
-    margin-left: -140px;
+    margin-left: -302px;
   }
   
   .reply-post .review-text {
@@ -413,6 +452,8 @@ body {
   .reply-options-icon:hover {
     color: #000;
   }
+  
+
   
   
 

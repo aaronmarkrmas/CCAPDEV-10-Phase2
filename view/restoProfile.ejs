@@ -17,7 +17,7 @@
       <img src="/images/logo.png" alt="Bloemen Bites Logo">
     </div>
     <div class="navigation">
-        <a href="/logout">
+        <a href="/suli">
             <i class="fa-solid fa-arrow-right-from-bracket" style="color: #fc6467;"></i>
             <p>Logout</p>
         </a>
@@ -67,18 +67,30 @@
       <% } else { %>
           <% reviews.forEach(review => { %>
               <div class="review-post">
-                      <% if (repliesMap[review._id] && repliesMap[review._id].length > 0) { %>
-                        <!-- If a reply exists, show 'Edit Reply' button -->
-                        <a href="/restaurant/<%= encodeURIComponent(restaurant._id) %>/review/<%= encodeURIComponent(review._id) %>/edit-reply" class="edit-reply-link">
-                            Edit Reply
+                <% if (repliesMap[review._id] && repliesMap[review._id].length > 0) { %>
+              
+                  <!-- Ellipsis (only if a reply exists) -->
+                  <div class="ellipsis-container" style="position: relative; display: inline-block;">
+                      <i class="fa-solid fa-ellipsis reply-options-icon" data-review-id="<%= review._id %>" style="cursor: pointer;"></i>
+              
+                      <!-- Dropdown (Initially Hidden) -->
+                      <div class="reply-options-dropdown" id="dropdown-<%= review._id %>" style="display: none; position: absolute; top: 20px; right: 0; background: white; border: 1px solid #ccc; padding: 5px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+                        <a href="/restaurant/<%= encodeURIComponent(restaurant._id) %>/review/<%= encodeURIComponent(review._id) %>/reply/<%= encodeURIComponent(repliesMap[review._id][0]._id) %>/edit-reply" class="edit-reply-option">
+                          Edit Reply
                         </a>
-                      <% } else { %>
-                        <!-- If no reply exists, show 'Reply' button -->
-                        <a href="/restaurant/<%= encodeURIComponent(restaurant._id) %>/review/<%= encodeURIComponent(review._id) %>/reply" class="reply-link">
-                            Reply
+                        <a href="#" class="delete-reply-option" data-review-id="<%= review._id %>">
+                          Delete Reply
                         </a>
-                      <% } %>
-                       
+                      </div>
+                  </div>
+              <% } else { %>
+                  <!-- Reply Button -->
+                  <a href="/restaurant/<%= encodeURIComponent(restaurant._id) %>/review/<%= encodeURIComponent(review._id) %>/reply" class="reply-link">
+                      Reply
+                  </a>
+              <% } %>
+              
+              
                       <div class="review-post-details">
                       <img class="review-user-photo" src="<%= customerPfps[review.customerEmail] %>" alt="User Photo">
                       <div class="review-info">
@@ -96,7 +108,7 @@
                           </div>
                       </div>
                   </div>
-                  <h1 class="review-title">Customer Review</h1>
+                  <h1 class="review-title"><%= review.reviewTitle %></h1>
                   <p class="review-text"><%= review.reviewText %></p>
   
                   <!-- Media Section -->

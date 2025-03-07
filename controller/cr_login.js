@@ -16,12 +16,12 @@ exports.authenticateUser = async (req, res) => {
         let userType = "customer";
 
         if (!user) {
-            user = await restaurants.findOne({ email });
+            user = await restaurants.findOne({ _id: email });
             userType = "restaurant";
         }
 
         if (!user) {
-            user = await admins.findOne({ email });
+            user = await admins.findOne({ _id: email });
             userType = "admin";
         }
 
@@ -43,6 +43,7 @@ exports.authenticateUser = async (req, res) => {
         // If no password is provided, just return email details
         res.json({ email: user.email, userType: userType });
     } catch (error) {
+        console.error("Authentication error:", error);
         res.status(500).json({ error: "Server error" });
     }
 };

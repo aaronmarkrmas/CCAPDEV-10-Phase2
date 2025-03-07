@@ -6,6 +6,7 @@ const reviewSchema = new mongoose.Schema({
     restaurantId: { type: String, required: true }, // The restaurant being reviewed
     customerEmail: { type: String, required: true }, // Name of the reviewer
     rating: { type: Number, required: true, min: 1, max: 5 }, // Rating (1-5)
+    reviewTitle: { type: String, required: true }, // Review title
     reviewText: { type: String, required: true }, // Review content
     like: { type: Number, required: true, default: 0 },
     dislikes: { type: Number, required: true, default: 0 },
