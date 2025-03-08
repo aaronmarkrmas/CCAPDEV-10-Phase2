@@ -11,3 +11,11 @@ Examples:
     ra_getReports
     rr_createAccount
 
+
+Jansen TODO:
+fix reply resto - add reviewer pfp
+fix edit reply - add reviewer pfp
+fix the resto profile - add the media in reviews
+add the backend of the edit customer profile
+add the backend of the view reports of admins
+

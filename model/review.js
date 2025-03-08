@@ -15,6 +15,5 @@ const reviewSchema = new mongoose.Schema({
     edited: { type: Boolean, default: false }, // Edited status
 }, { collection: "reviews" });
 
-module.exports = {
-    reviews: mongoose.model('reviews', reviewSchema),
-};
+const Review = mongoose.model("Review", reviewSchema); 
+module.exports = Review; 

@@ -29,7 +29,7 @@
   <div class="profile-section">
     <!-- Profile Photo and Button -->
     <div class="profile-photo-section">
-      <img id="profile-photo" src="/profile-pics/<%= restaurant._id.replace('@', '_') %>.png" alt="Profile Photo">
+      <img src="/profile-pics/<%= restaurant._id %>" alt="Restaurant Profile Picture">
       <button class="editpfp-button" onclick="window.location.href='/restaurant/<%= encodeURIComponent(restaurant._id) %>/updateProfile'">
         Edit Profile
       </button>

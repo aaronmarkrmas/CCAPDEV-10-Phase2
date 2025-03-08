@@ -1,40 +1,44 @@
-// cr_restoSignup.js (Controller File)
-const mongoose = require("mongoose");
-const { tags } = require("../model/tag");
 const Restaurant = require("../model/restaurant");
 
-exports.getSignupPage = async (req, res) => {
-    try {
-        const allTags = await tags.find();
-        res.render("restoSignup", { tags: allTags, errors: {} });
-    } catch (error) {
-        res.status(500).send("Error loading signup page.");
-    }
-};
-
-exports.handleSignup = async (req, res) => {
+const handleSignup = async (req, res) => {
     const { email, contactNumber, restaurantName, password, location, description, tags } = req.body;
-    const profilePic = req.file ? req.file.filename : null;
 
-    let errors = {};
-    if (!email) errors.email = "Email is required.";
-    if (!contactNumber) errors.contactNumber = "Contact number is required.";
-    if (!restaurantName) errors.restaurantName = "Restaurant name is required.";
-    if (!password) errors.password = "Password is required.";
+    // Ensure description is provided
+    if (!description) {
+        console.error("Error: Description is missing in request.");
+        return res.status(400).send("Description is required.");
+    }
 
-    if (Object.keys(errors).length > 0) {
-        const allTags = await tags.find();
-        return res.render("restoSignup", { tags: allTags, errors });
+    // Convert tags array to a string
+    const tagsString = Array.isArray(tags) ? tags.join(', ') : tags;
+
+    // Store image as binary
+    let profilePic = null;
+    if (req.file) {
+        profilePic = {
+            data: req.file.buffer,  
+            contentType: req.file.mimetype 
+        };
     }
 
     try {
-        const tagsString = Array.isArray(tags) ? tags.join(", ") : tags; // Convert to string if array
         const newResto = new Restaurant({
-            email, contactNumber, restaurantName, password, location, description, tags: tagsString, profilePic
+            _id: email,  
+            restoName: restaurantName,
+            password,
+            phone: contactNumber,
+            location,
+            description,
+            tags: tagsString,  // Convert array to string
+            pfp: profilePic
         });
+
         await newResto.save();
-        res.redirect(`/${email}/profile`);
+        res.redirect('/login');
     } catch (error) {
+        console.error(error);
         res.status(500).send("Error signing up.");
     }
 };
+
+module.exports = { handleSignup };

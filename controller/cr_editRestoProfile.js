@@ -1,10 +1,11 @@
-const { restaurants } = require('../model/restaurant');
+const Restaurant = require("../model/restaurant");
+const fs = require('fs');
 
 exports.getEditProfile = async (req, res) => {
     try {
         const { email } = req.params;
 
-        const restaurant = await restaurants.findOne({ _id: email }); 
+        const restaurant = await Restaurant.findOne({ _id: email }); 
 
         if (!restaurant) {
             console.log("Restaurant not found!"); 
@@ -19,49 +20,46 @@ exports.getEditProfile = async (req, res) => {
     }
 };
 
+
+// Handle updating the restaurant profile, including profile picture
 exports.updateProfile = async (req, res) => {
     try {
-        const { email } = req.params;
-        const { restoName, password, phone, description, location } = req.body;
+        const email = req.params.email;
 
-        console.log("Updating profile for:", email);
-        console.log("Received File in Controller:", req.file); // Debugging
-
-        const updatedRestaurant = await restaurants.findOneAndUpdate(
-            { _id: email },  // Find by email (_id)
-            {
-                ...(restoName && { restoName }),
-                ...(password && { password }),
-                ...(phone && { phone }),
-                ...(description && { description }),
-                ...(location && { location })
-            },
-            { new: true } // Return the updated document
-        );
-
-        if (!updatedRestaurant) {
-            console.log("Restaurant not found!");
+        // Find the restaurant by email
+        const restaurant = await Restaurant.findById(email);
+        
+        if (!restaurant) {
             return res.status(404).json({ error: "Restaurant not found" });
         }
 
+        // Update profile picture if it's provided
         if (req.file) {
-            if (!req.file.id) {
-                console.error("GridFS upload error: File ID is missing.");
-                return res.status(500).json({ error: "File upload failed." });
-            }
-            updatedRestaurant.pfp = {
-                data: req.file.id,
-                contentType: req.file.mimetype
+            console.log("Received file:", req.file);
+            console.log("Received file buffer:", req.file.buffer);  // Now, this should have the image buffer
+            restaurant.pfp = {
+                data: req.file.buffer,  // Store image as binary data in MongoDB
+                contentType: req.file.mimetype  // Store MIME type
             };
-            await updatedRestaurant.save();
-        }                
+        }
 
-        console.log("Profile updated successfully:", updatedRestaurant);
+        // Update other restaurant fields
+        restaurant.restoName = req.body.restoName || restaurant.restoName;
+        restaurant.description = req.body.description || restaurant.description;
+        restaurant.phone = req.body.phone || restaurant.phone;
+        restaurant.location = req.body.location || restaurant.location;
+        restaurant.password = req.body.password || restaurant.password;
 
-        // Redirect back to edit page
-        res.redirect(`/restaurant/${updatedRestaurant._id}/updateProfile`);
+        // Log before saving to check if the image data is correctly set
+        console.log("Profile data to be saved:", restaurant.pfp);
+
+        // Save the updated restaurant
+        await restaurant.save();
+
+        // Redirect back to the restaurant profile page
+        res.redirect(`/restaurant/${email}/profile`);
     } catch (error) {
-        console.error("Error updating profile:", error);
-        res.status(500).json({ error: "Failed to update restaurant profile" });
+        console.error("Error updating restaurant profile:", error);
+        res.status(500).json({ error: "An error occurred while updating the profile" });
     }
 };

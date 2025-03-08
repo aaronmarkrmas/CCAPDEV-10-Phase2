@@ -39,11 +39,11 @@
 
         <div class="upload-container">
             <input type="text" class="upload-text" placeholder="Upload Display Photo" readonly>
-            <input type="file" id="file-upload" accept="image/*" hidden>
+            <input type="file" id="file-upload" name="pfp" accept="image/*" hidden>
             <label for="file-upload" class="upload-icon">📤</label>
         </div>
         <input type="location" placeholder="Location" required>
-        <textarea placeholder="Short Description" rows="8"></textarea>
+        <textarea name="description" placeholder="Short Description" rows="8" required></textarea>
         
         <button>Sign Up</button>
     </form>

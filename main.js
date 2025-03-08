@@ -4,14 +4,14 @@
 // if your changes in main crashes the server, dont commit
 
 require("dotenv").config();
+require('events').EventEmitter.defaultMaxListeners = 15;
 
 const express = require("express");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const path = require("path");
-const { GridFsStorage } = require("multer-gridfs-storage");
 const multer = require("multer");
-const crypto = require("crypto");
+const Restaurant = require('./model/restaurant'); 
 
 // Init Express     
 const app = express();
@@ -34,55 +34,11 @@ mongoose.connect(MONGO_URI)
         process.exit(1); 
     });
 
-// Mongoose Connection
-const conn = mongoose.connection;
+// Multer Setup (No GridFS)
+const storage = multer.memoryStorage();  // Use memory storage to store files in memory as buffers
+const upload = multer({ storage });
 
-let gfs, gridfsBucket, upload;
-
-// Initialize GridFS **Before Exporting Anything**
-const initGridFS = new Promise((resolve, reject) => {
-    conn.once("open", () => {
-        console.log("Database connected successfully");
-
-        // Initialize GridFSBucket
-        gridfsBucket = new mongoose.mongo.GridFSBucket(conn.db, { bucketName: "uploads" });
-        gfs = gridfsBucket;
-
-        // Initialize GridFsStorage
-        const storage = new GridFsStorage({
-            url: MONGO_URI,
-            file: (req, file) => {
-                return new Promise((resolve, reject) => {
-                    crypto.randomBytes(16, (err, buf) => {
-                        if (err) {
-                            console.error("Error generating filename:", err);
-                            return reject(err);
-                        }
-                        const filename = buf.toString("hex") + path.extname(file.originalname);
-                        resolve({
-                            filename,
-                            bucketName: "uploads",
-                            metadata: { uploadedAt: new Date() } 
-                        });
-                    });
-                });
-            }
-        });
-        
-
-        storage.on("connection", () => console.log("GridFS storage initialized"));
-        storage.on("error", (err) => console.error("GridFS Storage Error:", err));
-
-        upload = multer({ storage });
-
-        resolve({ gfs, upload, gridfsBucket });
-    });
-
-    conn.on("error", (err) => reject(err));
-});
-
-// Export `initGridFS`
-module.exports = { initGridFS };
+module.exports = { upload };
 
 // Middlewares
 app.use(express.urlencoded({ extended: true }));  // Body parsing
@@ -107,9 +63,24 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "view"));
 app.use(express.static(path.join(__dirname, "public")));
 
-initGridFS.then(({ upload }) => {
-    app.locals.upload = upload;
-    module.exports = { initGridFS, upload }; 
+//pfp 
+app.get('/profile-pics/:restaurantId', async (req, res) => {
+    console.log('Fetching profile pic for:', req.params.restaurantId);
+
+    try {
+        const restaurant = await Restaurant.findById(req.params.restaurantId);
+        if (!restaurant || !restaurant.pfp || !restaurant.pfp.data) {
+            return res.status(404).send('No profile picture found');
+        }
+
+        res.set('Content-Type', restaurant.pfp.contentType); // Set correct MIME type
+        res.send(restaurant.pfp.data); // Send image data as response
+    } catch (err) {
+        console.error('Error fetching profile pic:', err);
+        res.status(500).send(err.message);
+    }
+});
+
 
 // Import routes
 const rr_editRestoProfile = require('./routes/rr_editRestoProfile');
@@ -146,12 +117,8 @@ const r_customer_homeFeed  = require("./routes/r_customer_homeFeed");
 app.use("/", r_customer_homeFeed);
 
 const rr_restoSignup = require("./routes/rr_restoSignup");
-app.use("/", rr_restoSignup);
+app.use("/restoSignup", rr_restoSignup);
 
 app.listen(PORT, () => {
     console.log(`Server started at http://localhost:${PORT}`);
 });
-}).catch(err => {
-    console.error("Error initializing GridFS:", err);
-});
-

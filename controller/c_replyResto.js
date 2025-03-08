@@ -1,7 +1,7 @@
-const { reviews } = require("../model/review");
-const { replies } = require("../model/reply");
-const { customers } = require("../model/customer");
-const { restaurants } = require("../model/restaurant");
+const Review = require("../model/review");
+const Reply = require("../model/reply");
+const Customer = require("../model/customer");
+const Restaurant = require("../model/restaurant");
 const { v4: uuidv4 } = require("uuid");
 
 // Load reply page with review data
@@ -10,19 +10,19 @@ exports.getReplyPage = async (req, res) => {
         const { restaurantId, reviewId } = req.params;
 
         // Fetch restaurant details
-        const restaurant = await restaurants.findOne({ _id: restaurantId });
+        const restaurant = await Restaurant.findOne({ _id: restaurantId });
         if (!restaurant) {
             return res.status(404).json({ error: "Restaurant not found" });
         }
 
         // Fetch the review
-        const review = await reviews.findOne({ _id: reviewId });
+        const review = await Review.findOne({ _id: reviewId });
         if (!review) {
             return res.status(404).json({ error: "Review not found" });
         }
 
         // Fetch customer data for displaying profile pictures and usernames
-        const customerData = await customers.findOne({ email: review.customerEmail });
+        const customerData = await Customer.findOne({ email: review.customerEmail });
         const customerPfps = {};
         const customerUsernames = {};
         if (customerData) {
@@ -50,13 +50,13 @@ exports.submitReply = async (req, res) => {
         }
 
         // Fetch restaurant name
-        const restaurant = await restaurants.findOne({ _id: restaurantId });
+        const restaurant = await Restaurant.findOne({ _id: restaurantId });
         if (!restaurant) {
             return res.status(404).json({ error: "Restaurant not found" });
         }
 
         // Create and save the reply
-        const newReply = new replies({
+        const newReply = Reply({
             _id: uuidv4(),
             reviewId,
             restoName: restaurant.restoName,

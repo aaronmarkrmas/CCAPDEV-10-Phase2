@@ -12,11 +12,10 @@ const restoAccSchema = new mongoose.Schema({
     rating: { type: Number, required: true, default: 0 },   
     location: {type: String, required: true, default: 'Br. Bloemen Hall'},
     pfp: {
-        data: { type: Buffer, required: true },
-        contentType: { type: String, required: true }
+        data: Buffer, // Store image as binary
+        contentType: String // Store MIME type (e.g., "image/png")
       }
 }, { collection: "restaurants"}); 
 
-module.exports = {
-    restaurants: mongoose.model('restaurants', restoAccSchema)
-};
+const Restaurant = mongoose.model("Restaurant", restoAccSchema);
+module.exports = Restaurant; 

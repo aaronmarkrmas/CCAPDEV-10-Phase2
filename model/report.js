@@ -7,6 +7,6 @@ const reportSchema = new mongoose.Schema({
     isResolved: { type: Boolean, required: true, default: false }
 });
 
-module.exports = {
-    reports:  mongoose.model('reports', reportSchema)
-};
+
+const Report = mongoose.model("Report", reportSchema); 
+module.exports = Report; 
