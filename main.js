@@ -142,6 +142,10 @@ app.use(r_deleteReply);
 const r_editReply = require("./routes/rr_editReply");
 app.use("/", r_editReply);
 
+const rr_restoSignup = require("./routes/rr_restoSignup");
+app.use("/", rr_restoSignup);
+
+
 app.listen(PORT, () => {
     console.log(`Server started at http://localhost:${PORT}`);
 });
