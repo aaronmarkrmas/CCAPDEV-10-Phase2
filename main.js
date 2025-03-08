@@ -95,6 +95,9 @@ app.use("/", r_getRestoReviews);
 const r_login = require("./routes/r_login");
 app.use("/", r_login);
 
+const r_search_username = require("./routes/r_search_username");
+app.use("/", r_search_username);
+
 const r_homepage = require('./routes/r_getRestos');
 app.use('/', r_homepage);
 
