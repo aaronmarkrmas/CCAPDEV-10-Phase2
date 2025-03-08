@@ -22,7 +22,7 @@
         <input type="email" id="email" placeholder="Email" required>
         <input type="password" id="password" placeholder="Password" required>
         <button id="login-btn">Login</button>
-        <p class="signup-text">No account yet? <a href="/signup">Sign up</a></p> <!-- Updated signup link -->
+        <p class="signup-text">No account yet? <a href="/accounttype_creation">Sign up</a></p> <!-- Updated signup link -->
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -56,11 +56,11 @@
     
                     // Redirect based on user type
                     if (result.userType === "customer") {
-                        //window.location.href = "/customer-dashboard";
+                        window.location.href = `/${encodeURIComponent(result.email)}/customer-home-feed`;
                     } else if (result.userType === "restaurant") {
-                        window.location.href = "/restaurant/sample%40restaurant.com/profile";
+                        window.location.href = `/restaurant/${encodeURIComponent(result._id)}/profile`;
                     } else if (result.userType === "admin") {
-                        //window.location.href = "/admin-dashboard";
+                        window.location.href = `/admin/${encodeURIComponent(result._id)}/profile`; // Placeholder
                     }
                 } catch (error) {
                     console.error("Login error:", error);

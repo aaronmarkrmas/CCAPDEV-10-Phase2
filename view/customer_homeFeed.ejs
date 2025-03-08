@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Feed</title>
+    <script src="https://kit.fontawesome.com/e9d3d528d3.js" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/customer_homeFeed_style.css">
+</head>
+<body>
+    <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">
+      <img src="/images/logo.png" alt="Bloemen Bites Logo">
+    </div>
+    <div class="navigation">
+      <a href="/<%= email %>/customer-home-feed">
+        <i class="fa-solid fa-magnifying-glass" style="color: #003399;"></i>
+        <p>Search</p>
+      </a>
+      <a onclick="updateContent('Reviews button clicked!')">
+        <i class="fa-solid fa-star" style="color: #003399;"></i>
+        <p>Reviews</p>
+      </a>
+      <a onclick="updateContent('Profile button clicked!')">
+        <i class="fa-solid fa-user" style="color: #003399;"></i>
+        <p>Profile</p>
+      </a>
+      <a onclick="updateContent('Logout button clicked!')">
+        <i class="fa-solid fa-arrow-right-from-bracket" style="color: #fc6467;"></i>
+        <p>Logout</p>
+      </a>
+    </div>
+  </div>
+  
+  <!-- Main Content Area -->
+  <div class="content">
+    <h1 style="color: #003399;">Welcome, <%= username %>!</h1>
+    <h1 style="color: #003399;">Find a restaurant</h1>
+
+    <div class="filter-container">
+      <div class="filter-buttons">
+          <% tags.slice(0, 4).forEach(tag => { %>
+              <button class="filter-button" onclick="filterByTag('<%= tag._id %>')"><%= tag._id %></button>
+          <% }); %>
+  
+          <% if (tags.length > 4) { %>
+              <button  onclick="toggleDropdown()">...</button>
+  
+              <div class="dropdown-menu hidden" id="tagDropdown"> 
+                  <% tags.slice(4).forEach(tag => { %>
+                      <button class="dropdown-item" onclick="filterByTag('<%= tag._id %>')"><%= tag._id %></button>
+                  <% }); %>
+              </div>
+          <% } %>
+          <button class="filter-button" onclick="resetFilter()" style="background-color: green;">Reset filters</button>
+
+      </div>
+  </div>
+
+    <form action="/<%= email %>/customer-home-feed" method="GET">
+        <div class="search-bar">
+            <input type="text" name="search" placeholder="Search for restaurants..." value="<%= search || '' %>">
+            <button type="submit">Search</button>
+        </div>
+    </form>
+
+    <div class="restaurant-list">
+        <% restaurants.forEach((restaurant) => { %>
+            <div class="restaurant-item">
+                <img src="<%= restaurant.pfp %>" alt="<%= restaurant.restoName %>">
+                <div class="restaurant-info">
+                    <h3><%= restaurant.restoName %></h3>
+                    <p><%= restaurant.tags %></p>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+</div>
+
+
+<script>
+  function toggleDropdown() {
+      const dropdown = document.getElementById("tagDropdown");
+      dropdown.classList.toggle("hidden");
+  }
+
+  function filterByTag(tag) {
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set('tag', tag); // Update tag filter in URL
+    window.location.search = urlParams.toString(); // Reload page with new filter
+}
+
+function resetFilter() {
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.delete('tag'); // Remove tag filter
+    window.location.search = urlParams.toString(); // Reload without tag filter
+}
+
+</script>
+
+
+</body>
+</html>
