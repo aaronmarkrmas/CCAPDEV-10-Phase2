@@ -225,3 +225,89 @@ body {
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
 }
+
+.filter-buttons {
+  display: flex;
+  gap: 10px; 
+  margin: 20px 0; 
+  position: relative;
+  left: 20px;
+}
+
+.filter-buttons button {
+  padding: 10px 20px;
+  font-family: "Poppins", serif;
+  font-size: 14px;
+  font-weight: 500; 
+  letter-spacing: 1px; 
+  border: none; 
+  color: white; 
+  border-radius: 14px; 
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.filter-buttons button:hover {
+  transform: scale(1.05); 
+}
+
+/* Specific Button Colors */
+.filter-buttons button:nth-child(1) {
+  background-color: #f0aa28;
+}
+
+.filter-buttons button:nth-child(2) {
+  background-color: #FF6B6B; 
+}
+
+.filter-buttons button:nth-child(3) {
+  background-color: #8573CB;
+}
+
+.filter-buttons button:nth-child(4) {
+  background-color: #8573CB;
+}
+
+.filter-buttons button:nth-child(5) {
+  background-color: #df7bce;
+}
+
+
+
+.more-tags {
+  background: none;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  color: #002878;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  border: 1px solid #ddd;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  z-index: 10;
+}
+
+.dropdown-item {
+  padding: 8px 16px;
+  border-radius: 16px;
+  background-color: #9370DB;
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
