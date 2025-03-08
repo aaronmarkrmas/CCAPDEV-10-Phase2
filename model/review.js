@@ -10,7 +10,10 @@ const reviewSchema = new mongoose.Schema({
     reviewText: { type: String, required: true }, // Review content
     like: { type: Number, required: true, default: 0 },
     dislikes: { type: Number, required: true, default: 0 },
-    media: [{ type: String }], // Array of image/video URLs
+    media: [{
+        data: Buffer, // Store image as binary
+        contentType: String // Store MIME type (e.g., "image/png")
+      }], 
     datePosted: { type: Date, default: Date.now }, // Timestamp
     edited: { type: Boolean, default: false }, // Edited status
 }, { collection: "reviews" });
