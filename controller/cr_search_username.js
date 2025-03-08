@@ -4,8 +4,6 @@ exports.getSearchUsernamePage = (req, res) => {
     res.render("search_username");
 };
 
-const { customers } = require("../model/customer");
-
 exports.getSearchUsernamePage = async (req, res) => {
     try {
         // Fetch all users from the database
