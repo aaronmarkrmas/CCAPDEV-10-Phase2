@@ -56,7 +56,7 @@
     
                     // Redirect based on user type
                     if (result.userType === "customer") {
-                        window.location.href = `/customer/${encodeURIComponent(result.email)}/profile`;
+                        window.location.href = `/${encodeURIComponent(result.email)}/customer-home-feed`;
                     } else if (result.userType === "restaurant") {
                         window.location.href = `/restaurant/${encodeURIComponent(result._id)}/profile`;
                     } else if (result.userType === "admin") {
