@@ -142,14 +142,11 @@ app.use(r_deleteReply);
 const r_editReply = require("./routes/rr_editReply");
 app.use("/", r_editReply);
 
-<<<<<<< HEAD
-const rr_restoSignup = require("./routes/rr_restoSignup");
-app.use("/", rr_restoSignup);
-
-=======
 const r_customer_homeFeed  = require("./routes/r_customer_homeFeed");
 app.use("/", r_customer_homeFeed);
->>>>>>> bc91e73ffb03b286782107d71b01b58085fa3430
+
+const rr_restoSignup = require("./routes/rr_restoSignup");
+app.use("/", rr_restoSignup);
 
 app.listen(PORT, () => {
     console.log(`Server started at http://localhost:${PORT}`);

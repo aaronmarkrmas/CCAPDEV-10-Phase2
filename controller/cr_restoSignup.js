@@ -28,8 +28,9 @@ exports.handleSignup = async (req, res) => {
     }
 
     try {
+        const tagsString = Array.isArray(tags) ? tags.join(", ") : tags; // Convert to string if array
         const newResto = new Restaurant({
-            email, contactNumber, restaurantName, password, location, description, tags, profilePic
+            email, contactNumber, restaurantName, password, location, description, tags: tagsString, profilePic
         });
         await newResto.save();
         res.redirect(`/${email}/profile`);

@@ -167,13 +167,14 @@ body {
 
 .tags-list {
     display: flex;
-    flex-wrap: wrap; /* Allows tags to wrap if they exceed container width */
-    gap: 10px; /* Adds spacing between tags */
+    flex-wrap: wrap; 
+    gap: 10px; 
     margin-top: 5px;
 }
 
 .tags-container label {
     display: flex;
     align-items: center;
-    gap: 5px; /* Adds spacing between checkbox and label text */
-    white-space: nowrap; /* Prevents text
+    gap: 5px; 
+    white-space: nowrap; 
+}

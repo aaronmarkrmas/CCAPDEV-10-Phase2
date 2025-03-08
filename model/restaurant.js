@@ -9,7 +9,7 @@ const restoAccSchema = new mongoose.Schema({
     description: { type: String, required: true },
     tags: { type: String, required: true },
     nReviews: { type: Number, required: true, default: 0 },
-    rating: { type: Number, required: true, default: 0 },
+    rating: { type: Number, required: true, default: 0 },   
     location: {type: String, required: true, default: 'Br. Bloemen Hall'},
     pfp: {
         data: { type: Buffer, required: true },
