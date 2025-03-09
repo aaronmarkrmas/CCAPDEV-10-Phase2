@@ -70,6 +70,7 @@
 
     <div class="restaurant-list">
         <% restaurants.forEach((restaurant) => { %>
+          <a href="/<%= email %>/profile/<%= encodeURIComponent(restaurant._id) %>" style="text-decoration: none;"> 
             <div class="restaurant-item">
                 <img src="<%= restaurant.pfp %>" alt="<%= restaurant.restoName %>">
                 <div class="restaurant-info">

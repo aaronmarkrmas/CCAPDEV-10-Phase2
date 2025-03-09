@@ -95,27 +95,36 @@ body {
     transition: background-color 0.2s ease;
     border: none;
     border-radius: 50px;
-    cursor:pointer;
+    cursor: pointer;
+    width: fit-content; /* Ensures it wraps around content */
+}
 
-    
-  }
-
-  .restaurant-item:hover {
+.restaurant-item:hover {
     background-color: rgb(240, 227, 227);
-    
-  }
-  
-  
-  .restaurant-info h3 {
+}
+
+.restaurant-img {
+    width: 50px; /* Adjust this based on your image size */
+    height: 50px;
+    object-fit: cover; /* Ensures images don’t stretch */
+    border-radius: 50%; /* Makes images circular */
+}
+
+.restaurant-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.restaurant-info h3 {
     margin: 0;
     font-size: 16px;
     font-weight: 600;
     color: #333;
-  }
-  
-  .restaurant-info p {
+}
+
+.restaurant-info p {
     margin: 5px 0 0;
     font-size: 14px;
     color: #666;
-  }
-
+}

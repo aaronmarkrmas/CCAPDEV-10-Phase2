@@ -28,20 +28,22 @@
     </div>
     <div class="content">
         <h1>Bloemen Food Places</h1>
-          <a href="RESTOPROFILE" style="text-decoration: none;"> 
             <div class="restaurant-list">
              <% restaurants.forEach((restaurant) => { %>
+              <a href="/<%= encodeURIComponent(restaurant._id) %>/profile" style="text-decoration: none;"> 
+
                     <div class="restaurant-item">
-                      <img src="<%= restaurant.pfp %>" alt="<%= restaurant.restoName %>">
+                      <img src="/profile-pics/<%= restaurant._id %>" class="restaurant-img" alt="Restaurant Profile Picture">
                         <div class="restaurant-info">
                           <h3><%= restaurant.restoName %></h3>
                           <p><%= restaurant.tags %></p>
                       </div>
                     
                  </div>
+                </a>
+
              <% }) %>
           </div>
-        </a>
     </div>
 
 </body>

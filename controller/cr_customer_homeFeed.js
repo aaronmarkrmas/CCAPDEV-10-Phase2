@@ -1,6 +1,6 @@
-const { restaurants: Restaurant } = require('../model/restaurant');
-const { customers: Customer } = require('../model/customer');
-const {tags:Tag} = require('../model/tag');
+const Restaurant = require('../model/restaurant');
+const Customer  = require('../model/customer');
+const Tag   = require('../model/tag');
 
 exports.getCustomerHomeFeed = async (req, res) => {
     const customerEmail = req.params.email; // get email
@@ -33,7 +33,7 @@ exports.getCustomerHomeFeed = async (req, res) => {
         const tags = await Tag.find(); // get tags
 
         res.render('customer_homeFeed', { restaurants, email: customerEmail, username: customer.username, search:searchQuery, tags }); 
-
+       
     } catch (error) {
         console.error("Error fetching restaurants:", error);
         res.status(500).send("Internal Server Error");
