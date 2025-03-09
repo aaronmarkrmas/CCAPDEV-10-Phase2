@@ -90,7 +90,6 @@
                   </a>
               <% } %>
               
-              
                       <div class="review-post-details">
                       <img class="review-user-photo" src="<%= customerPfps[review.customerEmail] %>" alt="User Photo">
                       <div class="review-info">
@@ -112,19 +111,16 @@
                   <p class="review-text"><%= review.reviewText %></p>
   
                   <!-- Media Section -->
-                  <% if (review.media.length > 0) { %>
-                      <div class="media-section">
-                          <% review.media.forEach(mediaItem => { %>
-                              <% if (mediaItem.endsWith('.mp4')) { %>
-                                  <video controls width="100px" height="100px">
-                                      <source src="<%= mediaItem %>" type="video/mp4">
-                                  </video>
-                              <% } else { %>
-                                  <img src="<%= mediaItem %>" width="100px" height="100px" style="border-radius: 8px;">
-                              <% } %>
-                          <% }); %>
-                      </div>
-                  <% } %>
+                  <% review.media.forEach(mediaItem => { %>
+                    <% let mediaUrl = String(mediaItem); %> <!-- Convert to string if necessary -->
+                    <% if (mediaUrl.endsWith('.mp4')) { %>
+                        <video controls width="100px" height="100px">
+                            <source src="<%= mediaUrl %>" type="video/mp4">
+                        </video>
+                    <% } else { %>
+                        <img src="<%= mediaUrl %>" width="100px" height="100px" style="border-radius: 8px;">
+                    <% } %>
+                <% }); %>
   
                   <!-- Reply Section -->
                   <% if (repliesMap[review._id] && repliesMap[review._id].length > 0) { %>
