@@ -47,23 +47,23 @@
         </div>
 
         <div class="username-list">
-            <% if (users.length > 0) { %>
-                <% users.forEach(user => { %>
-                    <button class="usernames-container">
-                        <div class="icon-container">
-                            <img src="<%= user.pfp %>" alt="<%= user.username %>'s profile picture" 
-                                style="width: 120px; height: 120px; border-radius: 50%;">
-                        </div>
-                        <div class="account-details">
-                            <p><strong>Username:</strong> <%= user.username %></p>
-                            <p><strong>Joined:</strong> August 2019</p>
-                        </div>
-                    </button>
-                <% }) %>
-            <% } else { %>
-                <p>No users found.</p>
-            <% } %>
-        </div>        
+          <% if (users.length > 0) { %>
+              <% users.forEach(user => { %>
+                  <button class="usernames-container">
+                      <div class="icon-container">
+                          <img src="<%= user.pfp %>" alt="<%= user.username %>'s profile picture" 
+                              style="width: 120px; height: 120px; border-radius: 50%;">
+                      </div>
+                      <div class="account-details">
+                          <p><strong>Username:</strong> <%= user.username %></p>
+                          <p><strong>Email:</strong> <%= user.email %></p>
+                      </div>
+                  </button>
+              <% }) %>
+          <% } else { %>
+              <p>No users found.</p>
+          <% } %>
+      </div>
       </div>
 </body>
 </html>

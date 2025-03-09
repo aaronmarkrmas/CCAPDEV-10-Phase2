@@ -73,8 +73,8 @@ app.get('/profile-pics/:restaurantId', async (req, res) => {
             return res.status(404).send('No profile picture found');
         }
 
-        res.set('Content-Type', restaurant.pfp.contentType); // Set correct MIME type
-        res.send(restaurant.pfp.data); // Send image data as response
+        res.set('Content-Type', restaurant.pfp.contentType);
+        res.send(restaurant.pfp.data); 
     } catch (err) {
         console.error('Error fetching profile pic:', err);
         res.status(500).send(err.message);

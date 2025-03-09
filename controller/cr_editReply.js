@@ -1,26 +1,26 @@
-const { replies } = require("../model/reply");
-const { reviews } = require("../model/review");
-const { restaurants } = require("../model/restaurant");
-const { customers } = require("../model/customer");
+const Reply = require("../model/reply");
+const Review = require("../model/review");
+const Restaurant = require("../model/restaurant");
+const Customer = require("../model/customer");
 
 exports.getEditReplyPage = async (req, res) => {
     try {
         const { restaurantId, reviewId, replyId } = req.params;
 
         //  restaurant details
-        const restaurant = await restaurants.findOne({ _id: restaurantId });
+        const restaurant = await Restaurant.findOne({ _id: restaurantId });
         if (!restaurant) return res.status(404).json({ error: "Restaurant not found" });
 
         //  review details
-        const review = await reviews.findOne({ _id: reviewId });
+        const review = await Review.findOne({ _id: reviewId });
         if (!review) return res.status(404).json({ error: "Review not found" });
 
         //  the existing reply
-        const reply = await replies.findOne({ _id: replyId, reviewId });
+        const reply = await Reply.findOne({ _id: replyId, reviewId });
         if (!reply) return res.status(404).json({ error: "Reply not found" });
 
         //  customer data 
-        const customer = await customers.findOne({ email: review.customerEmail }, "username pfp");
+        const customer = await Customer.findOne({ email: review.customerEmail }, "username pfp");
 
         const customerPfps = {};
         const customerUsernames = {};
@@ -44,7 +44,7 @@ exports.updateReply = async (req, res) => {
             return res.status(400).json({ error: "Reply text cannot be empty" });
         }
 
-        const updatedReply = await replies.findOneAndUpdate(
+        const updatedReply = await Reply.findOneAndUpdate(
             { _id: replyId, reviewId },
             { 
                 replyText,

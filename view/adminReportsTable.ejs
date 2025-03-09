@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Reports Table</title>
+  <script src="https://kit.fontawesome.com/e9d3d528d3.js" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/adminReportsTable_style.css">
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">
+      <img src="/images/logo.png" alt="Bloemen Bites Logo">
+    </div>
+    <div class="navigation">
+      <a onclick="openSearch()"> 
+        <i class="fa-solid fa-magnifying-glass" style="color: #003399;"></i>
+        <p>Search</p>
+      </a>
+      <a onclick="openReviews()">
+        <i class="fa-solid fa-star" style="color: #003399;"></i>
+        <p>Reviewers</p>
+      </a>
+      <a onclick="openSettings()">
+        <i class="fa-solid fa-gear" style="color: #003399;"></i>
+        <p>Settings</p>
+      </a>
+      <a href="/suli">
+        <i class="fa-solid fa-arrow-right-from-bracket" style="color: #fc6467;"></i>
+        <p>Logout</p>
+      </a>
+    </div>
+  </div>
+  <!-- Main Content -->
+  <div class="table-container">
+    <h1>Reports</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Reported by</th>
+                <th>Post ID</th>
+                <th>Reason</th>
+                <th>Date Reported</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% reports.forEach(report => { %>
+                <tr>
+                    <td><%= report.reporterUsername %></td>
+                    <td>
+                        <!-- Make Post ID clickable with dynamic URL -->
+                        <a href="/admin/<%= adminemail %>/restaurant/<%= restoemail %>/profile?postId=<%= report.postId %>">
+                            <%= report.postId %>
+                        </a>
+                    </td>
+                    <td><%= report.reason %></td>
+                    <td><%= report.dateReported %></td>
+                    <td><%= report.isResolved %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>         
+  </div>
+  <script src="/js/adminReportsTable_script.js"></script>
+</body>
+</html>

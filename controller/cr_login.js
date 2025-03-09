@@ -1,7 +1,6 @@
-const { customers } = require("../model/customer");
-const { restaurants } = require("../model/restaurant");
-const { admins } = require("../model/admin");
-const bcrypt = require("bcrypt");
+const customers = require("../model/customer"); // Made consistent
+const restaurants = require("../model/restaurant"); // Already consistent
+const admins = require("../model/admin"); // Made consistent
 
 exports.getLoginPage = (req, res) => {
     res.render("login");
@@ -33,24 +32,29 @@ exports.authenticateUser = async (req, res) => {
 
         if (!user) return res.status(404).json({ error: "Email not found" });
 
-        // Compare plain text passwords
-        console.log("Inputted Password:", password);
-        console.log("Stored Password:", user.password);
+        // Trim both passwords to remove any extra spaces
+        const inputPassword = password.trim();
+        const storedPassword = user.password.trim();
 
-        if (password !== user.password) {
+        console.log("Inputted Password:", inputPassword);
+        console.log("Stored Password:", storedPassword);
+
+        if (inputPassword !== storedPassword) {
             return res.status(401).json({ error: "Incorrect password" });
         }
 
+        // Store user session data
         req.session.user = {
-            email: user.email || user._id,
+            email: user.email || user._id, // Restaurants use _id as email
             userType,
         };
+
+        console.log("Stored in session:", req.session.user); // Debugging
 
         return res.json({ 
             success: true, 
             userType, 
-            email: user.email, 
-            _id: user._id 
+            email: user.email || user._id // Ensure correct email format
         });
     } catch (error) {
         console.error("Authentication error:", error);
