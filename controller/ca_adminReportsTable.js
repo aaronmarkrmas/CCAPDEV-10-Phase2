@@ -12,7 +12,6 @@ exports.getReports = async (req, res) => {
             return res.render('adminReportsTable', { reports: [], message: 'No unresolved reports found.' });
         }
 
-        // Format the reports for passing to the EJS view
         const formattedReports = reports.map(report => ({
             reporterUsername: report.reporterUsername,
             postId: report._id,  // Assuming the Post ID is the report's ID or another field

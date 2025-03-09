@@ -14,13 +14,10 @@ exports.viewProfile = async (req, res) => {
             return res.status(404).json({ error: "Restaurant not found" });
         }
 
-        // Convert tags to an array
         const tagsArray = restaurant.tags.split(",").map(tag => tag.trim());
 
-        // Fetch restaurant reviews
         const restaurantReviews = await Review.find({ restaurantId: email });
 
-        // Get customer emails from reviews
         const customerEmails = restaurantReviews.map(review => review.customerEmail);
         const customersData = await Customer.find(
             { email: { $in: customerEmails } }, 
@@ -30,7 +27,6 @@ exports.viewProfile = async (req, res) => {
         const customerPfps = {};
         const customerUsernames = {};
 
-        // Process customer profile pictures and usernames
         customersData.forEach(customer => {
             customerPfps[customer.email] = customer.pfp && customer.pfp.data 
                 ? `data:${customer.pfp.contentType};base64,${customer.pfp.data.toString("base64")}` 
@@ -43,7 +39,6 @@ exports.viewProfile = async (req, res) => {
         console.log("Customer usernames:", customerUsernames);
         console.log("Reviews fetched:", restaurantReviews.length);
 
-        // Fetch replies for each review
         const repliesMap = {};
         for (const review of restaurantReviews) {
             const reviewReplies = await Reply.find({ reviewId: review._id });
@@ -52,7 +47,6 @@ exports.viewProfile = async (req, res) => {
 
         console.log("Replies fetched:", Object.keys(repliesMap).length); 
 
-        // Render the restaurant profile with all necessary data
         res.render("restoProfile", { 
             restaurant,
             tags: tagsArray,
@@ -67,9 +61,6 @@ exports.viewProfile = async (req, res) => {
         res.status(500).json({ error: "Failed to load restaurant profile" });
     }
 };
-
-
-
 
 
 // Handle logout
