@@ -1,6 +1,6 @@
-const customers = require("../model/customer"); // Made consistent
-const restaurants = require("../model/restaurant"); // Already consistent
-const admins = require("../model/admin"); // Made consistent
+const customers = require("../model/customer"); 
+const restaurants = require("../model/restaurant"); 
+const admins = require("../model/admin"); 
 
 exports.getLoginPage = (req, res) => {
     res.render("login");
@@ -14,17 +14,15 @@ exports.authenticateUser = async (req, res) => {
         let user = null;
         let userType = null;
 
-        // Search in Customers collection
         user = await customers.findOne({ email });
         if (user) userType = "customer";
 
-        // If not found, search in Restaurants collection
         if (!user) {
             user = await restaurants.findOne({ _id: email });
             if (user) userType = "restaurant";
         }
 
-        // If still not found, search in Admins collection
+        
         if (!user) {
             user = await admins.findOne({ _id: email });
             if (user) userType = "admin";
@@ -32,7 +30,7 @@ exports.authenticateUser = async (req, res) => {
 
         if (!user) return res.status(404).json({ error: "Email not found" });
 
-        // Trim both passwords to remove any extra spaces
+        
         const inputPassword = password.trim();
         const storedPassword = user.password.trim();
 
@@ -43,18 +41,18 @@ exports.authenticateUser = async (req, res) => {
             return res.status(401).json({ error: "Incorrect password" });
         }
 
-        // Store user session data
+        
         req.session.user = {
-            email: user.email || user._id, // Restaurants use _id as email
+            email: user.email || user._id, 
             userType,
         };
 
-        console.log("Stored in session:", req.session.user); // Debugging
+        console.log("Stored in session:", req.session.user); 
 
         return res.json({ 
             success: true, 
             userType, 
-            email: user.email || user._id // Ensure correct email format
+            email: user.email || user._id 
         });
     } catch (error) {
         console.error("Authentication error:", error);
