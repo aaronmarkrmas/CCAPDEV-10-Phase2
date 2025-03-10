@@ -128,6 +128,8 @@ app.use("/", r_customerPOV_restoProfile);
 const adminReportsRoute = require('./routes/ra_adminReportsTable');
 app.use(adminReportsRoute);
 
+const r_write_reviews = require("./routes/r_write_reviews");
+app.use("/",r_write_reviews);
 
 app.listen(PORT, () => {
     console.log(`Server started at http://localhost:${PORT}`);

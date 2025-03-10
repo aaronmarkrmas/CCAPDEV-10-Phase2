@@ -72,7 +72,7 @@
         <% restaurants.forEach((restaurant) => { %>
           <a href="/<%= email %>/profile/<%= encodeURIComponent(restaurant._id) %>" style="text-decoration: none;"> 
             <div class="restaurant-item">
-                <img src="<%= restaurant.pfp %>" alt="<%= restaurant.restoName %>">
+                <img src="/profile-pics/<%= restaurant._id %>" class="restaurant-img" alt="Restaurant Profile Picture">
                 <div class="restaurant-info">
                     <h3><%= restaurant.restoName %></h3>
                     <p><%= restaurant.tags %></p>

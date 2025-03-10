@@ -7,7 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/customerPOV_restoProfile_style.css">
+  <link rel="stylesheet" href="/css/resto_account_styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
@@ -50,13 +51,7 @@
     <!-- Profile Details -->
     <div class="profile-details">
         <h2 id="user-name"><%= restaurant.restoName %></h2>
-        <p >
-          <span><%= restaurant.location %></span> 
-        </p>
-        <p >
-          <span><%= restaurant.phone %></span> | 
-          <span><%= restaurant._id %></span>
-        </p>
+        <p id="user-email"><%= restaurant.location %></p>
         <div class="tags">
           <% 
           let tagsArray = Array.isArray(restaurant.tags) ? restaurant.tags : restaurant.tags.split(",").map(tag => tag.trim());
@@ -73,6 +68,10 @@
       <div id="rating-stars"></div> <!-- Stars will be dynamically inserted -->
       <span id="rating-number"></span> <!-- Rating number will be dynamically updated -->
     </div>
+      <p >
+        <span><%= restaurant.phone %></span> | 
+        <span><%= restaurant._id %></span>
+      </p>
     </div>
   </div>
 
@@ -84,15 +83,15 @@
       <% } else { %>
           <% reviews.forEach(review => { %>
               <div class="review-post">
-                <% if (repliesMap[review._id] && repliesMap[review._id].length > 0) { %>
+                <!-- <% if (repliesMap[review._id] && repliesMap[review._id].length > 0) { %>
               
               
               <% } else { %>
-                  <!-- Reply Button -->
+                 
                   <a href="/restaurant/<%= encodeURIComponent(restaurant._id) %>/review/<%= encodeURIComponent(review._id) %>/reply" class="reply-link">
                       Reply
                   </a>
-              <% } %>
+              <% } %> -->
               
               
                       <div class="review-post-details">
@@ -116,7 +115,18 @@
                   <p class="review-text"><%= review.reviewText %></p>
   
                   <!-- Media Section -->
-                 
+                  <% review.media.forEach(mediaItem => { %>
+                    <% let mediaUrl = String(mediaItem); %> <!-- Convert to string if necessary -->
+                    <% if (mediaUrl.endsWith('.mp4')) { %>
+                        <video controls width="100px" height="100px">
+                            <source src="<%= mediaUrl %>" type="video/mp4">
+                        </video>
+                    <% } else { %>
+                        <img src="<%= mediaUrl %>" width="100px" height="100px" style="border-radius: 8px;">
+                    <% } %>
+                  <% }); %>
+              
+              
                   <!-- Reply Section -->
                   <% if (repliesMap[review._id] && repliesMap[review._id].length > 0) { %>
                     <div class="reply-container">
@@ -141,6 +151,11 @@
   </div>
 
   </div>
+  <a href="/<%=loggedUserEmail %>/profile/<%= restaurant._id %>/write">
+  <div class="floating-button">
+    <i class="fa-solid fa-plus"></i>
+  </div>
+  </a>
 </div>
 
 <script src="/js/restoProfile_script.js"></script>

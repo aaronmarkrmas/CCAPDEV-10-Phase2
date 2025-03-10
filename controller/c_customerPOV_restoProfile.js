@@ -2,6 +2,7 @@ const Customer = require("../model/customer"); // Ensure correct import
 const Restaurant = require("../model/restaurant"); // Ensure correct import
 const Review = require("../model/review"); // Ensure correct import
 const Reply = require("../model/reply"); // Ensure correct import
+const { v4: uuidv4 } = require("uuid"); 
 
 exports.publicViewProfile = async (req, res) => {
     try {
@@ -86,10 +87,22 @@ exports.loggedViewProfile = async (req, res) => {
         // Convert tags to an array
         const tagsArray = restaurant.tags.split(",").map(tag => tag.trim());
 
-        // Fetch restaurant reviews
-        const restaurantReviews = await Review.find({ restaurantId });
+       // Fetch restaurant reviews
+        const restaurantReviews = await Review.find({ restaurantId }); 
 
-        // Get customer emails from reviews
+        const processedReviews = restaurantReviews.map(review => {
+            const processedMedia = review.media.map(mediaItem => {
+                if (mediaItem.data) {
+                    return `data:${mediaItem.contentType};base64,${mediaItem.data.toString("base64")}`;
+                } else {
+                    return mediaItem;
+                }
+            });
+
+            return { ...review.toObject(), media: processedMedia };
+        });
+
+       // Get customer emails from reviews
         const customerEmails = restaurantReviews.map(review => review.customerEmail);
         const customersData = await Customer.find(
             { email: { $in: customerEmails } }, 
@@ -99,7 +112,7 @@ exports.loggedViewProfile = async (req, res) => {
         const customerPfps = {};
         const customerUsernames = {};
 
-        // Process customer profile pictures and usernames
+        //Process customer profile pictures and usernames
         customersData.forEach(customer => {
             customerPfps[customer.email] = customer.pfp && customer.pfp.data 
                 ? `data:${customer.pfp.contentType};base64,${customer.pfp.data.toString("base64")}` 
@@ -112,12 +125,12 @@ exports.loggedViewProfile = async (req, res) => {
         console.log("Customer usernames:", customerUsernames);
         console.log("Reviews fetched:", restaurantReviews.length);
 
-        // Fetch replies for each review
+        //Fetch replies for each review
         const repliesMap = {};
         for (const review of restaurantReviews) {
             const reviewReplies = await Reply.find({ reviewId: review._id });
-            repliesMap[review._id] = reviewReplies; // Store replies in an object
-        }
+             repliesMap[review._id] = reviewReplies; // Store replies in an object
+         }
 
         console.log("Replies fetched:", Object.keys(repliesMap).length); 
 
@@ -127,10 +140,10 @@ exports.loggedViewProfile = async (req, res) => {
             restaurant,
             restaurantId: restaurant._id,
             tags: tagsArray,
-            reviews: restaurantReviews,
-            customerPfps,
-            customerUsernames,
-            repliesMap 
+            reviews: processedReviews,  
+             customerPfps,
+             customerUsernames,
+             repliesMap 
         });
 
     } catch (error) {
@@ -138,3 +151,4 @@ exports.loggedViewProfile = async (req, res) => {
         res.status(500).json({ error: "Failed to load restaurant profile" });
     }
 };
+
