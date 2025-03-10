@@ -58,7 +58,7 @@
                     if (result.userType === "customer") {
                         window.location.href = `/${encodeURIComponent(result.email)}/customer-home-feed`;
                     } else if (result.userType === "restaurant") {
-                        window.location.href = `/restaurant/${encodeURIComponent(result._id)}/profile`;
+                        window.location.href = `/${encodeURIComponent(result._id)}/profile`;
                     } else if (result.userType === "admin") {
                         window.location.href = `/admin/${encodeURIComponent(result._id)}/profile`; // Placeholder
                     }
@@ -71,3 +71,4 @@
     </script>
 </body>
 </html>
+
