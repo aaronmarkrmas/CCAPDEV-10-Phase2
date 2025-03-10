@@ -125,6 +125,9 @@ app.use("/restoSignup", rr_restoSignup);
 const r_customerPOV_restoProfile = require("./routes/r_customerPOV_restoProfile");
 app.use("/", r_customerPOV_restoProfile);
 
+const r_write_reviews = require("./routes/r_write_reviews");
+app.use("/",r_write_reviews);
+
 app.listen(PORT, () => {
     console.log(`Server started at http://localhost:${PORT}`);
 });
