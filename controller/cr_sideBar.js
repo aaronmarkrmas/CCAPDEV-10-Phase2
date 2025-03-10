@@ -47,10 +47,22 @@ exports.viewProfile = async (req, res) => {
 
         console.log("Replies fetched:", Object.keys(repliesMap).length); 
 
+        const processedReviews = restaurantReviews.map(review => {
+            const processedMedia = review.media.map(mediaItem => {
+                if (mediaItem.data) {
+                    return `data:${mediaItem.contentType};base64,${mediaItem.data.toString("base64")}`;
+                } else {
+                    return mediaItem;
+                }
+            });
+
+            return { ...review.toObject(), media: processedMedia };
+        });
+
         res.render("restoProfile", { 
             restaurant,
             tags: tagsArray,
-            reviews: restaurantReviews,
+            reviews: processedReviews,
             customerPfps,
             customerUsernames,
             repliesMap 
