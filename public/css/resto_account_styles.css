@@ -239,6 +239,19 @@ body {
   .media-section video:hover {
     transform: scale(1.05);
   }
+
+  .media-container {
+    display: flex;         
+    gap: 10px;             
+    overflow-x: auto;     
+    padding: 10px 0;            
+    }
+
+    .media-container img,
+    .media-container video {
+        flex-shrink: 0;       
+        border-radius: 8px;    
+    }
   
 
   .reviews-list {
