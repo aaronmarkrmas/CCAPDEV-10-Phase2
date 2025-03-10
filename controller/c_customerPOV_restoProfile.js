@@ -89,17 +89,17 @@ exports.loggedViewProfile = async (req, res) => {
 
        // Fetch restaurant reviews
         const restaurantReviews = await Review.find({ restaurantId }); 
-        restaurantReviews.forEach(review => { 
-            if (!Array.isArray(review.media)) {
-                review.media = []; // Ensure it's always an array
-            }
-        
-            review.media = review.media.map(mediaItem => {
-                if (mediaItem && mediaItem.path) { // Use file path instead of Base64
-                    return `/uploads/${mediaItem.path}`; // Path to access uploaded file
+
+        const processedReviews = restaurantReviews.map(review => {
+            const processedMedia = review.media.map(mediaItem => {
+                if (mediaItem.data) {
+                    return `data:${mediaItem.contentType};base64,${mediaItem.data.toString("base64")}`;
+                } else {
+                    return mediaItem;
                 }
-                return null; // Skip invalid media
-            }).filter(Boolean); // Remove null values
+            });
+
+            return { ...review.toObject(), media: processedMedia };
         });
 
        // Get customer emails from reviews
@@ -140,7 +140,7 @@ exports.loggedViewProfile = async (req, res) => {
             restaurant,
             restaurantId: restaurant._id,
             tags: tagsArray,
-            reviews: restaurantReviews ,  
+            reviews: processedReviews,  
              customerPfps,
              customerUsernames,
              repliesMap 
