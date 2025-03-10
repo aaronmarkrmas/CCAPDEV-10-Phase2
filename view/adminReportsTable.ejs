@@ -64,7 +64,10 @@
                 </tr>
             <% }) %>
         </tbody>
-    </table>         
+    </table>
+    <button class="viewRep-button" onclick="window.location.href='/admin/<%= encodeURIComponent(admin._id) %>/view-reports'">
+      View Reports
+    </button>
   </div>
   <script src="/js/adminReportsTable_script.js"></script>
 </body>
