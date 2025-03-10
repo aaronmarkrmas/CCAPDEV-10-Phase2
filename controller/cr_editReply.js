@@ -7,27 +7,37 @@ exports.getEditReplyPage = async (req, res) => {
     try {
         const { restaurantId, reviewId, replyId } = req.params;
 
-        //  restaurant details
+        // Fetch restaurant details
         const restaurant = await Restaurant.findOne({ _id: restaurantId });
         if (!restaurant) return res.status(404).json({ error: "Restaurant not found" });
 
-        //  review details
+        // Fetch review details
         const review = await Review.findOne({ _id: reviewId });
         if (!review) return res.status(404).json({ error: "Review not found" });
 
-        //  the existing reply
+        // Fetch the existing reply
         const reply = await Reply.findOne({ _id: replyId, reviewId });
         if (!reply) return res.status(404).json({ error: "Reply not found" });
 
-        //  customer data 
+        // Fetch customer data 
         const customer = await Customer.findOne({ email: review.customerEmail }, "username pfp");
 
         const customerPfps = {};
         const customerUsernames = {};
-        customerPfps[review.customerEmail] = customer?.pfp || "/images/default-user.png";
+        customerPfps[review.customerEmail] = customer?.pfp 
+            ? `data:${customer.pfp.contentType};base64,${customer.pfp.data.toString("base64")}`
+            : "/images/default-user.png";
         customerUsernames[review.customerEmail] = customer?.username || "Unknown User";
 
-        res.render("editReply", { restaurant, review, reply, customerPfps, customerUsernames });
+        // Process review media
+        const reviewMedia = review.media 
+            ? review.media.map(media => ({
+                url: `data:${media.contentType};base64,${media.data.toString("base64")}`,
+                type: media.contentType.startsWith("image") ? "image" : "video"
+            }))
+            : [];
+
+        res.render("editReply", { restaurant, review, reply, customerPfps, customerUsernames, reviewMedia });
 
     } catch (error) {
         console.error("Error fetching edit reply page:", error);

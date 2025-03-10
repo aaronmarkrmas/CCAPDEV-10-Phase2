@@ -30,26 +30,40 @@
     <h2>Edit Your Reply</h2>
 
     <!-- Review Container -->
-    <div class="review-post">
-      <div class="review-post-details">
-        <img class="review-user-photo" src="<%= customerPfps[review.customerEmail] || '/images/default-user.png' %>" alt="User Photo">
-        <div class="review-info">
-          <p class="review-user-name"><%= customerUsernames[review.customerEmail] %></p>
-          <p class="review-meta"><%= new Date(review.datePosted).toLocaleDateString() %> 
-            <% if (review.edited) { %> | Edited <% } %>
-          </p>
-          <div class="review-rating">
-            <% for (let i = 0; i < Math.floor(review.rating); i++) { %>
-                <i class="fa-solid fa-star" style="color: #ffcd3c;"></i>
-            <% } %>
-            <% for (let i = Math.floor(review.rating); i < 5; i++) { %>
-                <i class="fa-regular fa-star" style="color: #ccc;"></i>
-            <% } %>
+    <div class="review-container">
+      <div class="review-post">
+        <div class="review-post-details">
+          <img class="review-user-photo" src="<%= customerPfps[review.customerEmail] || '/images/default-user.png' %>" alt="User Photo">
+          <div class="review-info">
+            <p class="review-user-name"><%= customerUsernames[review.customerEmail] %></p>
+            <p class="review-meta"><%= new Date(review.datePosted).toLocaleDateString() %> 
+              <% if (review.edited) { %> | Edited <% } %>
+            </p>
+            <div class="review-rating">
+                <% for (let i = 0; i < Math.floor(review.rating); i++) { %>
+                    <i class="fa-solid fa-star" style="color: #ffcd3c;"></i>
+                <% } %>
+                <% for (let i = Math.floor(review.rating); i < 5; i++) { %>
+                    <i class="fa-regular fa-star" style="color: #ccc;"></i>
+                <% } %>
+            </div>
+          </div>
         </div>
-        </div>
+        <h1 class="review-title"><%= review.reviewTitle %></h1>
+        <p class="review-text"><%= review.reviewText %></p>
+
+       <!-- Media Section -->
+        <% reviewMedia.forEach(mediaItem => { %>
+          <% if (mediaItem.type === "video") { %>
+              <video controls width="100px" height="100px">
+                  <source src="<%= mediaItem.url %>" type="video/mp4">
+              </video>
+          <% } else { %>
+              <img src="<%= mediaItem.url %>" width="100px" height="100px" style="border-radius: 8px;">
+          <% } %>
+        <% }); %>
+
       </div>
-      <h1 class="review-title"><%= review.reviewTitle %></h1>
-      <p class="review-text"><%= review.reviewText %></p>
     </div>
 
     <!-- Edit Reply Container -->

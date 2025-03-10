@@ -52,17 +52,17 @@
         <h1 class="review-title"><%= review.reviewTitle %></h1>
         <p class="review-text"><%= review.reviewText %></p>
 
-        <!-- Media Section -->
-        <% review.media.forEach(mediaItem => { %>
-          <% let mediaUrl = String(mediaItem); %> <!-- Convert to string if necessary -->
-          <% if (mediaUrl.endsWith('.mp4')) { %>
+       <!-- Media Section -->
+        <% reviewMedia.forEach(mediaItem => { %>
+          <% if (mediaItem.type === "video") { %>
               <video controls width="100px" height="100px">
-                  <source src="<%= mediaUrl %>" type="video/mp4">
+                  <source src="<%= mediaItem.url %>" type="video/mp4">
               </video>
           <% } else { %>
-              <img src="<%= mediaUrl %>" width="100px" height="100px" style="border-radius: 8px;">
+              <img src="<%= mediaItem.url %>" width="100px" height="100px" style="border-radius: 8px;">
           <% } %>
         <% }); %>
+
       </div>
     </div>
 
