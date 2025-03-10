@@ -184,15 +184,14 @@ body {
 }
 
 #reviews {
-    font-size: 0.9rem; /* Slightly smaller than the default heading size */
+    font-size: 0.9rem; 
     margin-top: 20px;
-    color: #333; /* Match the color scheme */
+    color: #333; 
     font-family: "Poppins", serif;
     font-weight: 700;
     margin-bottom: -10px;
 }
 
-  /* Ensure reviews container is inside the main content and doesn't affect the upper section */
 .content {
     margin-top: 20px;
     padding: 20px;
@@ -219,8 +218,8 @@ body {
 
    .media-section {
     display: flex;
-    flex-wrap: wrap; /* Ensures media wrap if there's not enough space */
-    gap: 5px; /* Adds spacing between the items */
+    flex-wrap: wrap; 
+    gap: 5px; 
     margin-top: 10px;
   }
   
@@ -240,7 +239,6 @@ body {
     transform: scale(1.05);
   }
   
-
   .reviews-list {
     margin-top: 20px;
     display: flex;
@@ -251,7 +249,7 @@ body {
 .review-post-details {
     display: flex;
     align-items: center;
-    gap: 5px; /* Gap between pfp and info */
+    gap: 5px; 
     margin-top: -30px;
 }
 
@@ -260,12 +258,13 @@ body {
     height: 50px;
     border-radius: 50%;
     margin-top: 5px;
-    margin-left: 5px; /* Margin from the top and left */
+    margin-left: 5px; 
 }
 
 .review-info {
     display: flex;
     flex-direction: column;
+    padding:10px;
 }
 
 .review-user-name {
@@ -279,7 +278,7 @@ body {
     margin-top: -10px;
     font-size: 0.6rem;
     color: #666;
-    margin-bottom: 0px; /* Adjust gap between meta info elements */
+    margin-bottom: 0px; 
     font-family: "Poppins", serif;
     font-weight: 400;
     font-style: normal;
@@ -292,7 +291,7 @@ body {
 
 .reply-container {
     width: 100%;
-    text-align: right; /* Aligns the content to the right */
+    text-align: right; 
 }
 
 .reply-link {
@@ -416,7 +415,8 @@ body {
     margin-top: 30px;
   }
   
-  .reply-post .review-meta {
+
+.reply-post .review-meta {
     position: absolute; 
     font-size: 0.6rem;
     color: gray;
@@ -427,7 +427,7 @@ body {
     top: 43px;
     left: 10px; 
 }
-  
+
   .reply-post .review-text {
     font-size: 0.8rem;
     margin-top: 10px;
@@ -459,26 +459,5 @@ body {
   
   
 
-  .floating-button {
-    position: fixed;
-    bottom: 40px;
-    right: 70px;
-    width: 80px;
-    height: 80px;
-    background-color: #003399;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 24px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .floating-button:hover {
-    background-color: #001f66;
-  }
-  
+
   

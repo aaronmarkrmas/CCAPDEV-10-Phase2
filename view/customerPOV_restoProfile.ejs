@@ -116,14 +116,17 @@
   
                   <!-- Media Section -->
                   <% review.media.forEach(mediaItem => { %>
-                    <% if (mediaItem.endsWith(".mp4")) { %>
+                    <% let mediaUrl = String(mediaItem || ""); %> <!-- Ensure it's a string -->
+                    
+                    <% if (mediaUrl.startsWith("data:video/mp4") || mediaUrl.endsWith(".mp4")) { %>
                         <video controls width="100px" height="100px">
-                            <source src="<%= mediaItem %>" type="video/mp4">
+                            <source src="<%= mediaUrl %>" type="video/mp4">
                         </video>
                     <% } else { %>
-                        <img src="<%= mediaItem %>" width="100px" height="100px" style="border-radius: 8px;">
+                        <img src="<%= mediaUrl %>" width="100px" height="100px" style="border-radius: 8px;">
                     <% } %>
                 <% }); %>
+                
               
               
                   <!-- Reply Section -->
