@@ -59,6 +59,24 @@ body {
     font-size: 25px;
 }
 
+.viewRep-button {
+    margin-left: 17px;
+    padding: 10px 30px;
+    border: 1.5px solid #003399;
+    border-radius: 20px;
+    background-color: white;
+    color: #003399;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: "Poppins", serif;
+    font-weight: 400;
+}
+
+.viewRep-button:hover {
+    background-color: #003399;
+    color: white;
+}
+
 .table-container {
     margin-top: 20px;
     margin-left: 160px; 
