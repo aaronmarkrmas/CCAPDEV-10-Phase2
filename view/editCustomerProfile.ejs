@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Customer Profile</title>
+  <script src="https://kit.fontawesome.com/e9d3d528d3.js" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/edit_customer_profile_style.css">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">
+      <img src="/images/logo.png" alt="Bloemen Bites Logo">
+    </div>
+    <div class="navigation">
+      <a href="/customer/<%= encodeURIComponent(customer.email) %>/profile">
+        <i class="fa-solid fa-user" style="color: #003399;"></i>
+        <p>Profile</p>
+      </a>     
+      <a href="/logout">
+        <i class="fa-solid fa-arrow-right-from-bracket" style="color: #fc6467;"></i>
+        <p>Logout</p>
+      </a>    
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="content">
+    <h1>Edit Profile</h1>
+    
+    <form id="edit-profile-form" 
+          action="/customer/<%= encodeURIComponent(customer.email) %>/updateProfile" 
+          method="POST" 
+          enctype="multipart/form-data">
+      
+      <!-- Profile Picture -->
+      <div class="form-group">
+          <label for="profile-picture">Profile Picture</label>
+          <div class="profile-picture-container">
+              <img id="profile-picture-preview" 
+                   src="<%= customer.pfp && customer.pfp.data 
+                         ? 'data:' + customer.pfp.contentType + ';base64,' + customer.pfp.data.toString('base64') 
+                         : '/images/pfp.png' %>" 
+                   alt="Profile Picture">
+              <input type="file" id="profile-picture" name="pfp" accept="image/*" onchange="previewImage(event)">
+          </div>
+      </div>
+
+      <!-- Username -->
+      <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" value="<%= customer.username || '' %>">
+      </div>
+
+      <div class="form-group">
+        <label for="bio">Bio</label>
+        <textarea id="bio" name="bio" rows="6"><%= customer.bio || '' %></textarea>
+    </div>
+    
+    <div class="form-group">
+        <label for="email">Update Email</label>
+        <input type="email" id="email" name="email" value="<%= customer.email || '' %>" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="password">Update Password</label>
+        <input type="password" id="password" name="password">
+    </div>
+    
+    
+    
+    
+      
+      <!-- Submit Button -->
+      <button type="submit">Save Changes</button>
+    </form>
+
+  </div>
+
+</body>
+</html>
