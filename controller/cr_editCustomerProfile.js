@@ -1,10 +1,10 @@
 const Customer = require("../model/customer");
+const DeactivatedAcc = require("../model/deactivatedAcc");
 
 exports.getEditProfile = async (req, res) => {
     try {
         const { email } = req.params;
-
-        const customer = await Customer.findOne({ email: email }); 
+        const customer = await Customer.findOne({ email });
 
         if (!customer) {
             console.log("Customer not found!"); 
@@ -21,7 +21,7 @@ exports.getEditProfile = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
     try {
-        const email = req.params.email;
+        const { email } = req.params;
         const customer = await Customer.findOne({ email });
 
         if (!customer) {
@@ -54,3 +54,28 @@ exports.updateProfile = async (req, res) => {
     }
 };
 
+// Deactivate Account
+exports.deactivateAccount = async (req, res) => {
+    try {
+        const { email } = req.params;
+        const customer = await Customer.findOne({ email });
+
+        if (!customer) {
+            return res.status(404).json({ error: "Customer not found" });
+        }
+
+        // Create a deactivated account entry
+        const deactivatedAcc = new DeactivatedAcc({
+            _id: customer._id,
+            date: new Date()
+        });
+
+        await deactivatedAcc.save();
+
+        res.render("editCustomerProfile", { customer, message: "Account deactivated." });
+
+    } catch (error) {
+        console.error("Error deactivating account:", error);
+        res.status(500).json({ error: "An error occurred while deactivating the account" });
+    }
+};

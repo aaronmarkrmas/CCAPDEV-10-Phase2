@@ -9,4 +9,7 @@ router.get("/:email/updateProfile", customerController.getEditProfile);
 // POST route to update the customer profile  
 router.post("/:email/updateProfile", upload.single("pfp"), customerController.updateProfile);
 
+// POST route to deactivate the account  
+router.post("/:email/deactivate", customerController.deactivateAccount);
+
 module.exports = router;

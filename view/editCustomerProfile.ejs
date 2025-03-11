@@ -76,8 +76,23 @@
     
       
       <!-- Submit Button -->
-      <button type="submit">Save Changes</button>
-    </form>
+      <div class="button-group">
+        <button class="deactivate-btn">Deactivate Account</button>
+        <button class="save-btn">Save Changes</button>
+      </div>
+  </form>
+
+  <form id="deactivateForm" action="/customer/<%= customer._id %>/deactivate" method="POST" style="display: none;">
+      <input type="hidden" name="_id" value="<%= customer._id %>">
+  </form>
+
+  <script>
+      function deactivateAccount() {
+          if (confirm("Are you sure you want to deactivate your account?")) {
+              document.getElementById("deactivateForm").submit();
+          }
+      }
+  </script>
 
   </div>
 
