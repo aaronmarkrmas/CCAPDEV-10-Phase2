@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Signup Page</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="\css\restoSignup_style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+          <img src="\images\logo.png" alt="Bloemen Bites Logo">
+        </div>
+    </div>
+    <div class="signup-container">
+        <h2>Customer Sign Up</h2>
+        <form action="/customerSignup" method="POST" enctype="multipart/form-data">
+            <% if (errors && errors.message) { %>
+                <p class="error"><%= errors.message %></p>
+            <% } %>            
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="contactnumber" name="contactNumber" placeholder="Contact Number" required>
+            <input type="username" name="username" placeholder="User Name" required>
+            <input type="password" name="password" placeholder="Password" required>
+
+        <div class="upload-container">
+            <input type="text" class="upload-text" placeholder="Upload Display Photo" readonly>
+            <input type="file" id="file-upload" name="pfp" accept="image/*" hidden>
+            <label for="file-upload" class="upload-icon">📤</label>
+        </div>
+        <textarea name="bio" placeholder="bio" rows="8" required></textarea>
+
+        
+        <button>Sign Up</button>
+    </form>
+    </div>
+
+    <script>
+        document.getElementById('file-upload').addEventListener('change', function() {
+            let fileName = this.files[0] ? this.files[0].name : "Upload Display Photo";
+            document.querySelector('.upload-text').value = fileName;
+        });
+    </script>
+</body>
+</html>

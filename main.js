@@ -153,6 +153,9 @@ app.use(adminReportsRoute);
 const r_write_reviews = require("./routes/r_write_reviews");
 app.use("/",r_write_reviews);
 
+const customerSignupRoute = require("./routes/rr_custoSignup");
+app.use("/", customerSignupRoute);
+
 app.listen(PORT, () => {
     console.log(`Server started at http://localhost:${PORT}`);
 });
