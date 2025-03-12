@@ -1,69 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Username</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Username</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/e9d3d528d3.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="/css/search_username_style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/e9d3d528d3.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="/css/search_username_style.css">
 </head>
 <body>
     <div class="sidebar">
         <div class="logo">
-          <img src="images/logo.png" alt="Bloemen Bites Logo">
+            <img src="/images/logo.png" alt="Bloemen Bites Logo">
         </div>
         <div class="navigation">
-            <a onclick="openSearch()"> 
-            <i class="fa-solid fa-magnifying-glass" style="color: #003399;"></i>
-            <p>Search</p>
-          </a>
-          <a onclick="openReviews()">
-            <i class="fa-solid fa-star" style="color: #003399;"></i>
-            <p>Reviews</p>
-          </a>
-          <a onclick="openProfile()">
-            <i class="fa-solid fa-user" style="color: #003399;"></i>
-            <p>Profile</p>
-          </a>
-          <a onclick="logout()">
-            <i class="fa-solid fa-arrow-right-from-bracket" style="color: #fc6467;"></i>
-            <p>Logout</p>
-          </a>
+            <a href="/<%= encodeURIComponent(currentUserEmail) %>/search_username">
+                <i class="fa-solid fa-magnifying-glass" style="color: #003399;"></i>
+                <p>Search</p>
+            </a>        
+            <a href="/<%= encodeURIComponent(currentUserEmail) %>/reviewers">
+              <i class="fa-solid fa-star" style="color: #003399;"></i>
+              <p>Reviewers</p>
+            </a>
+            <a href="/<%= encodeURIComponent(currentUserEmail) %>/customerProfile">
+              <i class="fa-solid fa-user" style="color: #003399;"></i>
+              <p>Profile</p>
+            </a>
+            <a href="/suli">
+              <i class="fa-solid fa-arrow-right-from-bracket" style="color: #fc6467;"></i>
+              <p>Logout</p>
+            </a>
         </div>
       </div>
 
-      <div class="content">
-        <div class="header">
-            <h1> Search Username</h1>
-        </div>
-        
-        <div>
-            <input type="text" class="search" placeholder="Enter username here">
-            <button class="search-button"> Search</button>
-        </div>
+  <div class="content">
+      <div class="header">
+          <h1>Search Username</h1>
+      </div>
+      
+      <div class="search-container">
+          <input type="text" id="search-input" class="search" placeholder="Enter username here">
+          <button id="search-button" class="search-button">Search</button>
+      </div>
 
-        <div class="username-list">
-          <% if (users.length > 0) { %>
-              <% users.forEach(user => { %>
-                  <button class="usernames-container">
-                      <div class="icon-container">
-                          <img src="<%= user.pfp %>" alt="<%= user.username %>'s profile picture" 
-                              style="width: 120px; height: 120px; border-radius: 50%;">
-                      </div>
-                      <div class="account-details">
-                          <p><strong>Username:</strong> <%= user.username %></p>
-                          <p><strong>Email:</strong> <%= user.email %></p>
-                      </div>
-                  </button>
-              <% }) %>
-          <% } else { %>
-              <p>No users found.</p>
-          <% } %>
-      </div>
-      </div>
+      <div class="username-list">
+        <% if (users.length > 0) { %>
+            <% users.forEach(user => { %>
+                <!-- Wrap the entire container with the <a> tag -->
+                <a href="/<%= encodeURIComponent(currentUserEmail) %>/<%= encodeURIComponent(user.email) %>/customerProfilePublic" class="usernames-container">
+                  <div class="icon-container">
+                      <% if (user.pfp && user.pfp.data) { %>
+                          <img src="data:<%= user.pfp.contentType %>;base64,<%= user.pfp.data.toString('base64') %>"
+                               alt="<%= user.username %>'s profile picture"
+                               width="120" height="120" style="border-radius: 50%;">
+                      <% } else { %>
+                          <img src="/images/default_pfp.png"
+                               alt="Default Profile Picture"
+                               width="120" height="120" style="border-radius: 50%;">
+                      <% } %>
+                  </div>
+                  <div class="accountdeets-container account-details">
+                      <p><strong>Username:</strong> <span class="username-info"><%= user.username %></span></p>
+                      <p><strong>Email:</strong> <span class="user-info"><%= user.email %></span></p>
+                  </div>
+                </a>
+              <% }); %>
+        <% } else { %>
+            <p>No users found.</p>
+        <% } %>
+    </div>    
+  </div>
+
+  <script>
+    // Function to filter user cards based only on username
+    function filterUserCards() {
+      const searchInput = document.getElementById("search-input");
+      const filter = searchInput.value.toLowerCase().trim();
+      const userCards = document.querySelectorAll(".usernames-container");
+
+      userCards.forEach(card => {
+        // Only check the username-info span
+        const usernameText = card.querySelector(".username-info").textContent.toLowerCase();
+        card.style.display = usernameText.includes(filter) ? "" : "none";
+      });
+    }
+
+    // Run the filter when the search button is pressed
+    document.getElementById("search-button").addEventListener("click", filterUserCards);
+  </script>
 </body>
 </html>

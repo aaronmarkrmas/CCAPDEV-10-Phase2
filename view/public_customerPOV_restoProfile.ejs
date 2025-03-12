@@ -7,22 +7,32 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/resto_account_styles.css">
+  <link rel="stylesheet" href="/css/customerPOV_restoProfile_style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
   <!-- Sidebar -->
   <div class="sidebar">
     <div class="logo">
-      <img src="/images/logo.png" alt="Bloemen Bites Logo">
-    </div>
-    <div class="navigation">
-      <a href="/logout" class="logout">
-        <i class="fa-solid fa-arrow-right-from-bracket"></i>
-        <p>Logout</p>
-    </a>
+        <img src="/images/logo.png" alt="Bloemen Bites Logo">
+      </div>
+      <div class="navigation">
+        <!-- need pa ifix -->       
+        <a href="#" onclick="window.history.back(); return false;">   
+          <i class="fa-solid fa-magnifying-glass" style="color: #003399;"></i>
+          <p>Search</p>
+        </a>
+
+      </div>
+
+      <div class="navigation">
+        <a href="/suli">
+          <i class="fa-solid fa-user" style="color: #003399;"></i>
+         <p>Login</p>
+        </a>
     
-    </div>
+      </div>
   </div>
   
   <!-- Main Content Area --> 
@@ -31,16 +41,14 @@
     <!-- Profile Photo and Button -->
     <div class="profile-photo-section">
       <img src="/profile-pics/<%= restaurant._id %>" alt="Restaurant Profile Picture">
-      <button class="editpfp-button" onclick="window.location.href='/restaurant/<%= encodeURIComponent(restaurant._id) %>/updateProfile'">
-        Edit Profile
-      </button>
       <h2 id="reviews">Reviews</h2>
+     
     </div>  
 
     <!-- Profile Details -->
     <div class="profile-details">
         <h2 id="user-name"><%= restaurant.restoName %></h2>
-        <p id="user-email"><%= restaurant._id %></p>
+        <p id="user-email"><%= restaurant.location %></p>
         <div class="tags">
           <% 
           let tagsArray = Array.isArray(restaurant.tags) ? restaurant.tags : restaurant.tags.split(",").map(tag => tag.trim());
@@ -57,6 +65,10 @@
       <div id="rating-stars"></div> <!-- Stars will be dynamically inserted -->
       <span id="rating-number"></span> <!-- Rating number will be dynamically updated -->
     </div>
+      <p >
+        <span><%= restaurant.phone %></span> | 
+        <span><%= restaurant._id %></span>
+      </p>
     </div>
   </div>
 
@@ -68,29 +80,7 @@
       <% } else { %>
           <% reviews.forEach(review => { %>
               <div class="review-post">
-                <% if (repliesMap[review._id] && repliesMap[review._id].length > 0) { %>
-              
-                  <!-- Ellipsis (only if a reply exists) -->
-                  <div class="ellipsis-container" style="position: relative; display: inline-block;">
-                      <i class="fa-solid fa-ellipsis reply-options-icon" data-review-id="<%= review._id %>" style="cursor: pointer;"></i>
-              
-                      <!-- Dropdown (Initially Hidden) -->
-                      <div class="reply-options-dropdown" id="dropdown-<%= review._id %>" style="display: none; position: absolute; top: 20px; right: 0; background: white; border: 1px solid #ccc; padding: 5px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
-                        <a href="/restaurant/<%= encodeURIComponent(restaurant._id) %>/review/<%= encodeURIComponent(review._id) %>/reply/<%= encodeURIComponent(repliesMap[review._id][0]._id) %>/edit-reply" class="edit-reply-option">
-                          Edit Reply
-                        </a>
-                        <a href="#" class="delete-reply-option" data-review-id="<%= review._id %>">
-                          Delete Reply
-                        </a>
-                      </div>
-                  </div>
-              <% } else { %>
-                  <!-- Reply Button -->
-                  <a href="/restaurant/<%= encodeURIComponent(restaurant._id) %>/review/<%= encodeURIComponent(review._id) %>/reply" class="reply-link">
-                      Reply
-                  </a>
-              <% } %>
-              
+           
                       <div class="review-post-details">
                       <img class="review-user-photo" src="<%= customerPfps[review.customerEmail] %>" alt="User Photo">
                       <div class="review-info">
@@ -113,18 +103,19 @@
   
                   <!-- Media Section -->
                   <div class="media-container">
-                      <% review.media.forEach(mediaItem => { %>
-                          <% let mediaUrl = String(mediaItem); %> 
-                          <% if (mediaUrl.endsWith('.mp4')) { %>
-                              <video controls width="100px" height="100px">
-                                  <source src="<%= mediaUrl %>" type="video/mp4">
-                              </video>
-                          <% } else { %>
-                              <img src="<%= mediaUrl %>" width="100px" height="100px" style="border-radius: 8px;">
-                          <% } %>
-                      <% }); %>
-                  </div>
-                
+                    <% review.media.forEach(mediaItem => { %>
+                        <% let mediaUrl = String(mediaItem); %> 
+                        <% if (mediaUrl.endsWith('.mp4')) { %>
+                            <video controls width="100px" height="100px">
+                                <source src="<%= mediaUrl %>" type="video/mp4">
+                            </video>
+                        <% } else { %>
+                            <img src="<%= mediaUrl %>" width="100px" height="100px" style="border-radius: 8px;">
+                        <% } %>
+                    <% }); %>
+                </div>
+              
+              
                   <!-- Reply Section -->
                   <% if (repliesMap[review._id] && repliesMap[review._id].length > 0) { %>
                     <div class="reply-container">
@@ -148,8 +139,6 @@
       <% } %>
   </div>
 
-  </div>
-</div>
 
 <script src="/js/restoProfile_script.js"></script>
 <script>

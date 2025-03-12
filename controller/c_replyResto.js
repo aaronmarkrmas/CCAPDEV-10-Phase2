@@ -32,12 +32,19 @@ exports.getReplyPage = async (req, res) => {
             customerUsernames[review.customerEmail] = customerData.username;
         }
 
-        res.render("restoReply", { restaurant, review, customerPfps, customerUsernames });
+        // Fetch review media
+        const reviewMedia = review.media ? review.media.map(media => ({
+            url: `data:${media.contentType};base64,${media.data.toString("base64")}`,
+            type: media.contentType.startsWith("image") ? "image" : "video"
+        })) : [];
+
+        res.render("restoReply", { restaurant, review, customerPfps, customerUsernames, reviewMedia });
     } catch (error) {
         console.error("Error loading reply page:", error);
         res.status(500).json({ error: "Failed to load reply page" });
     }
 };
+
 
 // Handle reply submission
 exports.submitReply = async (req, res) => {

@@ -3,7 +3,7 @@ const router = express.Router();
 
 // Import Controllers
 const adminRestaurantController = require('../controller/cr_adminResto');
-const adminReviewController = require('../controller/cr_adminReviewDelete');
+const adminReviewController = require('../controller/cr_adminReviewDelete.js');
 const Restaurant = require('../model/restaurant'); // Import Model for profile pictures
 
 // ✅ FIX: Route to Serve Profile Pictures

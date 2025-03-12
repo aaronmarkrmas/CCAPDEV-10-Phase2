@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Customer Profile Public View</title>
+  <script src="https://kit.fontawesome.com/e9d3d528d3.js" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/customerProfile_style.css">
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">
+        <img src="/images/logo.png" alt="Bloemen Bites Logo">
+    </div>
+    <div class="navigation">
+        <a href="/<%= encodeURIComponent(customer.email) %>/search_username">
+            <i class="fa-solid fa-magnifying-glass" style="color: #003399;"></i>
+            <p>Search</p>
+        </a>        
+        <a href="/<%= encodeURIComponent(customer.email) %>/reviewers">
+          <i class="fa-solid fa-star" style="color: #003399;"></i>
+          <p>Reviewers</p>
+        </a>
+        <a href="/<%= encodeURIComponent(customer.email) %>/customerProfile">
+          <i class="fa-solid fa-user" style="color: #003399;"></i>
+          <p>Profile</p>
+        </a>
+        <a href="/suli">
+          <i class="fa-solid fa-arrow-right-from-bracket" style="color: #fc6467;"></i>
+          <p>Logout</p>
+        </a>
+    </div>
+  </div>
+
+  <!-- Main Content Area --> 
+  <div class="content">
+    <div class="profile-section">
+        <div class="profile-photo-section">
+            <img src="<%= profilePicture %>" alt="Profile Picture">
+            <h2 id="reviews">Reviews</h2>
+        </div>
+        <div class="profile-details">
+            <h2 id="user-name"><%= customer.username %></h2>
+            <p id="user-email"><%= customer.email %></p>
+            <div class="description">
+                <p id="user-description"><%= customer.bio %></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div id="reviews-container" class="reviews-container">
+        <div id="reviews-list" class="reviews-list">
+            <% if (reviews.length === 0) { %>
+                <p>No reviews yet.</p>
+            <% } else { %>
+                <% reviews.forEach(review => { %>
+                    <div class="review-post" data-review-id="<%= review._id %>">
+                        <!-- Ellipsis Options Menu -->
+                        <div class="ellipsis-container" style="position: relative; display: inline-block;">
+                            <i class="fa-solid fa-ellipsis review-options-icon" data-review-id="<%= review._id %>" style="cursor: pointer;"></i>
+                        
+                            <!-- Dropdown Menu -->
+                            <div class="review-options-dropdown" id="dropdown-<%= review._id %>" style="display: none; position: absolute; top: 20px; right: 0; background: white; border-radius: 5px; border: 1px solid #ccc; padding: 5px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); min-width: 120px;">
+                                <a href="#" class="report-review-option" data-review-id="<%= review._id %>" style="display: block; padding: 8px 12px; text-decoration: none; color: black; font-size: 14px;">
+                                    Report
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="review-post-details">
+                            <img class="review-user-photo" src="<%= profilePicture %>" alt="User Photo">
+                            <div class="review-info">
+                                <p class="review-user-name"><%= review.restaurantName %></p>
+                                <p class="review-meta"><%= new Date(review.datePosted).toLocaleDateString() %> 
+                                    <% if (review.edited) { %>| Edited<% } %>
+                                </p>
+                                <div class="review-rating">
+                                    <% for (let i = 0; i < Math.floor(review.rating); i++) { %>
+                                        <i class="fa-solid fa-star" style="color: #ffcd3c;"></i>
+                                    <% } %>
+                                    <% for (let i = Math.floor(review.rating); i < 5; i++) { %>
+                                        <i class="fa-regular fa-star" style="color: #ccc;"></i>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                        <h1 class="review-title"><%= review.reviewTitle %></h1>
+                        <p class="review-text"><%= review.reviewText %></p>
+                        
+                        <!-- Media Section -->
+                        <div class="media-container">
+                            <% review.media.forEach(mediaItem => { %>
+                                <% let mediaUrl = String(mediaItem); %> 
+                                <% if (mediaUrl.endsWith('.mp4')) { %>
+                                    <video controls width="100px" height="100px">
+                                        <source src="<%= mediaUrl %>" type="video/mp4">
+                                    </video>
+                                <% } else { %>
+                                    <img src="<%= mediaUrl %>" width="100px" height="100px" style="border-radius: 8px;">
+                                <% } %>
+                            <% }); %>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } %>
+        </div>
+    </div>
+  </div>
+
+  <div id="report-modal" class="report-modal">
+    <div class="report-modal-content">
+        <h3>Report</h3>
+        <div id="report-review-id-display" style="margin-bottom: 10px;"></div>
+        
+        <!-- Hidden input for review ID -->
+        <input type="hidden" id="report-review-id" value="" />  <!-- Make sure this is included and it's hidden -->
+        
+        <label for="report-reason">Reason:</label>
+        <textarea id="report-reason" rows="4" placeholder="Enter reason for reporting"></textarea>
+        
+        <div class="modal-footer">
+            <button onclick="submitReport()" id="submit-report-btn">Submit</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    console.log("Script loaded, adding event listeners...");
+
+    // Toggle dropdown visibility when clicking on ellipsis
+    document.querySelectorAll('.review-options-icon').forEach(icon => {
+        icon.addEventListener('click', function(event) {
+            event.stopPropagation(); // Prevent click from closing immediately
+            const reviewId = this.getAttribute('data-review-id');
+            console.log("Clicked on ellipsis for review:", reviewId);
+
+            const dropdown = document.getElementById(`dropdown-${reviewId}`);
+
+            // Hide all other dropdowns before showing the clicked one
+            document.querySelectorAll('.review-options-dropdown').forEach(d => {
+                if (d !== dropdown) d.style.display = 'none';
+            });
+
+            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+        });
+    });
+
+    // Show report modal when "Report" option is clicked
+    document.querySelectorAll('.report-review-option').forEach(option => {
+        option.addEventListener('click', function(e) {
+            e.preventDefault();
+            const reviewId = this.getAttribute('data-review-id');
+            console.log("Report button clicked for review:", reviewId);
+
+            // Show the report modal and set the review ID for the report
+            document.getElementById("report-modal").style.display = "flex";
+            document.getElementById("report-review-id").value = reviewId;  // Set review ID in hidden field
+            document.getElementById("report-review-id-display").textContent = `Review ID: ${reviewId}`;  // Display review ID
+        });
+    });
+
+    // Close modal when clicked outside of modal content
+    document.getElementById('report-modal').addEventListener('click', function(event) {
+        if (event.target === this) {
+            this.style.display = 'none';
+        }
+    });
+});
+
+// Function to submit the report
+function submitReport() {
+    const reason = document.getElementById("report-reason").value;
+    const reviewId = document.getElementById("report-review-id").value;  // Get review ID from hidden input
+    const currentUserEmail = "<%= currentUserEmail %>";  // Ensure this is correctly populated in the template
+
+    if (!reviewId) {
+        alert("There was an issue with the review ID.");
+        return;
+    }
+
+    if (reason.trim() === "") {
+        alert("Please provide a reason.");
+        return;
+    }
+
+    // Send the report to the server
+    fetch('/reportReview', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            reviewId: reviewId,
+            reason: reason,
+            currentUserEmail: currentUserEmail,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("Report submitted successfully.");
+            location.reload();  // Refresh the page to reflect changes
+        } else {
+            alert("Failed to submit the report.");
+        }
+    })
+    .catch(error => {
+        console.error("Error submitting the report:", error);
+        alert("There was an error submitting your report.");
+    });
+
+    // Close the modal
+    document.getElementById("report-modal").style.display = "none";
+}
+</script>
+</body>
+</html>

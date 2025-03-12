@@ -15,14 +15,14 @@
         </div>
     </div>
     <div class="signup-container">
-        <h2>Restaurant Sign Up</h2>
-        <form action="/restoSignup" method="POST" enctype="multipart/form-data">
+        <h2>Customer Sign Up</h2>
+        <form action="/customerSignup" method="POST" enctype="multipart/form-data">
             <% if (errors && errors.message) { %>
                 <p class="error"><%= errors.message %></p>
             <% } %>            
             <input type="email" name="email" placeholder="Email" required>
             <input type="contactnumber" name="contactNumber" placeholder="Contact Number" required>
-            <input type="restaurantname" name="restaurantName" placeholder="Restaurant Name" required>
+            <input type="username" name="username" placeholder="User Name" required>
             <input type="password" name="password" placeholder="Password" required>
 
         <div class="upload-container">
@@ -30,20 +30,8 @@
             <input type="file" id="file-upload" name="pfp" accept="image/*" hidden>
             <label for="file-upload" class="upload-icon">📤</label>
         </div>
-        <input type="location" placeholder="Location" required>
-        <textarea name="description" placeholder="Short Description" rows="8" required></textarea>
+        <textarea name="bio" placeholder="bio" rows="8" required></textarea>
 
-        <!-- Checklist for Tags -->
-        <div class="tags-container">
-            <p>Tags:</p>
-            <div class="tags-list">
-                <% tags.forEach(tag => { %>
-                    <label>
-                        <input type="checkbox" name="tags" value="<%= tag._id %>"> <%= tag._id %>
-                    </label>
-                <% }); %>
-            </div>
-        </div>
         
         <button>Sign Up</button>
     </form>

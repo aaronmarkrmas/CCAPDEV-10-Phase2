@@ -53,19 +53,17 @@
             <% reports.forEach(report => { %>
                 <tr>
                     <td><%= report.reporterUsername %></td>
-                    <td>
-                        <!-- Make Post ID clickable with dynamic URL -->
-                        <a href="/admin/<%= adminemail %>/restaurant/<%= restoemail %>/profile?postId=<%= report.postId %>">
-                            <%= report.postId %>
-                        </a>
-                    </td>
+                    <td><%= report.postId %></td>
                     <td><%= report.reason %></td>
                     <td><%= report.dateReported %></td>
                     <td><%= report.isResolved %></td>
                 </tr>
             <% }) %>
         </tbody>
-    </table>         
+    </table>
+    <button class="viewRep-button">
+      View Reports
+    </button>
   </div>
   <script src="/js/adminReportsTable_script.js"></script>
 </body>
