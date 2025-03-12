@@ -45,10 +45,11 @@ exports.authenticateUser = async (req, res) => {
 
         // Store user session data
         req.session.user = {
-            email: user.email || user._id, // Restaurants use _id as email
-            userType,
-        };
-
+            _id: user._id.toString(),  // Always store _id
+            email: user.email || user._id.toString(), // Customers/Restaurants use `email`, admins use `_id`
+            userType
+          };
+          
         console.log("Stored in session:", req.session.user); // Debugging
 
         return res.json({ 

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="UTF-8">
+  <title>Restaurant Profile (Admin View)</title>
+  
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/e9d3d528d3.js" crossorigin="anonymous"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" 
+    rel="stylesheet"
+  >
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/restoAdmin_view_style.css">
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">
+      <img src="/images/logo.png" alt="Bloemen Bites Logo" />
+    </div>
+    <div class="navigation">
+        <a href="/admin/<%= encodeURIComponent(adminId) %>/search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <p>Search</p>
+        </a>
+        <a href="#">
+          <i class="fa-solid fa-star"></i>
+          <p>Reviews</p>
+        </a>
+        <a href="#">
+          <i class="fa-solid fa-gear"></i>
+          <p>Settings</p>
+        </a>
+        <a href="/logout" class="logout">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          <p>Logout</p>
+        </a>
+    </div>
+  </div>
+  
+  <!-- Main Content Area -->
+  <div class="content">
+    <div class="profile-section">
+      <!-- Profile Photo and Buttons -->
+      <div class="profile-photo-section">
+        <img 
+          id="profile-photo" 
+          src="/images/profile-pics/<%= restaurant._id %>" 
+          alt="Profile Photo"
+        />
+        <!-- Admin-Only Button: Deactivate Account -->
+        <form 
+          action="/admin/<%= adminId %>/restaurant/<%= restaurant._id %>/deactivate" 
+          method="POST"
+        >
+          <button 
+            type="submit" 
+            class="deactivate-button"
+            onclick="return confirm('Are you sure you want to deactivate this restaurant account?')"
+          >
+            Deactivate Account
+          </button>
+        </form>
+        
+        <button class="editpfp-button">Edit Profile</button>
+
+        <h2 id="reviews" class="reviews-heading">Reviews</h2>
+      </div>
+
+      <!-- Profile Details -->
+      <div class="profile-details">
+        <h2 id="user-name"><%= restaurant.restoName %></h2>
+        <p id="user-email"><%= restaurant._id %></p>
+
+        <!-- Tags (Formatted from string) -->
+        <div class="tags">
+          <% if (restaurant.tags && typeof restaurant.tags === "string" && restaurant.tags.trim() !== "") { %>
+            <% restaurant.tags.split(",").map(tag => tag.trim()).forEach((tag, index) => { %>
+              <span class="tag tag-color-<%= index %>"><%= tag %></span>
+            <% }) %>
+          <% } else { %>
+            <span class="tag">No Tags Available</span>
+          <% } %>
+        </div>
+        
+
+        <!-- Description -->
+        <div class="description">
+          <p id="user-description">
+            <%= restaurant.description || 'No description provided.' %>
+          </p>
+        </div>
+
+        <!-- Rating Section -->
+        <div class="rating">
+          <div id="rating-stars">
+            <% 
+              const avgRating = averageRating || 0;
+              const fullStars = Math.floor(avgRating);
+              const hasHalfStar = (avgRating - fullStars) >= 0.5;
+            %>
+            <% for(let i = 0; i < fullStars; i++){ %>
+              <i class="fa-solid fa-star" style="color:#FFD700"></i>
+            <% } %>
+            <% if(hasHalfStar){ %>
+              <i class="fa-solid fa-star-half-stroke" style="color:#FFD700"></i>
+            <% } %>
+            <% for(let i = 0; i < (5 - fullStars - (hasHalfStar ? 1 : 0)); i++){ %>
+              <i class="fa-regular fa-star" style="color:#FFD700"></i>
+            <% } %>
+          </div>
+          <span id="rating-number"><%= avgRating %>/5</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reviews Container -->
+    <div id="reviews-container" class="reviews-container">
+      <div id="reviews-list" class="reviews-list">
+        <!-- Render each review -->
+        <% reviews.forEach(review => { %>
+          <div class="review-card">
+
+            <!-- Review Header (Name & Date) -->
+            <div class="review-header">
+              <div class="review-details">
+                <h3 class="reviewer-name"><%= review.customerName || "Anonymous" %></h3>
+                <p class="review-subdetails">
+                  <% if (review.datePosted) { %>
+                    <%= new Date(review.datePosted).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %>
+                  <% } else { %>
+                    Date not available
+                  <% } %>
+                </p>
+                
+              </div>
+
+              <!-- Delete Post Button -->
+            <form 
+            action="/admin/<%= adminId %>/reviews/<%= review._id %>/delete" 
+            method="POST"
+             >
+            <button 
+              type="submit"
+              class="delete-post-button"
+              onclick="return confirm('Are you sure you want to delete this post?')"
+             >
+              Delete Post
+            </button>
+              </form>
+            </div>
+
+            <!-- Star Rating -->
+            <!-- Star Rating (Fixed) -->
+<div class="review-rating">
+  <% 
+    const fullStars = Math.floor(review.rating);
+    const hasHalfStar = (review.rating - fullStars) >= 0.5;
+  %>
+  <% for (let i = 0; i < fullStars; i++) { %>
+    <i class="fa-solid fa-star" style="color:#FFD700"></i>
+  <% } %>
+  <% if (hasHalfStar) { %>
+    <i class="fa-solid fa-star-half-stroke" style="color:#FFD700"></i>
+  <% } %>
+  <% for (let i = 0; i < (5 - fullStars - (hasHalfStar ? 1 : 0)); i++) { %>
+    <i class="fa-regular fa-star" style="color:#FFD700"></i>
+  <% } %>
+</div>
+
+            <!-- Review Content -->
+            <div class="review-content">
+              <h4 class="review-header-text">“<%= review.reviewTitle %>”</h4>
+              <p class="review-text"><%= review.reviewText %></p>
+            </div>
+
+            <!-- Review Images (If Available) -->
+            <% if (review.media && review.media.length > 0) { %>
+              <div class="review-images">
+                <% review.media.forEach((file, index) => { %>
+                  <img src="/path/to/reviewMedia/<%= file.filename %>" alt="Review Image <%= index + 1 %>">
+                <% }) %>
+              </div>
+            <% } %>
+
+            
+
+          </div> <!-- End Review Card -->
+        <% }) %>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
