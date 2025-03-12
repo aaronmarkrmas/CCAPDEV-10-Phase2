@@ -92,6 +92,9 @@ app.use('/customer', r_editCustomerProfile);
 const rr_sideBar = require("./routes/rr_sideBar");
 app.use("/restaurant", rr_sideBar); 
 
+const r_customerProfile = require('./routes/r_customerProfile');
+app.use('/', r_customerProfile);
+
 const r_getRestoReviews = require("./routes/r_getRestoReviews");
 app.use("/", r_getRestoReviews); 
 
