@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/public/css/customerPOV_restoProfile_style.css">
   <link rel="stylesheet" href="/css/customerPOV_restoProfile_style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -15,11 +16,10 @@
   <!-- Sidebar -->
   <div class="sidebar">
     <div class="logo">
-        <img src="/images/logo.png" alt="Bloemen Bites Logo">
-      </div>
-      <div class="navigation">
-        <!-- need pa ifix -->       
-        <a href="/<%=loggedUserEmail %>/customer-home-feed">   
+        <img src="/public/images/logo.png" alt="Bloemen Bites Logo">
+    </div>
+    <div class="navigation">      
+        <a href="/<%= loggedUserEmail %>/customer-home-feed">
           <i class="fa-solid fa-magnifying-glass" style="color: #003399;"></i>
           <p>Search</p>
         </a>
@@ -35,19 +35,32 @@
           <i class="fa-solid fa-arrow-right-from-bracket" style="color: #fc6467;"></i>
           <p>Logout</p>
         </a>
-      </div>
+    </div>
   </div>
   
   <!-- Main Content Area --> 
-<div class="content">
-  <div class="profile-section">
-    <!-- Profile Photo and Button -->
-    <div class="profile-photo-section">
-      <img src="/profile-pics/<%= restaurant._id %>" alt="Restaurant Profile Picture">
-      <h2 id="reviews">Reviews</h2>
-     
-    </div>  
+  <div class="content">
+    <div class="profile-section">
+      <div class="profile-photo-section">
+        <img src="/profile-pics/<%= restaurant?._id || 'default.png' %>" alt="Restaurant Profile Picture">
+        <h2 id="reviews">Reviews</h2>
+      </div>  
 
+      <div class="profile-details">
+          <h2 id="user-name"><%= restaurant?.restoName || "Unknown Restaurant" %></h2>
+          <p><%= restaurant?.location || "No Location Provided" %></p>
+          <p><%= restaurant?.phone || "No Phone Provided" %> | <%= restaurant?._id || "Unknown ID" %></p>
+
+          <div class="tags">
+            <% (restaurant?.tags || "").split(",").map(tag => tag.trim()).forEach(tag => { %>
+                <span class="tag"><%= tag %></span>
+            <% }); %>
+          </div>
+
+          <div class="description">
+            <p id="user-description"><%= restaurant?.description || "No description available." %></p>
+          </div>
+      </div>
     <!-- Profile Details -->
     <div class="profile-details">
         <h2 id="user-name"><%= restaurant.restoName %></h2>
@@ -73,14 +86,19 @@
         <span><%= restaurant._id %></span>
       </p>
     </div>
-  </div>
 
-  <!-- New Reviews Container -->
-  <div id="reviews-container" class="reviews-container">
-    <div id="reviews-list" class="reviews-list">
-      <% if (reviews.length === 0) { %>
-          <p>No reviews yet.</p>
+    <!-- Reviews Section -->
+    <div id="reviews-container">
+      <% if (Array.isArray(reviews) && reviews.length > 0) { %>
+        <% reviews.forEach(review => { %>
+          <div class="review-post">
+            <p class="review-user-name"><%= customerUsernames?.[review.customerEmail] || "Anonymous" %></p>
+            <h1 class="review-title"><%= review?.reviewTitle || "Untitled Review" %></h1>
+            <p class="review-text"><%= review?.reviewText || "No Review Text Provided" %></p>
+          </div>
+        <% }); %>
       <% } else { %>
+        <p>No reviews yet.</p>
           <% reviews.forEach(review => { %>
               <div class="review-post">
               
@@ -141,8 +159,10 @@
               </div>
           <% }); %>
       <% } %>
+    </div>
   </div>
 
+<script src="/public/js/restoProfile_script.js"></script>
   </div>
   <a href="/<%=loggedUserEmail %>/profile/<%= restaurant._id %>/write">
   <div class="floating-button">
@@ -154,14 +174,10 @@
 <script src="/js/restoProfile_script.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-      displayRating(<%= restaurant.rating %>);
+      displayRating(<%= restaurant && restaurant.rating ? restaurant.rating : 0 %>);
   });
-
-    const restaurantId = "<%= restaurant._id %>"; 
-    fetch(`/reviews/${encodeURIComponent(restaurantId)}`)
-        .then(response => response.json())
-        .then(reviews => console.log("Reviews:", reviews));
 </script>
+
 
 </body>
 </html>

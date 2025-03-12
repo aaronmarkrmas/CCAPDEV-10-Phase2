@@ -92,6 +92,15 @@ app.use('/customer', r_editCustomerProfile);
 const rr_sideBar = require("./routes/rr_sideBar");
 app.use("/restaurant", rr_sideBar); 
 
+const r_customerProfile = require('./routes/r_customerProfile');
+app.use('/', r_customerProfile);
+
+const r_editReview = require('./routes/r_editReview');
+app.use('/', r_editReview);
+
+const r_customerProfile_public = require('./routes/r_customerProfile_public');
+app.use('/', r_customerProfile_public);
+
 const r_getRestoReviews = require("./routes/r_getRestoReviews");
 app.use("/", r_getRestoReviews); 
 
@@ -127,6 +136,16 @@ app.use("/restoSignup", rr_restoSignup);
 
 const r_customerPOV_restoProfile = require("./routes/r_customerPOV_restoProfile");
 app.use("/", r_customerPOV_restoProfile);
+
+//miguel  added
+const r_adminSearch = require("./routes/r_adminsearch");
+app.use("/", r_adminSearch);
+
+const r_adminRoutes = require("./routes/r_adminRoutes");
+app.use("/", r_adminRoutes);
+
+const imageRoutes = require('./routes/r_imageRoutes');
+app.use('/images', imageRoutes); 
 
 const adminReportsRoute = require('./routes/ra_adminReportsTable');
 app.use(adminReportsRoute);

@@ -19,7 +19,7 @@ exports.authenticateUser = async (req, res) => {
         if (user) userType = "customer";
 
         if (!user) {
-            user = await restaurants.findOne({ email });  
+            user = await restaurants.findOne({ _id: email });  
             if (user) userType = "restaurant";
         }
 
@@ -47,10 +47,20 @@ exports.authenticateUser = async (req, res) => {
         }
 
         req.session.user = {
-            email: user.email,
-            _id: user._id,
-            userType,
-        };
+            _id: user._id.toString(),  // Always store _id
+            email: user.email || user._id.toString(), // Customers/Restaurants use `email`, admins use `_id`
+            userType
+          };
+          
+        console.log("Stored in session:", req.session.user); // Debugging
+
+        return res.json({ 
+            success: true, 
+            userType, 
+            email: user.email || user._id,
+            _id: user._id
+        });
+        
 
         res.json({ success: true, email: req.session.user.email, _id: req.session.user._id, userType });
     } catch (error) {

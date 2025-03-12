@@ -60,7 +60,8 @@
                     } else if (result.userType === "restaurant") {
                         window.location.href = `/restaurant/${encodeURIComponent(result._id)}/profile`;
                     } else if (result.userType === "admin") {
-                        window.location.href = `/admin/${encodeURIComponent(result._id)}/profile`; // Placeholder
+                   
+                         window.location.href = `/admin/${encodeURIComponent(result._id)}/search`;
                     }
                 } catch (error) {
                     console.error("Login error:", error);
