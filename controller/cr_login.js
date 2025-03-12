@@ -19,7 +19,7 @@ exports.authenticateUser = async (req, res) => {
         if (user) userType = "customer";
 
         if (!user) {
-            user = await restaurants.findOne({ email });  
+            user = await restaurants.findOne({ _id: email });  
             if (user) userType = "restaurant";
         }
 
