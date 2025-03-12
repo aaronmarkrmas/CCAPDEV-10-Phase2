@@ -86,6 +86,9 @@ app.get('/profile-pics/:restaurantId', async (req, res) => {
 const rr_editRestoProfile = require('./routes/rr_editRestoProfile');
 app.use('/restaurant', rr_editRestoProfile);
 
+const r_editCustomerProfile = require('./routes/r_editCustomerProfile');
+app.use('/customer', r_editCustomerProfile);
+
 const rr_sideBar = require("./routes/rr_sideBar");
 app.use("/restaurant", rr_sideBar); 
 
@@ -124,6 +127,9 @@ app.use("/restoSignup", rr_restoSignup);
 
 const r_customerPOV_restoProfile = require("./routes/r_customerPOV_restoProfile");
 app.use("/", r_customerPOV_restoProfile);
+
+const adminReportsRoute = require('./routes/ra_adminReportsTable');
+app.use(adminReportsRoute);
 
 const r_write_reviews = require("./routes/r_write_reviews");
 app.use("/",r_write_reviews);
