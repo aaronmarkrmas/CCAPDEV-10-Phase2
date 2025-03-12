@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const c_write_reviews = require("../controller/c_write_reviews");
-const { upload } = require("../main"); // ✅ Import from server.js
+const { upload } = require("../main"); 
 
 router.get("/:email/profile/:restaurantId/write", c_write_reviews.viewProfile);
 

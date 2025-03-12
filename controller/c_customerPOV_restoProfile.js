@@ -15,10 +15,8 @@ exports.publicViewProfile = async (req, res) => {
             return res.status(404).json({ error: "Restaurant not found" });
         }
 
-        // Convert tags to an array
         const tagsArray = restaurant.tags.split(",").map(tag => tag.trim());
 
-        // Fetch restaurant reviews
         const restaurantReviews = await Review.find({ restaurantId: restoEmail });
 
         const processedReviews = restaurantReviews.map(review => {
@@ -33,7 +31,6 @@ exports.publicViewProfile = async (req, res) => {
             return { ...review.toObject(), media: processedMedia };
         });
         
-        // Get customer emails from reviews
         const customerEmails = restaurantReviews.map(review => review.customerEmail);
         const customersData = await Customer.find(
             { email: { $in: customerEmails } }, 
@@ -43,7 +40,6 @@ exports.publicViewProfile = async (req, res) => {
         const customerPfps = {};
         const customerUsernames = {};
 
-        // Process customer profile pictures and usernames
         customersData.forEach(customer => {
             customerPfps[customer.email] = customer.pfp && customer.pfp.data 
                 ? `data:${customer.pfp.contentType};base64,${customer.pfp.data.toString("base64")}` 
@@ -56,7 +52,6 @@ exports.publicViewProfile = async (req, res) => {
         console.log("Customer usernames:", customerUsernames);
         console.log("Reviews fetched:", restaurantReviews.length);
 
-        // Fetch replies for each review
         const repliesMap = {};
         for (const review of restaurantReviews) {
             const reviewReplies = await Reply.find({ reviewId: review._id });
@@ -65,7 +60,6 @@ exports.publicViewProfile = async (req, res) => {
 
         console.log("Replies fetched:", Object.keys(repliesMap).length); 
 
-        // Render the restaurant profile with all necessary data
         res.render("public_customerPOV_restoProfile", { 
             loggedUserEmail: null,
             restaurant,
@@ -96,10 +90,8 @@ exports.loggedViewProfile = async (req, res) => {
             return res.status(404).json({ error: "Restaurant not found" });
         }
 
-        // Convert tags to an array
         const tagsArray = restaurant.tags.split(",").map(tag => tag.trim());
 
-       // Fetch restaurant reviews
         const restaurantReviews = await Review.find({ restaurantId }); 
 
         let averageRating = 0;
@@ -108,7 +100,6 @@ exports.loggedViewProfile = async (req, res) => {
             averageRating = (totalRating / restaurantReviews.length).toFixed(2); // Round to 2 decimals
         }
 
-        // Update the restaurant rating in the database
         restaurant.rating = averageRating;
         restaurant.nReviews = restaurantReviews.length;
         await restaurant.save();
@@ -125,7 +116,6 @@ exports.loggedViewProfile = async (req, res) => {
             return { ...review.toObject(), media: processedMedia };
         });
 
-       // Get customer emails from reviews
         const customerEmails = restaurantReviews.map(review => review.customerEmail);
         const customersData = await Customer.find(
             { email: { $in: customerEmails } }, 
@@ -135,7 +125,6 @@ exports.loggedViewProfile = async (req, res) => {
         const customerPfps = {};
         const customerUsernames = {};
 
-        //Process customer profile pictures and usernames
         customersData.forEach(customer => {
             customerPfps[customer.email] = customer.pfp && customer.pfp.data 
                 ? `data:${customer.pfp.contentType};base64,${customer.pfp.data.toString("base64")}` 
@@ -148,7 +137,6 @@ exports.loggedViewProfile = async (req, res) => {
         console.log("Customer usernames:", customerUsernames);
         console.log("Reviews fetched:", restaurantReviews.length);
 
-        //Fetch replies for each review
         const repliesMap = {};
         for (const review of restaurantReviews) {
             const reviewReplies = await Reply.find({ reviewId: review._id });
@@ -157,7 +145,6 @@ exports.loggedViewProfile = async (req, res) => {
 
         console.log("Replies fetched:", Object.keys(repliesMap).length); 
 
-        // Render the restaurant profile with all necessary data
         res.render("customerPOV_restoProfile", { 
             loggedUserEmail: email, // Pass logged-in user email
             restaurant,

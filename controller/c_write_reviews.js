@@ -4,7 +4,7 @@ const Review = require("../model/review"); // Ensure correct import
 const Reply = require("../model/reply"); // Ensure correct import
 const { v4: uuidv4 } = require("uuid"); 
 
-exports.viewProfile = async (req, res) => {
+exports.viewProfile = async (req, res) => { //get details na nasa taas
     try {
         const { email, restaurantId } = req.params;
 
@@ -16,13 +16,11 @@ exports.viewProfile = async (req, res) => {
             return res.status(404).json({ error: "Restaurant not found" });
         }
 
-        // Convert tags to an array
         const tagsArray = restaurant.tags.split(",").map(tag => tag.trim());
 
        
-        // Render the restaurant profile with all necessary data
         res.render("write_review", { 
-            loggedUserEmail: email, // Pass logged-in user email
+            loggedUserEmail: email, 
             restaurant,
             restaurantId: restaurant._id,
             tags: tagsArray,
@@ -38,7 +36,7 @@ exports.viewProfile = async (req, res) => {
 exports.postReview = async (req, res) => { 
     try {
         const { title, review, rating} = req.body;
-        const { email, restaurantId } = req.params; // Extract from URL parameters
+        const { email, restaurantId } = req.params; 
 
         const formattedMedia = req.files.map(file => ({
             filename: file.originalname,
@@ -46,23 +44,21 @@ exports.postReview = async (req, res) => {
             data: file.buffer 
         }));
 
-        console.log("Processed Media:", formattedMedia); // Debugging
+        console.log("Processed Media:", formattedMedia); 
 
-        const customerEmail = req.user ? req.user.email : email || "Anonymous"; // Ensure correct email extraction
-       
+        const customerEmail = req.user ? req.user.email : email || "Anonymous"; 
 
         if (!restaurantId || !title || !review || !rating) {
             return res.status(400).json({ error: "All fields are required" });
         }
 
         
-
         console.log(req.files)
         const newReview = new Review({
             _id: uuidv4(),
             restaurantId,
-            customerEmail, // Updated field
-            reviewTitle: title, // Rename to match schema
+            customerEmail, 
+            reviewTitle: title, 
             rating: parseInt(rating),
             reviewText: review,
             media:formattedMedia

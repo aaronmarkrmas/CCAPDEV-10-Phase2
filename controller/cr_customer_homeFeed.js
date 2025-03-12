@@ -17,18 +17,16 @@ exports.getCustomerHomeFeed = async (req, res) => {
 
         let query = {};
 
-        // Apply search filter if provided
-        if (searchQuery) {
+        if (searchQuery) { //search
             query.restoName = { $regex: searchQuery, $options: 'i' }; // Case-insensitive search
         }
 
-        // Apply tag filter if provided
-        if (tagFilter) {
-            query.tags ={ $regex: new RegExp(`\\b${tagFilter}\\b`, 'i') }; // <-- Matches restaurants with the selected tag
+        if (tagFilter) {//fortags
+            query.tags ={ $regex: new RegExp(`\\b${tagFilter}\\b`, 'i') }; 
         }
 
 
-        const restaurants = await Restaurant.find(query); // Fetch restaurants with filters applied
+        const restaurants = await Restaurant.find(query); 
 
         const tags = await Tag.find(); // get tags
 

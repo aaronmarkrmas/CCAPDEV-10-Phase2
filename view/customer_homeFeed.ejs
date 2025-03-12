@@ -91,14 +91,14 @@
 
   function filterByTag(tag) {
     const urlParams = new URLSearchParams(window.location.search);
-    urlParams.set('tag', tag); // Update tag filter in URL
-    window.location.search = urlParams.toString(); // Reload page with new filter
+    urlParams.set('tag', tag); //tag filet sa url
+    window.location.search = urlParams.toString(); //reload page
 }
 
 function resetFilter() {
     const urlParams = new URLSearchParams(window.location.search);
     urlParams.delete('tag'); // Remove tag filter
-    window.location.search = urlParams.toString(); // Reload without tag filter
+    window.location.search = urlParams.toString(); //remove and reload page without filte
 }
 
 </script>
