@@ -147,6 +147,8 @@ app.use("/", r_adminRoutes);
 const imageRoutes = require('./routes/r_imageRoutes');
 app.use('/images', imageRoutes); 
 
+const r_adminSettings = require("./routes/r_adminSettings");
+app.use("/", r_adminSettings);
 const adminReportsRoute = require('./routes/ra_adminReportsTable');
 app.use(adminReportsRoute);
 

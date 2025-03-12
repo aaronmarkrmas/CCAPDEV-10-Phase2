@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://kit.fontawesome.com/e9d3d528d3.js" crossorigin="anonymous"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" 
+    rel="stylesheet"
+  >
+
+    <title>Admin Settings</title>
+    <link rel="stylesheet" href="/css/adminSettings_style.css" />
+
+</head>
+<body>
+    <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">
+      <img src="/images/logo.png" alt="Bloemen Bites Logo" />
+    </div>
+    <div class="navigation">
+      <a href="/admin/<%= encodeURIComponent(adminId) %>/search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <p>Search</p>
+      </a>
+      <a href="#">
+        <i class="fa-solid fa-star"></i>
+        <p>Reviews</p>
+      </a>
+      <a href="/admin/<%= encodeURIComponent(adminId) %>/settings">
+        <i class="fa-solid fa-gear"></i>
+        <p>Settings</p>
+      </a>
+      
+      <a href="/logout" class="logout">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        <p>Logout</p>
+      </a>
+    </div>
+  </div>
+
+    <!-- Main content -->
+    <div class="settings-container">
+      <h1>Settings</h1>
+      <p>Total Users: <%= totalUsers %></p>
+      <p>Customer Accounts: <%= customerCount %></p>
+      <p>Restaurant Accounts: <%= restaurantCount %></p>
+  
+      <!-- Buttons -->
+      <div class="settings-buttons">
+          <button onclick="location.href='/admin/<%= adminId %>/reports'">
+              Reports
+          </button>
+          <button onclick="location.href='/admin/<%= adminId %>/tags'">
+              Manage Tags
+          </button>
+      </div>
+  </div>
+</body>
+</html>
