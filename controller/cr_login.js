@@ -32,9 +32,11 @@ exports.authenticateUser = async (req, res) => {
             return res.status(404).json({ error: "Email not found" });
         }
 
-        const isDeactivated = await deactivatedAcc.findOne({ _id: user._id });
-        if (isDeactivated) {
-            return res.status(403).json({ error: "This account has been deactivated" });
+        if (userType === "customer") {
+            const isDeactivated = await deactivatedAcc.findOne({ _id: user._id });
+            if (isDeactivated) {
+                return res.status(403).json({ error: "This account has been deactivated" });
+            }
         }
 
         const inputPassword = password.trim();
