@@ -54,28 +54,31 @@ exports.updateProfile = async (req, res) => {
     }
 };
 
-// Deactivate Account
 exports.deactivateAccount = async (req, res) => {
-    try {
-        const { email } = req.params;
-        const customer = await Customer.findOne({ email });
+    console.log("Deactivate route hit with email:", req.params.email); // Debugging
 
+    try {
+        const email = req.params.email;
+
+        if (!email) {
+            console.log("No email provided"); // Debugging
+            return res.status(400).json({ error: "Email is required" });
+        }
+
+        const customer = await Customer.findOne({ email });
         if (!customer) {
+            console.log("Customer not found"); // Debugging
             return res.status(404).json({ error: "Customer not found" });
         }
 
-        // Create a deactivated account entry
-        const deactivatedAcc = new DeactivatedAcc({
-            _id: customer._id,
-            date: new Date()
-        });
+        // Insert into deactivatedAcc collection
+        const deactivatedEntry = { _id: customer._id, date: new Date() };
+        await DeactivatedAcc.create(deactivatedEntry);
+        console.log("Account successfully deactivated:", deactivatedEntry); // Debugging
 
-        await deactivatedAcc.save();
-
-        res.render("editCustomerProfile", { customer, message: "Account deactivated." });
-
+        res.json({ message: "Account deactivated successfully" });
     } catch (error) {
         console.error("Error deactivating account:", error);
-        res.status(500).json({ error: "An error occurred while deactivating the account" });
+        res.status(500).json({ error: "Internal Server Error" });
     }
 };
