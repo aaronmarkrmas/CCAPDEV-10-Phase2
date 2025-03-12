@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <script src="https://kit.fontawesome.com/e9d3d528d3.js" crossorigin="anonymous"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" 
+    rel="stylesheet"
+  >
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Tags</title>
+    <link rel="stylesheet" href="/css/adminTags_style.css">
+    <script defer src="/js/adminTags.js"></script> 
+</head>
+<body>
+
+    <!-- Sidebar (Reused from other pages) -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="/images/logo.png" alt="Bloemen Bites Logo">
+        </div>
+        <div class="navigation">
+            <a href="/admin/<%= encodeURIComponent(adminId) %>/search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <p>Search</p>
+            </a>
+            <a href="#">
+                <i class="fa-solid fa-star"></i>
+                <p>Reviews</p>
+            </a>
+            <a href="/admin/<%= encodeURIComponent(adminId) %>/search">
+
+                <i class="fa-solid fa-gear"></i>
+                <p>Settings</p>
+            </a>
+            <a href="/logout" class="logout">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                <p>Logout</p>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="tags-container">
+        <h1>Manage Tags</h1>
+
+        <!-- Delete Tag -->
+        <div class="tag-section">
+            <label for="delete-tag">Delete Tag</label>
+            <select id="delete-tag">
+                <% tags.forEach(tag => { %>
+                    <option value="<%= tag %>"><%= tag %></option>
+                <% }) %>
+            </select>
+            <button id="delete-btn" class="delete-btn">Delete</button>
+        </div>
+
+        <!-- Add Tag -->
+        <div class="tag-section">
+            <label for="add-tag">Add Tag</label>
+            <input type="text" id="add-tag" placeholder="Enter new tag">
+            <button id="add-btn" class="add-btn">Add Tag</button>
+        </div>
+    </div>
+
+</body>
+</html>

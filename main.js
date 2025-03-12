@@ -135,6 +135,8 @@ app.use("/", r_adminRoutes);
 const imageRoutes = require('./routes/r_imageRoutes');
 app.use('/images', imageRoutes); 
 
+const r_adminSettings = require("./routes/r_adminSettings");
+app.use("/", r_adminSettings);
 
 app.listen(PORT, () => {
     console.log(`Server started at http://localhost:${PORT}`);
