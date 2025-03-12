@@ -98,6 +98,9 @@ app.use('/', r_customerProfile);
 const r_editReview = require('./routes/r_editReview');
 app.use('/', r_editReview);
 
+const r_customerProfile_public = require('./routes/r_customerProfile_public');
+app.use('/', r_customerProfile_public);
+
 const r_getRestoReviews = require("./routes/r_getRestoReviews");
 app.use("/", r_getRestoReviews); 
 

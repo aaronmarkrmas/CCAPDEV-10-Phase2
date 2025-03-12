@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Customer Profile</title>
+  <title>Customer Profile Public View</title>
   <script src="https://kit.fontawesome.com/e9d3d528d3.js" crossorigin="anonymous"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -41,9 +41,6 @@
     <div class="profile-section">
         <div class="profile-photo-section">
             <img src="<%= profilePicture %>" alt="Profile Picture">
-            <button class="editpfp-button" onclick="window.location.href='/customer/<%= encodeURIComponent(customer.email) %>/updateProfile'">
-                Edit Profile
-            </button>
             <h2 id="reviews">Reviews</h2>
         </div>
         <div class="profile-details">
@@ -69,14 +66,8 @@
                         
                             <!-- Dropdown Menu -->
                             <div class="review-options-dropdown" id="dropdown-<%= review._id %>" style="display: none; position: absolute; top: 20px; right: 0; background: white; border-radius: 5px; border: 1px solid #ccc; padding: 5px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); min-width: 120px;">
-                                <a href="#" 
-                                class="edit-review-option" 
-                                data-review-id="<%= review._id %>" 
-                                data-restaurant-id="<%= review.restaurantId %>">
-                                Edit Review
-                                </a>
-                                <a href="#" class="delete-review-option" data-review-id="<%= review._id %>" style="display: block; padding: 8px 12px; text-decoration: none; color: black; font-size: 14px;">
-                                    Delete Review
+                                <a href="#" class="report-review-option" data-review-id="<%= review._id %>" style="display: block; padding: 8px 12px; text-decoration: none; color: black; font-size: 14px;">
+                                    Report
                                 </a>
                             </div>
                         </div>
@@ -121,81 +112,115 @@
     </div>
   </div>
 
-  <script>
+  <div id="report-modal" class="report-modal">
+    <div class="report-modal-content">
+        <h3>Report</h3>
+        <div id="report-review-id-display" style="margin-bottom: 10px;"></div>
+        
+        <!-- Hidden input for review ID -->
+        <input type="hidden" id="report-review-id" value="" />  <!-- Make sure this is included and it's hidden -->
+        
+        <label for="report-reason">Reason:</label>
+        <textarea id="report-reason" rows="4" placeholder="Enter reason for reporting"></textarea>
+        
+        <div class="modal-footer">
+            <button onclick="submitReport()" id="submit-report-btn">Submit</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
     document.addEventListener("DOMContentLoaded", function() {
-        console.log("Script loaded, adding event listeners...");
+    console.log("Script loaded, adding event listeners...");
 
-        // Toggle dropdown visibility when clicking on ellipsis
-        document.querySelectorAll('.review-options-icon').forEach(icon => {
-            icon.addEventListener('click', function(event) {
-                event.stopPropagation(); // Prevent click from closing immediately
-                const reviewId = this.getAttribute('data-review-id');
-                console.log("Clicked on ellipsis for review:", reviewId);
+    // Toggle dropdown visibility when clicking on ellipsis
+    document.querySelectorAll('.review-options-icon').forEach(icon => {
+        icon.addEventListener('click', function(event) {
+            event.stopPropagation(); // Prevent click from closing immediately
+            const reviewId = this.getAttribute('data-review-id');
+            console.log("Clicked on ellipsis for review:", reviewId);
 
-                const dropdown = document.getElementById(`dropdown-${reviewId}`);
+            const dropdown = document.getElementById(`dropdown-${reviewId}`);
 
-                // Hide all other dropdowns before showing the clicked one
-                document.querySelectorAll('.review-options-dropdown').forEach(d => {
-                    if (d !== dropdown) d.style.display = 'none';
-                });
-
-                dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+            // Hide all other dropdowns before showing the clicked one
+            document.querySelectorAll('.review-options-dropdown').forEach(d => {
+                if (d !== dropdown) d.style.display = 'none';
             });
-        });
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function() {
-            document.querySelectorAll('.review-options-dropdown').forEach(dropdown => {
-                dropdown.style.display = 'none';
-            });
-        });
-
-        // Delete review functionality
-        document.querySelectorAll('.delete-review-option').forEach(option => {
-            option.addEventListener('click', function(e) {
-                e.preventDefault();
-                const reviewId = this.getAttribute('data-review-id');
-                console.log("Delete button clicked for review:", reviewId);
-
-                if (confirm('Are you sure you want to delete this review?')) {
-                    fetch(`/customer/<%= encodeURIComponent(loggedUserEmail) %>/reviews/${reviewId}/delete`, { method: 'DELETE' })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            document.querySelector(`.review-post[data-review-id="${reviewId}"]`).remove();
-                        } else {
-                            alert('Failed to delete review');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('An error occurred while deleting the review');
-                    });
-                }
-            });
-        });
-
-        // Edit review functionality
-        const loggedUserEmail = "<%= encodeURIComponent(customer.email) %>";
-        console.log("Logged user email:", loggedUserEmail);
-
-        document.querySelectorAll('.edit-review-option').forEach(option => {
-            option.addEventListener('click', function(e) {
-                e.preventDefault();
-
-                const reviewId = this.getAttribute('data-review-id'); // Get review ID
-                if (!reviewId) {
-                    console.error("Error: reviewId is undefined.");
-                    alert("Error: Review ID is missing.");
-                    return;
-                }
-
-                const targetUrl = `/customer/${loggedUserEmail}/reviews/${reviewId}/edit`;
-                console.log("Redirecting to:", targetUrl);
-                window.location.href = targetUrl;
-            });
+            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
         });
     });
+
+    // Show report modal when "Report" option is clicked
+    document.querySelectorAll('.report-review-option').forEach(option => {
+        option.addEventListener('click', function(e) {
+            e.preventDefault();
+            const reviewId = this.getAttribute('data-review-id');
+            console.log("Report button clicked for review:", reviewId);
+
+            // Show the report modal and set the review ID for the report
+            document.getElementById("report-modal").style.display = "flex";
+            document.getElementById("report-review-id").value = reviewId;  // Set review ID in hidden field
+            document.getElementById("report-review-id-display").textContent = `Review ID: ${reviewId}`;  // Display review ID
+        });
+    });
+
+    // Close modal when clicked outside of modal content
+    document.getElementById('report-modal').addEventListener('click', function(event) {
+        if (event.target === this) {
+            this.style.display = 'none';
+        }
+    });
+});
+
+// Function to submit the report
+function submitReport() {
+    const reason = document.getElementById("report-reason").value;
+    const reviewId = document.getElementById("report-review-id").value;  // Get review ID from hidden input
+    const currentUserEmail = "<%= currentUserEmail %>";  // Ensure this is correctly populated in the template
+
+    if (!reviewId) {
+        alert("There was an issue with the review ID.");
+        return;
+    }
+
+    if (reason.trim() === "") {
+        alert("Please provide a reason.");
+        return;
+    }
+
+    // Send the report to the server
+    fetch('/reportReview', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            reviewId: reviewId,
+            reason: reason,
+            currentUserEmail: currentUserEmail,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("Report submitted successfully.");
+            location.reload();  // Refresh the page to reflect changes
+        } else {
+            alert("Failed to submit the report.");
+        }
+    })
+    .catch(error => {
+        console.error("Error submitting the report:", error);
+        alert("There was an error submitting your report.");
+    });
+
+    // Close the modal
+    document.getElementById("report-modal").style.display = "none";
+}
 </script>
 </body>
 </html>
