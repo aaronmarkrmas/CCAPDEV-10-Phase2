@@ -102,6 +102,17 @@ exports.loggedViewProfile = async (req, res) => {
        // Fetch restaurant reviews
         const restaurantReviews = await Review.find({ restaurantId }); 
 
+        let averageRating = 0;
+        if (restaurantReviews.length > 0) {
+            const totalRating = restaurantReviews.reduce((sum, review) => sum + review.rating, 0);
+            averageRating = (totalRating / restaurantReviews.length).toFixed(2); // Round to 2 decimals
+        }
+
+        // Update the restaurant rating in the database
+        restaurant.rating = averageRating;
+        restaurant.nReviews = restaurantReviews.length;
+        await restaurant.save();
+
         const processedReviews = restaurantReviews.map(review => {
             const processedMedia = review.media.map(mediaItem => {
                 if (mediaItem.data) {
