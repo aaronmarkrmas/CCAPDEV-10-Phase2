@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Search Page</title>
+  <script src="https://kit.fontawesome.com/e9d3d528d3.js" crossorigin="anonymous"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+  <!-- CSS -->
+  <link rel="stylesheet" href="/css/adminSearchPage_style.css">
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">
+      <img src="/images/logo.png" alt="Bloemen Bites Logo" />
+    </div>
+    <div class="navigation">
+      <a href="/admin/<%= encodeURIComponent(adminId) %>/search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <p>Search</p>
+      </a>
+      <a href="#">
+        <i class="fa-solid fa-star"></i>
+        <p>Reviews</p>
+      </a>
+      <a href="#">
+        <i class="fa-solid fa-gear"></i>
+        <p>Settings</p>
+      </a>
+      <a href="/logout" class="logout">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        <p>Logout</p>
+      </a>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="content">
+    <div class="search-section">
+      <h1 style="color: #003399;">Admin Search</h1>
+
+      <!-- Search Form -->
+      <form
+        action="/admin/<%= encodeURIComponent(adminId) %>/search"
+        method="POST"
+        class="search-bar"
+      >
+        <input
+          type="text"
+          name="search"
+          placeholder="Search for users or restaurants..."
+          required
+        />
+        <button type="submit">Search</button>
+      </form>
+
+      <!-- Display Results -->
+      <div class="restaurant-list">
+        <% if (searchResults) { %>
+          
+          <!-- User Results: Clickable link to user profile -->
+          <% searchResults.users.forEach(user => { %>
+            <a 
+              href="/admin/<%= adminId %>/customer/<%= user._id %>" 
+              style="text-decoration: none; color: inherit;"
+            >
+              <div class="restaurant-item">
+                <img src="/images/default-avatar-icon-of-social-media-user-vector.jpg" alt="User Avatar" style="width: 50px; height:50px;">
+                <div class="restaurant-info">
+                  <h3>User: <%= user.username %></h3>
+                  <p><%= user.email %></p>
+                </div>
+              </div>
+            </a>
+          <% }); %>
+
+          <!-- Restaurant Results (Clickable) -->
+          <% searchResults.restaurants.forEach(resto => { %>
+            <a 
+              href="/admin/<%= adminId %>/restaurant/<%= resto._id %>"
+              style="text-decoration: none; color: inherit;"
+            >
+              <div class="restaurant-item">
+                <img src="/profile-pics/<%= resto._id %>" alt="Restaurant Logo" />
+                <div class="restaurant-info">
+                  <h3><%= resto.restoName %></h3>
+                </div>
+              </div>
+            </a>
+          <% }); %>
+
+        <% } else { %>
+          <!-- If no search, show all restaurants (clickable) -->
+          <% restaurants.forEach(resto => { %>
+            <a 
+              href="/admin/<%= adminId %>/restaurant/<%= resto._id %>"
+              style="text-decoration: none; color: inherit;"
+            >
+              <div class="restaurant-item">
+                <img src="/profile-pics/<%= resto._id %>" alt="Restaurant Logo" />
+                <div class="restaurant-info">
+                  <h3><%= resto.restoName %></h3>
+                </div>
+              </div>
+            </a>
+          <% }); %>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
