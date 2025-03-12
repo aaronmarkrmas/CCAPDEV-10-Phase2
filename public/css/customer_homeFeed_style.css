@@ -175,7 +175,12 @@ body {
     font-size: 14px;
     color: #666;
   }
-
+  .restaurant-img {
+    width: 50px; /* Adjust this based on your image size */
+    height: 50px;
+    object-fit: cover; /* Ensures images don’t stretch */
+    border-radius: 50%; /* Makes images circular */
+}
   
 .resto-container{
   margin-top: 30px;

@@ -86,8 +86,20 @@ app.get('/profile-pics/:restaurantId', async (req, res) => {
 const rr_editRestoProfile = require('./routes/rr_editRestoProfile');
 app.use('/restaurant', rr_editRestoProfile);
 
+const r_editCustomerProfile = require('./routes/r_editCustomerProfile');
+app.use('/customer', r_editCustomerProfile);
+
 const rr_sideBar = require("./routes/rr_sideBar");
 app.use("/restaurant", rr_sideBar); 
+
+const r_customerProfile = require('./routes/r_customerProfile');
+app.use('/', r_customerProfile);
+
+const r_editReview = require('./routes/r_editReview');
+app.use('/', r_editReview);
+
+const r_customerProfile_public = require('./routes/r_customerProfile_public');
+app.use('/', r_customerProfile_public);
 
 const r_getRestoReviews = require("./routes/r_getRestoReviews");
 app.use("/", r_getRestoReviews); 
@@ -135,6 +147,11 @@ app.use("/", r_adminRoutes);
 const imageRoutes = require('./routes/r_imageRoutes');
 app.use('/images', imageRoutes); 
 
+const adminReportsRoute = require('./routes/ra_adminReportsTable');
+app.use(adminReportsRoute);
+
+const r_write_reviews = require("./routes/r_write_reviews");
+app.use("/",r_write_reviews);
 
 app.listen(PORT, () => {
     console.log(`Server started at http://localhost:${PORT}`);

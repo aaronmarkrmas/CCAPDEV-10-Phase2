@@ -169,21 +169,30 @@ body {
 
 
 .accountdeets-container.account-details {
-    font-family: "Poppins", serif;
-    font-weight: 400;
-    font-size: 1.1rem;
-    color: #003399;
-    margin-left: 5px;
-    margin-right: 5px;
+  font-family: "Poppins", serif;
+  font-weight: 400;
+  font-size: 1.1rem;
+  color: #003399; 
+  text-align: left;
+  display: flex;
+  flex-direction: column;/
+  gap: 5px;
 }
 
-.accountdeets-container.account-details:hover{
+
+.accountdeets-container.account-details:hover,
+.accountdeets-container.account-details:hover p,
+.accountdeets-container.account-details:hover span {
   color: white;
   cursor: pointer;
 }
+
+.user-info {
+  font-weight: normal;
+}
+
+
 .username-list{
   display: inline-flex;
   flex-direction: column;
-  
-
 }

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Review</title>
+  <script src="https://kit.fontawesome.com/e9d3d528d3.js" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/editReview_style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">
+        <img src="/images/logo.png" alt="Bloemen Bites Logo">
+      </div>
+      <div class="navigation">    
+        <a href="/<%= loggedUserEmail %>/customer-home-feed">   
+          <i class="fa-solid fa-magnifying-glass" style="color: #003399;"></i>
+          <p>Search</p>
+        </a>
+        <a onclick="window.location.href='/search_username';">
+          <i class="fa-solid fa-star" style="color: #003399;"></i>
+          <p>Reviewers</p>
+        </a>
+        <a onclick="window.location.href='/<%= loggedUserEmail %>/customerProfile';">
+          <i class="fa-solid fa-user" style="color: #003399;"></i>
+          <p>Profile</p>
+        </a>
+        <a onclick="window.location.href='/suli';">
+          <i class="fa-solid fa-arrow-right-from-bracket" style="color: #fc6467;"></i>
+          <p>Logout</p>
+        </a>
+      </div>
+  </div>
+  
+  <!-- Main Content Area --> 
+  <div class="content">
+    <div class="profile-section">
+      <!-- Profile Photo and Details -->
+      <div class="profile-photo-section">
+        <img src="/profile-pics/<%= restaurant._id %>" alt="Restaurant Profile Picture">
+      </div>  
+
+      <div class="profile-details">
+        <h2 id="user-name"><%= restaurant.restoName %></h2>
+        <p id="user-email"><%= restaurant.location %></p>
+        <div class="tags">
+          <% let tagsArray = Array.isArray(restaurant.tags) ? restaurant.tags : restaurant.tags.split(",").map(tag => tag.trim()); %>
+          <% tagsArray.forEach(tag => { %>
+            <span class="tag"><%= tag %></span>
+          <% }); %>
+        </div>
+        <div class="description">
+          <p id="user-description"><%= restaurant.description %></p>
+        </div>
+        <p>
+          <span><%= restaurant.phone %></span> | 
+          <span><%= restaurant._id %></span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Edit Review Form -->
+    <form id="reviewForm" class="review-container" action="/customer/<%= loggedUserEmail %>/reviews/<%= review._id %>/edit" method="POST" enctype="multipart/form-data">
+      <label for="title">Title:</label>
+      <input type="text" id="title" name="title" class="review-title" value="<%= review.reviewTitle %>" required>
+
+      <label for="review">Review:</label>
+      <textarea id="review" name="review" class="review-textarea" required><%= review.reviewText %></textarea>
+
+      <label>Current Media:</label>
+      <div id="mediaPreview" class="media-preview">
+        <% if (review.media.length > 0) { %>
+          <% review.media.forEach((file, index) => { %>
+            <div class="media-item">
+              <img src="data:<%= file.contentType %>;base64,<%= file.data.toString('base64') %>" alt="Review Media <%= index + 1 %>" width="100">
+            </div>
+          <% }) %>
+        <% } else { %>
+          <p>No media uploaded.</p>
+        <% } %>
+      </div>
+
+      <label for="media">Upload New Media:</label>
+      <input type="file" id="media" name="media" multiple accept="image/*, video/*">
+
+      <label>Rating:</label>
+      <div class="rating" id="rating">
+        <% for (let i = 1; i <= 5; i++) { %>
+          <span class="star" data-value="<%= i %>" <%= review.rating == i ? 'style="color: #FFD700;"' : '' %>>&#9733;</span>
+        <% } %>
+      </div>
+
+      <input type="hidden" id="ratingValue" name="rating" value="<%= review.rating %>">
+      <input type="hidden" name="customerEmail" value="<%= loggedUserEmail %>"> 
+      <input type="hidden" name="restaurantId" value="<%= restaurant._id %>">
+
+      <div class="buttons">
+        <button type="button" class="return-btn" onclick="history.back()">Cancel</button>
+        <button type="submit" class="post-btn">Save Changes</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Ensure the correct stars are highlighted based on the original rating
+        let currentRating = document.getElementById('ratingValue').value;
+        document.querySelectorAll('.star').forEach((star, index) => {
+            if (index < currentRating) {
+                star.style.color = '#FFD700';
+            }
+            star.addEventListener('click', function() {
+                let value = this.getAttribute('data-value');
+                document.getElementById('ratingValue').value = value;
+                document.querySelectorAll('.star').forEach(s => s.style.color = '#ccc');
+                for (let i = 0; i < value; i++) {
+                    document.querySelectorAll('.star')[i].style.color = '#FFD700';
+                }
+            });
+        });
+
+        // Refresh page with saved changes after form submission
+        document.getElementById("reviewForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent default form submission
+            
+            const formData = new FormData(this);
+            console.log("Sending form data to:", this.action);
+            console.log("Form data:", formData);
+
+            fetch(this.action, {
+                method: this.method,
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) throw new Error("Failed to update review.");
+                return response.json();
+            })
+            .then(data => {
+                console.log("Review updated successfully:", data);
+                window.location.reload(true); // Force-refresh page to show saved changes
+            })
+            .catch(error => {
+                console.error("Error updating review:", error);
+                alert("An error occurred while updating the review.");
+            });
+        });
+    });
+</script>
+</body>
+</html>
