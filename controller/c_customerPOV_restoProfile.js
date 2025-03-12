@@ -21,6 +21,18 @@ exports.publicViewProfile = async (req, res) => {
         // Fetch restaurant reviews
         const restaurantReviews = await Review.find({ restaurantId: restoEmail });
 
+        const processedReviews = restaurantReviews.map(review => {
+            const processedMedia = review.media.map(mediaItem => {
+                if (mediaItem.data) {
+                    return `data:${mediaItem.contentType};base64,${mediaItem.data.toString("base64")}`;
+                } else {
+                    return mediaItem;
+                }
+            });
+
+            return { ...review.toObject(), media: processedMedia };
+        });
+        
         // Get customer emails from reviews
         const customerEmails = restaurantReviews.map(review => review.customerEmail);
         const customersData = await Customer.find(
@@ -59,7 +71,7 @@ exports.publicViewProfile = async (req, res) => {
             restaurant,
             restaurantId:restaurant._id,
             tags: tagsArray,
-            reviews: restaurantReviews,
+            reviews: processedReviews,
             customerPfps,
             customerUsernames,
             repliesMap 
