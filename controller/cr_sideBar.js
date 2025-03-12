@@ -15,16 +15,20 @@ exports.viewProfile = async (req, res) => {
             return res.status(404).json({ error: "Restaurant not found" });
         }
 
-        // Tags are stored as a string, so no need to split unless you change the schema
-        const tagsString = restaurant.tags || "";
-
-        // Convert profile picture (pfp) to base64 if available
-        const restaurantPfp = restaurant.pfp?.data
-            ? `data:${restaurant.pfp.contentType};base64,${restaurant.pfp.data.toString("base64")}`
-            : "/images/default-user.png"; // Default profile picture
-
         // Fetch all reviews for the restaurant
         const restaurantReviews = await Review.find({ restaurantId: email });
+
+        // Calculate average rating
+        let averageRating = 0;
+        if (restaurantReviews.length > 0) {
+            const totalRating = restaurantReviews.reduce((sum, review) => sum + review.rating, 0);
+            averageRating = (totalRating / restaurantReviews.length).toFixed(2); // Round to 2 decimals
+        }
+
+        // Update the restaurant rating in the database
+        restaurant.rating = averageRating;
+        restaurant.nReviews = restaurantReviews.length;
+        await restaurant.save();
 
         // Fetch customer details for reviews in a single query
         const customerEmails = restaurantReviews.map(review => review.customerEmail);
@@ -44,9 +48,6 @@ exports.viewProfile = async (req, res) => {
             customerUsernames[customer.email] = customer.username;
         });
 
-        console.log("Customers fetched:", customersData.length);
-        console.log("Reviews fetched:", restaurantReviews.length);
-
         // Fetch all replies in one query instead of looping
         const reviewIds = restaurantReviews.map(review => review._id);
         const replies = await Reply.find({ reviewId: { $in: reviewIds } });
@@ -60,9 +61,6 @@ exports.viewProfile = async (req, res) => {
             });
         }
 
-        console.log("Replies fetched:", Object.keys(repliesMap).length);
-        console.log("repliesMap:", repliesMap); // Debugging
-
         // Process media in reviews
         const processedReviews = restaurantReviews.map(review => ({
             ...review.toObject(),
@@ -73,15 +71,24 @@ exports.viewProfile = async (req, res) => {
             ),
         }));
 
+        // Convert tags to a string
+        const tagsString = restaurant.tags || "";
+
+        // Convert profile picture (pfp) to base64 if available
+        const restaurantPfp = restaurant.pfp?.data
+            ? `data:${restaurant.pfp.contentType};base64,${restaurant.pfp.data.toString("base64")}`
+            : "/images/default-user.png"; // Default profile picture
+
         // Render the profile page
         res.render("restoProfile", { 
             restaurant,
-            tags: tagsString, // Keep tags as a string
-            restaurantPfp, // Pass profile picture to frontend
+            tags: tagsString,
+            restaurantPfp,
             reviews: processedReviews,
             customerPfps,
             customerUsernames,
-            repliesMap: repliesMap || {} // Ensure repliesMap is always passed
+            repliesMap: repliesMap || {},
+            averageRating // Pass the calculated average rating
         });
 
     } catch (error) {
@@ -89,6 +96,7 @@ exports.viewProfile = async (req, res) => {
         res.status(500).json({ error: "Failed to load restaurant profile" });
     }
 };
+
 
 // Handle logout
 exports.logout = (req, res) => {
