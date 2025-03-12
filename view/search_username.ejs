@@ -12,29 +12,29 @@
   <link rel="stylesheet" href="/css/search_username_style.css">
 </head>
 <body>
-  <div class="sidebar">
-      <div class="logo">
-          <img src="/images/logo.png" alt="Bloemen Bites Logo">
-      </div>
-      <div class="navigation">
-          <a onclick="openSearch()"> 
-              <i class="fa-solid fa-magnifying-glass" style="color: #003399;"></i>
-              <p>Search</p>
-          </a>
-          <a onclick="openReviews()">
+    <div class="sidebar">
+        <div class="logo">
+            <img src="/images/logo.png" alt="Bloemen Bites Logo">
+        </div>
+        <div class="navigation">
+            <a href="/<%= encodeURIComponent(currentUserEmail) %>/search_username">
+                <i class="fa-solid fa-magnifying-glass" style="color: #003399;"></i>
+                <p>Search</p>
+            </a>        
+            <a href="/<%= encodeURIComponent(currentUserEmail) %>/reviewers">
               <i class="fa-solid fa-star" style="color: #003399;"></i>
-              <p>Reviews</p>
-          </a>
-          <a onclick="openProfile()">
+              <p>Reviewers</p>
+            </a>
+            <a href="/<%= encodeURIComponent(currentUserEmail) %>/customerProfile">
               <i class="fa-solid fa-user" style="color: #003399;"></i>
               <p>Profile</p>
-          </a>
-          <a onclick="logout()">
+            </a>
+            <a href="/suli">
               <i class="fa-solid fa-arrow-right-from-bracket" style="color: #fc6467;"></i>
               <p>Logout</p>
-          </a>
+            </a>
+        </div>
       </div>
-  </div>
 
   <div class="content">
       <div class="header">
@@ -47,30 +47,31 @@
       </div>
 
       <div class="username-list">
-          <% if (users.length > 0) { %>
-              <% users.forEach(user => { %>
-                  <button class="usernames-container">
-                      <div class="icon-container">
-                          <% if (user.pfp && user.pfp.data) { %>
-                              <img src="data:<%= user.pfp.contentType %>;base64,<%= user.pfp.data.toString('base64') %>"
-                                   alt="<%= user.username %>'s profile picture"
-                                   width="120" height="120" style="border-radius: 50%;">
-                          <% } else { %>
-                              <img src="/images/default_pfp.png"
-                                   alt="Default Profile Picture"
-                                   width="120" height="120" style="border-radius: 50%;">
-                          <% } %>
-                      </div>
-                      <div class="accountdeets-container account-details">
-                          <p><strong>Username:</strong> <span class="username-info"><%= user.username %></span></p>
-                          <p><strong>Email:</strong> <span class="user-info"><%= user.email %></span></p>
-                      </div>
-                  </button>
+        <% if (users.length > 0) { %>
+            <% users.forEach(user => { %>
+                <!-- Wrap the entire container with the <a> tag -->
+                <a href="/<%= encodeURIComponent(currentUserEmail) %>/<%= encodeURIComponent(user.email) %>/customerProfilePublic" class="usernames-container">
+                  <div class="icon-container">
+                      <% if (user.pfp && user.pfp.data) { %>
+                          <img src="data:<%= user.pfp.contentType %>;base64,<%= user.pfp.data.toString('base64') %>"
+                               alt="<%= user.username %>'s profile picture"
+                               width="120" height="120" style="border-radius: 50%;">
+                      <% } else { %>
+                          <img src="/images/default_pfp.png"
+                               alt="Default Profile Picture"
+                               width="120" height="120" style="border-radius: 50%;">
+                      <% } %>
+                  </div>
+                  <div class="accountdeets-container account-details">
+                      <p><strong>Username:</strong> <span class="username-info"><%= user.username %></span></p>
+                      <p><strong>Email:</strong> <span class="user-info"><%= user.email %></span></p>
+                  </div>
+                </a>
               <% }); %>
-          <% } else { %>
-              <p>No users found.</p>
-          <% } %>
-      </div>
+        <% } else { %>
+            <p>No users found.</p>
+        <% } %>
+    </div>    
   </div>
 
   <script>
