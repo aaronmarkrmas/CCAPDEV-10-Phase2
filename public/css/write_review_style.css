@@ -297,7 +297,6 @@ body {
 
 .reply-link {
     font-size: 0.7rem;
-    color: #0073e6;
     font-family: "Poppins", serif;
     font-weight: 400;
     font-style: normal;
@@ -529,6 +528,7 @@ label {
     display: flex;
     justify-content: space-between;
     margin-top: 15px;
+    
 }
 
 .return-btn,
@@ -541,14 +541,36 @@ label {
 }
 
 .return-btn {
-    background-color: white;
-    border: 2px solid black;
+    padding: 10px 50px;
+    border: 1.5px solid #003399;
+    border-color: #003399;
+    border-radius: 20px;
+    background-color:white;
+    color:#003399;
+    font-size: 12px;
+    cursor: pointer;
+    margin-right: 50px;
+    font-family: "Poppins", serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
 .post-btn {
-    background-color: black;
-    color: white;
+    background-color: #003399;
+    padding: 10px 60px;
+    border: 1.5px solid #003399;
+    border-color: #003399;
+    border-radius: 20px;
+    color:white;
+    font-size: 12px;
+    cursor: pointer;
+    margin-right: 0px;
+    font-family: "Poppins", serif;
+    font-weight: 400;
+    font-style: normal;
+
 }
+
 .media-preview {
     display: flex;
     flex-wrap: wrap;
