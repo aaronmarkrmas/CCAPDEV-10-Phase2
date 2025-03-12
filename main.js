@@ -137,6 +137,16 @@ app.use("/restoSignup", rr_restoSignup);
 const r_customerPOV_restoProfile = require("./routes/r_customerPOV_restoProfile");
 app.use("/", r_customerPOV_restoProfile);
 
+//miguel  added
+const r_adminSearch = require("./routes/r_adminsearch");
+app.use("/", r_adminSearch);
+
+const r_adminRoutes = require("./routes/r_adminRoutes");
+app.use("/", r_adminRoutes);
+
+const imageRoutes = require('./routes/r_imageRoutes');
+app.use('/images', imageRoutes); 
+
 const adminReportsRoute = require('./routes/ra_adminReportsTable');
 app.use(adminReportsRoute);
 

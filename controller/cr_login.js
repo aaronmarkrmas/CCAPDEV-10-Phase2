@@ -47,6 +47,18 @@ exports.authenticateUser = async (req, res) => {
         }
 
         req.session.user = {
+            _id: user._id.toString(),  // Always store _id
+            email: user.email || user._id.toString(), // Customers/Restaurants use `email`, admins use `_id`
+            userType
+          };
+          
+        console.log("Stored in session:", req.session.user); // Debugging
+
+        return res.json({ 
+            success: true, 
+            userType, 
+            email: user.email || user._id // Ensure correct email format
+        });
             email: user.email,
             _id: user._id,
             userType,
