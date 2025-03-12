@@ -57,12 +57,10 @@ exports.authenticateUser = async (req, res) => {
         return res.json({ 
             success: true, 
             userType, 
-            email: user.email || user._id // Ensure correct email format
+            email: user.email || user._id,
+            _id: user._id
         });
-            email: user.email,
-            _id: user._id,
-            userType,
-        };
+        
 
         res.json({ success: true, email: req.session.user.email, _id: req.session.user._id, userType });
     } catch (error) {
