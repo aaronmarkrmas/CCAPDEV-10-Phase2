@@ -467,6 +467,29 @@ body {
   .reply-options-icon:hover {
     color: #000;
   }
-  
 
-  
+  .review-options-dropdown {
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    min-width: 130px;
+    position: absolute;
+    top: 20px;
+    right: 0;
+    display: none;
+}
+
+.review-options-dropdown a {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: black;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.review-options-dropdown a:hover {
+    background: #f0f0f0;
+}
