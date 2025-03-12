@@ -32,17 +32,20 @@ exports.getSearchUsernamePage = async (req, res) => {
     }
 };
 
-exports.viewProfile = async (req, res) => {
+exports.viewPublicProfile = async (req, res) => {
     try {
-        const username = req.params.username;
-        const user = await customers.findOne({ username });
+        const viewerEmail = req.params.viewerEmail;
+        const vieweeEmail = req.params.vieweeEmail;
+        
+        const viewer = await customers.findOne({ email: viewerEmail });
+        const viewee = await customers.findOne({ email: vieweeEmail });
 
-        if (!user) {
+        if (!viewee) {
             return res.status(404).send("User not found");
         }
 
-        // Render the user's profile page with their details
-        res.render("profile", { user });
+        // Render the public profile page with details of both the viewer and viewee
+        res.render("customerProfilePublic", { viewer, viewee });
     } catch (error) {
         console.error("Error fetching user profile:", error);
         res.status(500).send("Internal Server Error");
