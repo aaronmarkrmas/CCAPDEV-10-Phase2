@@ -28,7 +28,7 @@ exports.getRestaurantProfile = async (req, res) => {
       averageRating = (sum / reviews.length).toFixed(1);
     }
 
-    // ✅ Console Log: Full Restaurant Details
+    // debugging
     console.log("\n===== Restaurant Details =====");
     console.log("Email (_id):", restaurant._id);
     console.log("Name:", restaurant.restoName);
@@ -38,10 +38,10 @@ exports.getRestaurantProfile = async (req, res) => {
     console.log("Number of Reviews:", restaurant.nReviews);
     console.log("Average Rating:", restaurant.rating);
     console.log("Location:", restaurant.location);
-    // console.log("Profile Picture:", restaurant.pfp ? "Exists" : "Not uploaded");
+    
     console.log("==============================\n");
 
-    // ✅ Console Log: Review Data
+    // debugging
     console.log("Total Reviews Found:", reviews.length);
     reviews.forEach((review, index) => {
       console.log(`\nReview #${index + 1}:`);
@@ -49,13 +49,9 @@ exports.getRestaurantProfile = async (req, res) => {
       console.log("Rating:", review.rating);
       console.log("Customer Email:", review.customerEmail);
       console.log("Review Text:", review.reviewText);
-      // console.log("Media Files:", review.media.length > 0 ? review.media : "No media attached");
+      
     });
 
-    // ✅ Console Log: Debugging Profile Picture Data
-    // console.log("Restaurant Image Data:", restaurant.pfp ? "Profile picture found" : "No profile picture");
-    // Generate pastel colors for each tag
-    // Function to generate a pastel color class name
     
     res.render('restoAdmin_view', {
       adminId,         // So the template knows which admin is viewing

@@ -11,7 +11,6 @@
     href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;500;600;700&display=swap"
     rel="stylesheet"
   >
-
   <!-- CSS -->
   <link rel="stylesheet" href="/css/adminSearchPage_style.css">
 </head>
@@ -44,7 +43,6 @@
   <!-- Main Content Area -->
   <div class="content">
     <div class="search-section">
-      <!-- Heading styled similarly to customer_homeFeed.ejs -->
       <h1 style="color: #003399;">Admin Search</h1>
 
       <!-- Search Form -->
@@ -65,14 +63,24 @@
       <!-- Display Results -->
       <div class="restaurant-list">
         <% if (searchResults) { %>
-          <!-- User results (not clickable, unless you add a link) -->
+          
+          <!-- User Results: Clickable link to user profile -->
           <% searchResults.users.forEach(user => { %>
-            <div class="restaurant-item">
-              <h3>User: <%= user.username %></h3>
-            </div>
+            <a 
+              href="/admin/<%= adminId %>/customer/<%= user._id %>" 
+              style="text-decoration: none; color: inherit;"
+            >
+              <div class="restaurant-item">
+                <img src="/images/default-avatar-icon-of-social-media-user-vector.jpg" alt="User Avatar" style="width: 50px; height:50px;">
+                <div class="restaurant-info">
+                  <h3>User: <%= user.username %></h3>
+                  <p><%= user.email %></p>
+                </div>
+              </div>
+            </a>
           <% }); %>
 
-          <!-- Restaurant results (clickable) -->
+          <!-- Restaurant Results (Clickable) -->
           <% searchResults.restaurants.forEach(resto => { %>
             <a 
               href="/admin/<%= adminId %>/restaurant/<%= resto._id %>"
@@ -86,6 +94,7 @@
               </div>
             </a>
           <% }); %>
+
         <% } else { %>
           <!-- If no search, show all restaurants (clickable) -->
           <% restaurants.forEach(resto => { %>
