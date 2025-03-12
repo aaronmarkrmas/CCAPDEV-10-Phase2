@@ -66,7 +66,7 @@ exports.publicViewProfile = async (req, res) => {
         console.log("Replies fetched:", Object.keys(repliesMap).length); 
 
         // Render the restaurant profile with all necessary data
-        res.render("customerPOV_restoProfile", { 
+        res.render("public_customerPOV_restoProfile", { 
             loggedUserEmail: null,
             restaurant,
             restaurantId:restaurant._id,

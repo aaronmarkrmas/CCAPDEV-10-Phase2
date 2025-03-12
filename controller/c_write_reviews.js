@@ -72,6 +72,8 @@ exports.postReview = async (req, res) => {
         console.log("Review posted successfully:", newReview);
 
         res.status(201).json({ message: "Review added successfully", review: newReview });
+
+        
     } catch (error) {
         console.error("Error posting review:", error);
         res.status(500).json({ error: "Failed to post review" });
