@@ -25,6 +25,14 @@
             <input type="restaurantname" name="restaurantName" placeholder="Restaurant Name" required>
             <input type="password" name="password" placeholder="Password" required>
 
+        <div class="upload-container">
+            <input type="text" class="upload-text" placeholder="Upload Display Photo" readonly>
+            <input type="file" id="file-upload" name="pfp" accept="image/*" hidden>
+            <label for="file-upload" class="upload-icon">📤</label>
+        </div>
+        <input type="location" placeholder="Location" required>
+        <textarea name="description" placeholder="Short Description" rows="8" required></textarea>
+
         <!-- Checklist for Tags -->
         <div class="tags-container">
             <p>Tags:</p>
@@ -36,14 +44,6 @@
                 <% }); %>
             </div>
         </div>
-
-        <div class="upload-container">
-            <input type="text" class="upload-text" placeholder="Upload Display Photo" readonly>
-            <input type="file" id="file-upload" name="pfp" accept="image/*" hidden>
-            <label for="file-upload" class="upload-icon">📤</label>
-        </div>
-        <input type="location" placeholder="Location" required>
-        <textarea name="description" placeholder="Short Description" rows="8" required></textarea>
         
         <button>Sign Up</button>
     </form>

@@ -216,10 +216,10 @@ body {
     background-color: #f9f9f9;
   }
 
-   .media-section {
+  .media-section {
     display: flex;
-    flex-wrap: wrap; 
-    gap: 5px; 
+    flex-wrap: wrap; /* Ensures media wrap if there's not enough space */
+    gap: 5px; /* Adds spacing between the items */
     margin-top: 10px;
   }
   
@@ -238,6 +238,20 @@ body {
   .media-section video:hover {
     transform: scale(1.05);
   }
+
+  .media-container {
+    display: flex;         
+    gap: 10px;             
+    overflow-x: auto;     
+    padding: 10px 0;            
+    }
+
+    .media-container img,
+    .media-container video {
+        flex-shrink: 0;       
+        border-radius: 8px;    
+    }
+  
   
   .reviews-list {
     margin-top: 20px;

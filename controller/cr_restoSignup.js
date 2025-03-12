@@ -3,16 +3,14 @@ const Restaurant = require("../model/restaurant");
 const handleSignup = async (req, res) => {
     const { email, contactNumber, restaurantName, password, location, description, tags } = req.body;
 
-    // Ensure description is provided
     if (!description) {
         console.error("Error: Description is missing in request.");
         return res.status(400).send("Description is required.");
     }
 
-    // Convert tags array to a string
+    // Convert tags array to a string (if tags exist)
     const tagsString = Array.isArray(tags) ? tags.join(', ') : tags;
 
-    // Store image as binary
     let profilePic = null;
     if (req.file) {
         profilePic = {
@@ -23,20 +21,20 @@ const handleSignup = async (req, res) => {
 
     try {
         const newResto = new Restaurant({
-            _id: email,  
+            _id: email,
             restoName: restaurantName,
             password,
             phone: contactNumber,
-            location,
+            location: location || "Br. Bloemen Hall",
             description,
-            tags: tagsString,  // Convert array to string
+            tags: tagsString,
             pfp: profilePic
         });
 
         await newResto.save();
         res.redirect('/login');
     } catch (error) {
-        console.error(error);
+        console.error("Error saving restaurant:", error);
         res.status(500).send("Error signing up.");
     }
 };

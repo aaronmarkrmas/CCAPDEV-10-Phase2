@@ -150,7 +150,7 @@ textarea {
 }
 
 .deactivate-btn {
-  background-color: red !important;
+  background-color: rgb(172, 85, 85)  !important;
   color: white !important;
   border: none;
   padding: 10px 20px;
