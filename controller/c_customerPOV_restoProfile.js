@@ -19,6 +19,7 @@ exports.publicViewProfile = async (req, res) => {
 
         const restaurantReviews = await Review.find({ restaurantId: restoEmail });
 
+        
         const processedReviews = restaurantReviews.map(review => {
             const processedMedia = review.media.map(mediaItem => {
                 if (mediaItem.data) {
