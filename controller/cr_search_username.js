@@ -2,30 +2,34 @@ const customers = require("../model/customer");
 
 exports.getSearchUsernamePage = async (req, res) => {
     try {
-        const userEmail = req.params.email;  // Access the email from the URL path
+        const userEmail = req.params.email;
         const searchQuery = req.query.query ? req.query.query.trim() : "";
         let users = [];
 
-        // Fetch all users based on search query
         if (searchQuery) {
             users = await customers.find(
-                { username: { $regex: searchQuery, $options: "i" } },
+                { 
+                    username: { $regex: searchQuery, $options: "i" }, 
+                    email: { $ne: userEmail } 
+                },
                 "username email pfp"
             );
         } else {
-            users = await customers.find({}, "username email pfp");
+            users = await customers.find(
+                { email: { $ne: userEmail } }, 
+                "username email pfp"
+            );
         }
 
-        // Convert profile pictures to Base64 format for rendering
         users = users.map(user => ({
             username: user.username,
             email: user.email,
             pfp: user.pfp?.data
                 ? `data:${user.pfp.contentType};base64,${user.pfp.data.toString("base64")}`
-                : "/images/default_pfp.png" // Default image if no profile picture
+                : "/images/default_pfp.png"
         }));
 
-        res.render("search_username", { users, currentUserEmail: userEmail });
+        res.render("search_username", { users, currentUserEmail: userEmail, searchQuery });
     } catch (error) {
         console.error("Error fetching users:", error);
         res.status(500).send("Internal Server Error");
