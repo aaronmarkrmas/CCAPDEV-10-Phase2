@@ -17,11 +17,11 @@
         <img src="/images/logo.png" alt="Bloemen Bites Logo">
     </div>
     <div class="navigation">
-        <a href="/<%= encodeURIComponent(customer.email) %>/search_username">
+        <a href="/<%= encodeURIComponent(customer.email) %>/customer-home-feed">
             <i class="fa-solid fa-magnifying-glass" style="color: #003399;"></i>
             <p>Search</p>
         </a>        
-        <a href="/<%= encodeURIComponent(customer.email) %>/reviewers">
+        <a href="/<%= encodeURIComponent(customer.email) %>/search_username">
           <i class="fa-solid fa-star" style="color: #003399;"></i>
           <p>Reviewers</p>
         </a>
@@ -121,9 +121,16 @@
     </div>
   </div>
 
-  <script>
+  <!-- Store loggedUserEmail in a hidden div -->
+<div id="user-info" data-email="<%= encodeURIComponent(customer.email) %>"></div>
+
+<script>
     document.addEventListener("DOMContentLoaded", function() {
         console.log("Script loaded, adding event listeners...");
+
+        // Get loggedUserEmail from the hidden div
+        const loggedUserEmail = document.getElementById("user-info").getAttribute("data-email");
+        console.log("Logged user email:", loggedUserEmail);
 
         // Toggle dropdown visibility when clicking on ellipsis
         document.querySelectorAll('.review-options-icon').forEach(icon => {
@@ -155,30 +162,32 @@
             option.addEventListener('click', function(e) {
                 e.preventDefault();
                 const reviewId = this.getAttribute('data-review-id');
-                console.log("Delete button clicked for review:", reviewId);
 
                 if (confirm('Are you sure you want to delete this review?')) {
-                    fetch(`/customer/<%= encodeURIComponent(loggedUserEmail) %>/reviews/${reviewId}/delete`, { method: 'DELETE' })
-                    .then(response => response.json())
+                    fetch(`/customer/${encodeURIComponent(loggedUserEmail)}/reviews/${reviewId}/delete`, { method: 'DELETE' })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(errData => { throw new Error(errData.message || "Failed to delete review"); });
+                        }
+                        return response.json();
+                    })
                     .then(data => {
                         if (data.success) {
                             document.querySelector(`.review-post[data-review-id="${reviewId}"]`).remove();
+                            console.log("✅ Review deleted successfully!");
                         } else {
-                            alert('Failed to delete review');
+                            alert(`Failed to delete review: ${data.message}`);
                         }
                     })
                     .catch(error => {
-                        console.error('Error:', error);
-                        alert('An error occurred while deleting the review');
+                        console.error('🔥 Error:', error);
+                        alert(error.message);
                     });
                 }
             });
         });
 
         // Edit review functionality
-        const loggedUserEmail = "<%= encodeURIComponent(customer.email) %>";
-        console.log("Logged user email:", loggedUserEmail);
-
         document.querySelectorAll('.edit-review-option').forEach(option => {
             option.addEventListener('click', function(e) {
                 e.preventDefault();

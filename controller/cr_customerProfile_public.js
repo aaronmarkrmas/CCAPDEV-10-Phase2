@@ -9,9 +9,12 @@ exports.viewCustomerProfile = async (req, res) => {
         const decodedCurrentUserEmail = decodeURIComponent(currentUserEmail);
         const decodedViewedUserEmail = decodeURIComponent(viewedUserEmail);
 
+        console.log(`Fetching profile for: ${decodedViewedUserEmail}`);
+
         // Fetch the viewed customer's profile details
         const customer = await Customer.findOne({ email: decodedViewedUserEmail }, "email username bio pfp");
         if (!customer) {
+            console.log("Customer not found!");
             return res.status(404).json({ error: "Customer not found" });
         }
 
@@ -19,23 +22,28 @@ exports.viewCustomerProfile = async (req, res) => {
             ? `data:${customer.pfp.contentType};base64,${customer.pfp.data.toString("base64")}`
             : "/images/default-user.png";
 
+        console.log(`Fetching reviews for customer: ${decodedViewedUserEmail}`);
         const customerReviews = await Review.find({ customerEmail: decodedViewedUserEmail }).sort({ datePosted: -1 });
+        console.log(`Found ${customerReviews.length} reviews`);
 
         const restaurantIds = [...new Set(customerReviews.map(review => review.restaurantId))];
-        const restaurantsData = await Restaurant.find({ _id: { $in: restaurantIds } }, "_id name");
+        console.log("Restaurant IDs from reviews:", restaurantIds);
+
+        const restaurantsData = await Restaurant.find({ _id: { $in: restaurantIds } }, "_id restoName");
+        console.log("Fetched restaurant data:", restaurantsData);
 
         const restaurantNames = {};
         restaurantsData.forEach(restaurant => {
-            restaurantNames[restaurant._id] = restaurant.name;
+            restaurantNames[restaurant._id] = restaurant.restoName;
         });
 
         const processedReviews = customerReviews.map(review => {
+            console.log(`Processing review: ${review._id}, Restaurant ID: ${review.restaurantId}`);
+            
             const processedMedia = review.media.map(mediaItem => {
-                if (mediaItem.data) {
-                    return `data:${mediaItem.contentType};base64,${mediaItem.data.toString("base64")}`;
-                } else {
-                    return mediaItem;
-                }
+                return mediaItem.data
+                    ? `data:${mediaItem.contentType};base64,${mediaItem.data.toString("base64")}`
+                    : mediaItem;
             });
 
             return {
@@ -68,15 +76,13 @@ exports.reportReview = async (req, res) => {
             return res.status(400).json({ success: false, message: "Missing required fields" });
         }
 
-        // Find the review being reported
         const review = await Review.findById(reviewId);
         if (!review) {
             return res.status(404).json({ success: false, message: "Review not found" });
         }
 
-        // Create the report using the review's _id as the report _id
         const newReport = new Report({
-            _id: reviewId,  // Use the review's _id as the report _id
+            _id: reviewId,
             reporterUsername: currentUserEmail,
             reason: reason,
             isResolved: false,
@@ -90,4 +96,3 @@ exports.reportReview = async (req, res) => {
         res.status(500).json({ success: false, message: "Error reporting the review" });
     }
 };
-

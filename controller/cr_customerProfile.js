@@ -27,27 +27,34 @@ exports.viewCustomerProfile = async (req, res) => {
 
         // Get restaurant names in a single query
         const restaurantIds = [...new Set(customerReviews.map(review => review.restaurantId))];
+        console.log("Extracted restaurant IDs:", restaurantIds);
+        
         const restaurantsData = await Restaurant.find(
             { _id: { $in: restaurantIds } }, 
-            "_id name"
+            "_id restoName"
         );
+        console.log("Fetched restaurant data:", restaurantsData);
         
         // Map restaurant IDs to names
         const restaurantNames = {};
         restaurantsData.forEach(restaurant => {
-            restaurantNames[restaurant._id] = restaurant.name;
+            restaurantNames[restaurant._id] = restaurant.restoName; // Use restoName instead of name
         });
+        console.log("Mapped restaurant names:", restaurantNames);
 
         // Process reviews and media
-        const processedReviews = customerReviews.map(review => ({
-            ...review.toObject(),
-            media: review.media.map(mediaItem => 
-                mediaItem.data
-                    ? `data:${mediaItem.contentType};base64,${mediaItem.data.toString("base64")}`
-                    : mediaItem
-            ),
-            restaurantName: restaurantNames[review.restaurantId] || "Unknown Restaurant"
-        }));
+        const processedReviews = customerReviews.map(review => {
+            console.log(`Processing review: ${review._id}, Restaurant ID: ${review.restaurantId}`);
+            return {
+                ...review.toObject(),
+                media: review.media.map(mediaItem => 
+                    mediaItem.data
+                        ? `data:${mediaItem.contentType};base64,${mediaItem.data.toString("base64")}`
+                        : mediaItem
+                ),
+                restaurantName: restaurantNames[review.restaurantId] || "Unknown Restaurant"
+            };
+        });
 
         // Render the profile page
         res.render("customerProfile", { 
@@ -77,25 +84,30 @@ exports.logout = (req, res) => {
 // Delete Review
 exports.deleteReview = async (req, res) => {
     try {
-        const { reviewId } = req.params;
-        const { email } = req.params;
-        
-        // Verify the customer owns this review
-        const review = await Review.findById(reviewId);
+        const { reviewId, customerEmail } = req.params;
+        console.log(`Attempting to delete review: ${reviewId} by ${customerEmail}`);
+
+        // Find and check ownership
+        const review = await Review.findOne({ _id: reviewId, customerEmail });
         if (!review) {
+            console.log("❌ Review not found or does not belong to the user.");
             return res.status(404).json({ success: false, message: "Review not found" });
         }
-        
-        if (review.customerEmail !== email) {
-            return res.status(403).json({ success: false, message: "Unauthorized" });
-        }
-        
+
         // Delete the review
-        await Review.findByIdAndDelete(reviewId);
-        
-        return res.status(200).json({ success: true });
+        const result = await Review.deleteOne({ _id: reviewId });
+        if (result.deletedCount === 0) {
+            console.log("❌ Review deletion failed.");
+            return res.status(500).json({ success: false, message: "Review deletion failed" });
+        }
+
+        console.log("✅ Review successfully deleted!");
+        return res.json({ success: true });
+
     } catch (error) {
-        console.error("Error deleting review:", error);
+        console.error("🔥 Error deleting review:", error);
         return res.status(500).json({ success: false, message: "Failed to delete review" });
     }
 };
+
+

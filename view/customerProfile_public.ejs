@@ -17,15 +17,15 @@
         <img src="/images/logo.png" alt="Bloemen Bites Logo">
     </div>
     <div class="navigation">
-        <a href="/<%= encodeURIComponent(customer.email) %>/search_username">
+        <a href="/<%= encodeURIComponent(currentUserEmail) %>/customer-home-feed">
             <i class="fa-solid fa-magnifying-glass" style="color: #003399;"></i>
             <p>Search</p>
         </a>        
-        <a href="/<%= encodeURIComponent(customer.email) %>/reviewers">
+        <a href="/<%= encodeURIComponent(currentUserEmail) %>/search_username">
           <i class="fa-solid fa-star" style="color: #003399;"></i>
           <p>Reviewers</p>
         </a>
-        <a href="/<%= encodeURIComponent(customer.email) %>/customerProfile">
+        <a href="/<%= encodeURIComponent(currentUserEmail) %>/customerProfile">
           <i class="fa-solid fa-user" style="color: #003399;"></i>
           <p>Profile</p>
         </a>
