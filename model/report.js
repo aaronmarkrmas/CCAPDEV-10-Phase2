@@ -1,12 +1,14 @@
 const mongoose = require("mongoose");
 
 const reportSchema = new mongoose.Schema({
-    // Define your schema fields here
-    title: String,
-    content: String,
-    createdAt: { type: Date, default: Date.now }
-});
+    _id: String, 
+    postId: { type: String, required: true }, 
+    reporterEmail: { type: String, required: true },
+    reason: { type: String, required: true },
+    dateReported: { type: Date, default: Date.now }, 
+    isResolved: { type: Boolean, default: false },
+}, { collection: "reports" });
 
-const Report = mongoose.models.Report || mongoose.model("Report", reportSchema);
+const Report = mongoose.model("Report", reportSchema);
 
 module.exports = Report;
