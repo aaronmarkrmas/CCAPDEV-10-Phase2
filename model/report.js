@@ -9,6 +9,7 @@ const reportSchema = new mongoose.Schema({
     isResolved: { type: Boolean, default: false },
 }, { collection: "reports" });
 
-const Report = mongoose.model("Report", reportSchema);
+// Prevent model overwrite
+const Report = mongoose.models.Report || mongoose.model("Report", reportSchema);
 
 module.exports = Report;

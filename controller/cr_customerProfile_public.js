@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const Customer = require("../model/customer");
 const Review = require("../model/review");
 const Restaurant = require("../model/restaurant");
@@ -70,24 +71,33 @@ exports.viewCustomerProfile = async (req, res) => {
 // Function to handle the report of a review
 exports.reportReview = async (req, res) => {
     try {
+        console.log("Request body:", req.body);
         const { reviewId, reason, currentUserEmail } = req.body;
 
         if (!reviewId || !reason || !currentUserEmail) {
+            console.log("Missing fields:", { reviewId, reason, currentUserEmail });
             return res.status(400).json({ success: false, message: "Missing required fields" });
         }
 
         const review = await Review.findById(reviewId);
         if (!review) {
+            console.log("Review not found with ID:", reviewId);
             return res.status(404).json({ success: false, message: "Review not found" });
         }
 
+        // Generate a unique ID for the report
+        const reportId = new mongoose.Types.ObjectId().toString();
+
         const newReport = new Report({
-            _id: reviewId,
-            reporterUsername: currentUserEmail,
+            _id: reportId, // Explicitly set the _id as required by your schema
+            postId: reviewId,
+            reporterEmail: currentUserEmail,
             reason: reason,
+            dateReported: new Date(),
             isResolved: false,
         });
 
+        console.log("About to save report:", newReport);
         await newReport.save();
         console.log("Report successfully submitted.");
         res.json({ success: true });
