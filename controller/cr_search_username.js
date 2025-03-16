@@ -1,25 +1,26 @@
 const customers = require("../model/customer");
+const DeactivatedAccount = require("../model/deactivatedAcc");
 
 exports.getSearchUsernamePage = async (req, res) => {
     try {
         const userEmail = req.params.email;
         const searchQuery = req.query.query ? req.query.query.trim() : "";
+
+        const deactivatedAccounts = await DeactivatedAccount.find({}, "_id");
+        const deactivatedIds = deactivatedAccounts.map(acc => acc._id);
+
         let users = [];
 
+        const query = { 
+            email: { $ne: userEmail }, 
+            _id: { $nin: deactivatedIds } 
+        };
+
         if (searchQuery) {
-            users = await customers.find(
-                { 
-                    username: { $regex: searchQuery, $options: "i" }, 
-                    email: { $ne: userEmail } 
-                },
-                "username email pfp"
-            );
-        } else {
-            users = await customers.find(
-                { email: { $ne: userEmail } }, 
-                "username email pfp"
-            );
+            query.username = { $regex: searchQuery, $options: "i" };
         }
+
+        users = await customers.find(query, "username email pfp");
 
         users = users.map(user => ({
             username: user.username,
