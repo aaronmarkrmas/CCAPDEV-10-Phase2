@@ -105,6 +105,6 @@ exports.logout = (req, res) => {
             console.error("Logout error:", err);
             return res.status(500).json({ error: "Logout failed" });
         }
-        res.redirect("/loginPage");
+        res.redirect("/suli");
     });
 };

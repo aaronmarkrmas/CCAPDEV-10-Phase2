@@ -495,7 +495,45 @@ body {
     background-color: #001f66;
   }
   
-  
+  .like-btn, .dislike-btn {
+    background: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.like-btn {
+    color: #007bff;
+}
+
+.dislike-btn {
+    color: #dc3545;
+}
+
+/* Hover effect */
+.like-btn:hover {
+    background: #007bff;
+    color: white;
+}
+
+.dislike-btn:hover {
+    background: #dc3545;
+    color: white;
+}
+
+/* Active (when clicked) */
+.like-btn:active, .dislike-btn:active {
+    transform: scale(0.95);
+}
+
+/* Like & Dislike count */
+.like-count, .dislike-count {
+    font-weight: bold;
+    margin-left: 5px;
+}
   
 
 

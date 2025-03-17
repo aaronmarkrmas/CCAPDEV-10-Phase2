@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
+
   <title>Restaurant Account</title>
   <script src="https://kit.fontawesome.com/e9d3d528d3.js" crossorigin="anonymous"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,7 +31,9 @@
         <i class="fa-solid fa-user" style="color: #003399;"></i>
         <p>Profile</p>
       </a>
-      <a onclick="window.location.href='/suli';">
+      <form id="logoutForm" action="/logout" method="POST" style="display: none;"></form>
+
+      <a href="#" onclick="document.getElementById('logoutForm').submit();">
         <i class="fa-solid fa-arrow-right-from-bracket" style="color: #fc6467;"></i>
         <p>Logout</p>
       </a>
@@ -135,10 +138,23 @@
                             </div>
                         <% }); %>
                     </div>
+
+                   
                 <% } %>
+                <div>
+                  <button class="like-btn" data-review-id="<%= review._id %>">
+                    👍 Like (<span class="like-count"><%= review.like || 0 %></span>)
+                  </button>
+                
+                  <button class="dislike-btn" data-review-id="<%= review._id %>">
+                    👎 Dislike (<span class="dislike-count"><%= review.dislikes || 0 %></span>)
+                  </button>
+                </div>
               </div>
+             
           <% }); %>
       <% } %>
+      
   </div>
 
   <a href="/<%=loggedUserEmail %>/profile/<%= restaurant._id %>/write">
@@ -156,6 +172,63 @@
     fetch(`/reviews/${encodeURIComponent(restaurantId)}`)
         .then(response => response.json())
         .then(reviews => console.log("Reviews:", reviews));
+
+    document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".like-btn, .dislike-btn").forEach(button => {
+        button.addEventListener("click", async (event) => {
+            const isLike = event.target.classList.contains("like-btn"); // Check if it's a like
+            const reviewId = event.target.getAttribute("data-review-id");
+
+            try {
+                const response = await fetch(`/review/${isLike ? "like" : "dislike"}/${reviewId}`, {
+                method: "POST",
+                 headers: { "Content-Type": "application/json" }
+            });
+
+                 const data = await response.json();
+
+                  if (response.ok) { 
+                     const reviewElement = event.target.closest(".review-post");
+                     reviewElement.querySelector(".like-count").textContent = data.like;
+                     reviewElement.querySelector(".dislike-count").textContent = data.dislikes;
+
+                      updateButtonStates(reviewElement, data.userLiked, data.userDisliked);
+                  } else {
+                     alert(data.error); 
+                   }
+              } catch (error) {
+                    console.error("Error:", error);
+                     alert("Something went wrong. Please try again.");
+                     
+                }
+
+        });
+    });
+});
+
+// function to update buttons
+function updateButtonStates(reviewElement, userLiked, userDisliked) {
+    const likeButton = reviewElement.querySelector(".like-btn");
+    const dislikeButton = reviewElement.querySelector(".dislike-btn");
+
+    if (userLiked) {
+        likeButton.style.backgroundColor = "#007bff";
+        likeButton.style.color = "#fff";
+    } else {
+        likeButton.style.backgroundColor = "";
+        likeButton.style.color = "#007bff";
+    }
+
+    if (userDisliked) {
+        dislikeButton.style.backgroundColor = "#dc3545";
+        dislikeButton.style.color = "#fff";
+    } else {
+        dislikeButton.style.backgroundColor = "";
+        dislikeButton.style.color = "#dc3545";
+    }
+}
+
+
 </script>
 
 </body>
