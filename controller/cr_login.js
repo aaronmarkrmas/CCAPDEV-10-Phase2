@@ -1,3 +1,4 @@
+const bcrypt = require("bcrypt");
 const customers = require("../model/customer");
 const restaurants = require("../model/restaurant");
 const admins = require("../model/admin");
@@ -19,7 +20,7 @@ exports.authenticateUser = async (req, res) => {
         if (user) userType = "customer";
 
         if (!user) {
-            user = await restaurants.findOne({ _id: email });  
+            user = await restaurants.findOne({ _id: email });
             if (user) userType = "restaurant";
         }
 
@@ -39,20 +40,18 @@ exports.authenticateUser = async (req, res) => {
             }
         }
 
-        const inputPassword = password.trim();
-        const storedPassword = user.password.trim();
-
-        if (inputPassword !== storedPassword) {
+        const isPasswordMatch = await bcrypt.compare(password, user.password);
+        if (!isPasswordMatch) {
             return res.status(401).json({ error: "Incorrect password" });
         }
 
         req.session.user = {
-            _id: user._id.toString(),  // Always store _id
-            email: user.email || user._id.toString(), // Customers/Restaurants use `email`, admins use `_id`
+            _id: user._id.toString(),
+            email: user.email || user._id.toString(),
             userType
-          };
+        };
           
-        console.log("Stored in session:", req.session.user); // Debugging
+        console.log("Stored in session:", req.session.user);
 
         return res.json({ 
             success: true, 
@@ -60,9 +59,7 @@ exports.authenticateUser = async (req, res) => {
             email: user.email || user._id,
             _id: user._id
         });
-        
 
-        res.json({ success: true, email: req.session.user.email, _id: req.session.user._id, userType });
     } catch (error) {
         res.status(500).json({ error: "Server error" });
     }
