@@ -1,3 +1,4 @@
+const bcrypt = require("bcrypt");
 const Restaurant = require("../model/restaurant");
 
 const handleSignup = async (req, res) => {
@@ -20,10 +21,12 @@ const handleSignup = async (req, res) => {
     }
 
     try {
+        const hashedPassword = await bcrypt.hash(password, 10); 
+        
         const newResto = new Restaurant({
             _id: email,
             restoName: restaurantName,
-            password,
+            password: hashedPassword,
             phone: contactNumber,
             location: location || "Br. Bloemen Hall",
             description,
