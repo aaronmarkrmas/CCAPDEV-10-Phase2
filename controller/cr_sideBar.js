@@ -101,10 +101,12 @@ exports.viewProfile = async (req, res) => {
 // Handle logout
 exports.logout = (req, res) => {
     req.session.destroy((err) => {
-        if (err) {
-            console.error("Logout error:", err);
-            return res.status(500).json({ error: "Logout failed" });
-        }
-        res.redirect("/suli");
+      if (err) {
+        console.error("Logout error:", err);
+        return res.status(500).json({ error: "Logout failed" });
+      }
+
+      res.redirect('/');
     });
-};
+    };
+  

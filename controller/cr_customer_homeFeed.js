@@ -3,7 +3,7 @@ const Customer  = require('../model/customer');
 const Tag   = require('../model/tag');
 
 exports.getCustomerHomeFeed = async (req, res) => {
-    const customerEmail = req.params.email; // get email
+    const customerEmail = req.session.user?.email; // get email
     const searchQuery = req.query.search || '';
     const tagFilter = req.query.tag || ''; // tag filter
 
@@ -12,7 +12,7 @@ exports.getCustomerHomeFeed = async (req, res) => {
 
         const customer = await Customer.findOne({ email: customerEmail}); //get customer by email
         if (!customer) {
-            return res.status(500).json({ error: "Email n   ot found" });
+            return res.status(500).json({ error: "Email not found" });
         }
 
         let query = {};

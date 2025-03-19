@@ -36,7 +36,8 @@ exports.viewProfile = async (req, res) => { //get details na nasa taas
 exports.postReview = async (req, res) => { 
     try {
         const { title, review, rating} = req.body;
-        const { email, restaurantId } = req.params; 
+        const {restaurantId } = req.params; 
+        const email = req.session.user?.email;
 
         const formattedMedia = req.files.map(file => ({
             filename: file.originalname,

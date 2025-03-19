@@ -82,8 +82,8 @@ exports.publicViewProfile = async (req, res) => {
 
 exports.loggedViewProfile = async (req, res) => {
     try {
-        const { email, restaurantId } = req.params;
-
+        const  {restaurantId}  = req.params;
+        const email = req.session.user?.email;
         console.log(`Fetching profile for restaurant: ${restaurantId} (Viewed by: ${email})`);
 
         const restaurant = await Restaurant.findOne({ _id: restaurantId });
