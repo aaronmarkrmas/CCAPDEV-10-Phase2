@@ -5,8 +5,12 @@ const Reply = require("../model/reply");
 
 exports.viewProfile = async (req, res) => {
     try {
-        const { email } = req.params;
-        console.log(`Fetching profile for: ${email}`);
+        if (!req.session.user || !req.session.user.email) {
+            console.log("User session not found or email missing.");
+            return res.status(401).json({ error: "Unauthorized: Please log in" });
+        }
+        const email = req.session.user.email;
+                console.log(`Fetching profile for: ${email}`);
 
         // Fetch restaurant by _id (which is email)
         const restaurant = await Restaurant.findOne({ _id: email });
