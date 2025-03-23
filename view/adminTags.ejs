@@ -19,30 +19,8 @@
 <body>
 
     <!-- Sidebar (Reused from other pages) -->
-    <div class="sidebar">
-        <div class="logo">
-            <img src="/images/logo.png" alt="Bloemen Bites Logo">
-        </div>
-        <div class="navigation">
-            <a href="/admin/<%= encodeURIComponent(adminId) %>/search">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <p>Search</p>
-            </a>
-            <a href="#">
-                <i class="fa-solid fa-star"></i>
-                <p>Reviews</p>
-            </a>
-            <a href="/admin/<%= encodeURIComponent(adminId) %>/search">
+    <%- include('partials/sidebar', { adminId: adminId }) %>
 
-                <i class="fa-solid fa-gear"></i>
-                <p>Settings</p>
-            </a>
-            <a href="/logout" class="logout">
-                <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                <p>Logout</p>
-            </a>
-        </div>
-    </div>
 
     <!-- Main Content -->
     <div class="tags-container">

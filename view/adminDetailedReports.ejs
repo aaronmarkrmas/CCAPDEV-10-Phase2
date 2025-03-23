@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Detailed View</title>
+  <link rel="stylesheet" href="/css/adminDetailedReports.css">
+  <script src="https://kit.fontawesome.com/e9d3d528d3.js" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" 
+    rel="stylesheet"
+  >
+</head>
+<body>
+  <!-- Sidebar -->
+  <%- include('partials/sidebar', { adminId: adminId }) %>
+
+
+  <!-- Main Content -->
+  <div class="reports-container">
+    <h1>Detailed View</h1>
+
+    <% if (noReports) { %>
+      <p style="margin-left: 20px;">✅ No resolved reports to show.</p>
+    <% } else { %>
+    
+      
+        <!-- Reviews Container -->
+<div id="reviews-container" class="reviews-container">
+  <div id="reviews-list" class="reviews-list">
+    <% reports.forEach(report => { %>
+      <div class="review-card">
+        <!-- Review Header (Name & Date) -->
+        <div class="review-header">
+          <div class="review-details">
+            <h3 class="reviewer-name"><%= report.customer.username || "Anonymous" %></h3>
+            <p class="review-subdetails"><%= report.review.dateFormatted || "Date not available" %></p>
+
+          </div>
+
+        <div class="admin-action-buttons">
+          <!-- Resolve Report Button -->
+          <form action="/admin/<%= adminId %>/reports/<%= report._id %>/resolve" method="POST">
+            <button type="submit" class="resolve-post-button"
+               onclick="return confirm('Mark this report as resolved?')">
+              Resolve
+            </button>
+         </form>
+
+          <!-- Delete Post Button -->
+          <form action="/admin/<%= adminId %>/reviews/<%= report.review._id %>/delete" method="POST">
+            <button type="submit" class="delete-post-button"
+              onclick="return confirm('Are you sure you want to delete this post?')">
+              Delete Post
+            </button>
+          </form>
+        </div>
+     </div>
+
+        <!-- Star Rating -->
+        <div class="review-rating">
+          <% 
+            const fullStars = Math.floor(report.review.rating);
+            const hasHalfStar = (report.review.rating - fullStars) >= 0.5;
+          %>
+          <% for (let i = 0; i < fullStars; i++) { %>
+            <i class="fa-solid fa-star" style="color:#FFD700"></i>
+          <% } %>
+          <% if (hasHalfStar) { %>
+            <i class="fa-solid fa-star-half-stroke" style="color:#FFD700"></i>
+          <% } %>
+          <% for (let i = 0; i < (5 - fullStars - (hasHalfStar ? 1 : 0)); i++) { %>
+            <i class="fa-regular fa-star" style="color:#FFD700"></i>
+          <% } %>
+        </div>
+
+        <!-- Review Content -->
+        <div class="review-content">
+          <h4 class="review-header-text">“<%= report.review.reviewTitle %>”</h4>
+          <p class="review-text"><%= report.review.reviewText %></p>
+        </div>
+
+        <!-- Review Images -->
+        <% if (report.review.media && report.review.media.length > 0) { %>
+          <div class="review-images">
+            <% if (report.review.media && report.review.media.length > 0) { %>
+              <div class="review-images">
+                <% report.review.media.forEach((file, index) => { %>
+                  <img 
+                    src="data:<%= file.contentType %>;base64,<%= file.data.toString('base64') %>"
+                    alt="Review Image <%= index + 1 %>"
+                  />
+                <% }) %>
+              </div>
+            <% } %>
+          </div>
+        <% } %>
+
+        <!-- Report Info -->
+        <div class="report-info">
+          <p><strong>Reported:</strong> <%= new Date(report.dateReported).toLocaleString() %></p>
+          <p><strong>Reason:</strong> <%= report.reason %></p>
+          <p><strong>Status:</strong> <%= report.isResolved ? "✅ Resolved" : "❌ Pending" %></p>
+        </div>
+
+        <p class="review-subdetails">
+          Reviewed by: <%= report.customer.username %> <br/>
+          Reported by: <%= report.reporter.username %>(<%= report.reporterEmail %>) <br/>
+          Restaurant: <%= report.restaurant.name %>
+        </p>
+      </div>
+    <% }) %>
+  </div>
+</div>
+
+<% } %>     
+  </div>
+</body>
+</html>

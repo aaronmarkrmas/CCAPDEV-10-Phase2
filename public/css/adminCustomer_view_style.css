@@ -208,6 +208,11 @@ body {
   color: #666;
 }
 
+.review-images img {
+  max-width: 150px;
+  border-radius: 8px;
+  object-fit: cover;
+}
 
 
 .delete-review-form {

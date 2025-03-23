@@ -12,29 +12,8 @@
 
 <body>
   <!-- Sidebar -->
-  <div class="sidebar">
-    <div class="logo">
-      <img src="/images/logo.png" alt="Bloemen Bites Logo">
-    </div>
-    <div class="navigation">
-      <a onclick="openSearch()"> 
-        <i class="fa-solid fa-magnifying-glass" style="color: #003399;"></i>
-        <p>Search</p>
-      </a>
-      <a onclick="openReviews()">
-        <i class="fa-solid fa-star" style="color: #003399;"></i>
-        <p>Reviewers</p>
-      </a>
-      <a onclick="openSettings()">
-        <i class="fa-solid fa-gear" style="color: #003399;"></i>
-        <p>Settings</p>
-      </a>
-      <a href="/logout" class="logout">
-        <i class="fa-solid fa-arrow-right-from-bracket"></i>
-        <p>Logout</p>
-    </a>
-    
-    </div>
+  <%- include('partials/sidebar', { adminId: adminId }) %>
+
   </div>
   <!-- Main Content -->
   <div class="table-container">
@@ -52,7 +31,7 @@
         <tbody>
             <% reports.forEach(report => { %>
                 <tr>
-                    <td><%= report.reporterUsername %></td>
+                     <td><%= report.reporterUsername %></td>
                     <td><%= report.postId %></td>
                     <td><%= report.reason %></td>
                     <td><%= report.dateReported %></td>

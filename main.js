@@ -70,22 +70,33 @@ app.set("views", path.join(__dirname, "view"));
 app.use(express.static(path.join(__dirname, "public")));
 
 //pfp 
-app.get('/profile-pics/:restaurantId', async (req, res) => {
-    console.log('Fetching profile pic for:', req.params.restaurantId);
+const Customer = require('./model/customer'); // Make sure this is required
 
-    try {
-        const restaurant = await Restaurant.findById(req.params.restaurantId);
-        if (!restaurant || !restaurant.pfp || !restaurant.pfp.data) {
-            return res.status(404).send('No profile picture found');
-        }
+app.get('/profile-pics/:id', async (req, res) => {
+  const id = req.params.id;
+  console.log('Fetching profile pic for ID:', id);
 
-        res.set('Content-Type', restaurant.pfp.contentType);
-        res.send(restaurant.pfp.data); 
-    } catch (err) {
-        console.error('Error fetching profile pic:', err);
-        res.status(500).send(err.message);
+  try {
+    // Check customer first
+    let user = await Customer.findOne({ email: id });
+
+    // If not found in customers, check restaurants
+    if (!user) {
+      user = await Restaurant.findById(id);
     }
+
+    if (!user || !user.pfp || !user.pfp.data) {
+      return res.status(404).send('No profile picture found');
+    }
+
+    res.set('Content-Type', user.pfp.contentType);
+    res.send(user.pfp.data);
+  } catch (err) {
+    console.error('Error fetching profile pic:', err);
+    res.status(500).send(err.message);
+  }
 });
+
 
 
 // Import routes
@@ -167,3 +178,22 @@ app.use("/", customerSignupRoute);
 app.listen(PORT, () => {
     console.log(`Server started at http://localhost:${PORT}`);
 });
+
+
+// const bcrypt = require("bcrypt");
+// const Admin = require("./model/admin");
+
+// async function resetAllAdminPasswords() {
+//   try {
+//     const newPassword = "admin123"; // ← Change this as needed
+//     const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+//     const result = await Admin.updateMany({}, { password: hashedPassword });
+//     console.log(`✅ Updated ${result.modifiedCount} admin password(s).`);
+//   } catch (err) {
+//     console.error("❌ Error resetting passwords:", err);
+//   }
+// }
+
+// // Run it once
+// resetAllAdminPasswords();

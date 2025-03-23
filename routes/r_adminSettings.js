@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const adminSettingsController = require("../controller/cr_adminSettings");
 const adminReportsController = require("../controller/cr_adminReports");
-
+const adminDetailedController = require("../controller/cr_adminDetailedReport");
 
 const adminTagsController = require("../controller/cr_adminTags");
 
@@ -25,6 +25,11 @@ router.post("/admin/tags/add", adminTagsController.addTag);
 // Delete Tag
 router.post("/admin/tags/delete", adminTagsController.deleteTag);
 module.exports = router;
+
+//Detailed View Page
+router.get("/admin/:adminId/reports/detailed", adminDetailedController.getDetailedView);
+
+
 
 router.get("/logout", (req, res) => {
   req.session.destroy((err) => {

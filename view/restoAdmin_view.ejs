@@ -18,29 +18,8 @@
 
 <body>
   <!-- Sidebar -->
-  <div class="sidebar">
-    <div class="logo">
-      <img src="/images/logo.png" alt="Bloemen Bites Logo" />
-    </div>
-    <div class="navigation">
-      <a href="/admin/<%= encodeURIComponent(adminId) %>/search">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <p>Search</p>
-      </a>
-      <a href="#">
-        <i class="fa-solid fa-star"></i>
-        <p>Reviews</p>
-      </a>
-      <a href="#">
-        <i class="fa-solid fa-gear"></i>
-        <p>Settings</p>
-      </a>
-      <a href="/logout" class="logout">
-        <i class="fa-solid fa-arrow-right-from-bracket"></i>
-        <p>Logout</p>
-      </a>
-    </div>
-  </div>
+  <%- include('partials/sidebar', { adminId: adminId }) %>
+
   
   <!-- Main Content Area -->
   <div class="content">
@@ -163,10 +142,13 @@
             <% if (review.media && review.media.length > 0) { %>
               <div class="review-images">
                 <% review.media.forEach((file, index) => { %>
-                  <img src="/review-images/<%= file.filename %>" alt="Review Image <%= index + 1 %>">
+                  <img 
+                    src="data:<%= file.contentType %>;base64,<%= file.data.toString('base64') %>" 
+                    alt="Review Image <%= index + 1 %>">
                 <% }) %>
               </div>
             <% } %>
+            
           </div> <!-- End Review Card -->
         <% }) %>
       </div>

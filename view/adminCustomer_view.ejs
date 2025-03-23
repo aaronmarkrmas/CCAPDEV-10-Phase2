@@ -21,41 +21,27 @@
 
 <body>
   <!-- Sidebar (same as adminResto_view.ejs) -->
-  <div class="sidebar">
-    <div class="logo">
-      <img src="/images/logo.png" alt="Bloemen Bites Logo">
-    </div>
-    <div class="navigation">
-      <a href="/admin/<%= encodeURIComponent(adminId) %>/search">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <p>Search</p>
-      </a>
-      <a href="#">
-        <i class="fa-solid fa-star"></i>
-        <p>Reviews</p>
-      </a>
-      <a href="#">
-        <i class="fa-solid fa-gear"></i>
-        <p>Settings</p>
-      </a>
-      <a href="/logout" class="logout">
-        <i class="fa-solid fa-arrow-right-from-bracket"></i>
-        <p>Logout</p>
-    </a>
-    
-    </div>
-  </div>
+  <%- include('partials/sidebar', { adminId: adminId }) %>
+
 
   <!-- Main Content -->
   <div class="content">
     <div class="profile-section">
       <!-- Profile Picture (if your user has a pfp or fallback) -->
       <div class="profile-photo-section">
-        <img 
-          id="profile-photo" 
-          src="/profile-pics/<%= user._id %>" 
-          alt="User Profile Photo"
-        />
+        <% if (user.pfp && user.pfp.data) { %>
+          <img 
+            id="profile-photo" 
+            src="data:<%= user.pfp.contentType %>;base64,<%= user.pfp.data.toString('base64') %>" 
+            alt="User Profile Photo"
+          />
+        <% } else { %>
+          <img 
+            id="profile-photo" 
+            src="/images/default-user.png" 
+            alt="Default User"
+          />
+        <% } %>
 
         <!-- Deactivate Account Button -->
         <form action="/admin/<%= adminId %>/customer/<%= user._id %>/deactivate" method="POST">
@@ -97,6 +83,16 @@
     </div>
 
     <!-- Reviews the user has posted -->
+    <% if (!reviews || reviews.length === 0) { %>
+      <p style="text-align: center; margin-top: 50px; font-size: 20px; color: #444;">
+        There are no reviews available at the moment.
+      </p>
+    <% } else { %>
+      <% reviews.forEach(review => { %>
+        <!-- review card here -->
+      <% }) %>
+    <% } %>
+
     <div class="reviews-container">
       <div class="reviews-list">
         <% reviews.forEach(review => { %>
@@ -139,7 +135,10 @@
             <% if (review.media && review.media.length > 0) { %>
               <div class="review-images">
                 <% review.media.forEach((file, index) => { %>
-                  <img src="/review-images/<%= file.filename %>" alt="Review Image <%= index + 1 %>">
+                  <img 
+                    src="data:<%= file.contentType %>;base64,<%= file.data.toString('base64') %>" 
+                    alt="Review Image <%= index + 1 %>" 
+                  />
                 <% }) %>
               </div>
             <% } %>

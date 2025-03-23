@@ -1,3 +1,4 @@
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -66,73 +67,111 @@ body {
   margin: 0;
 }
 
-/* Sidebar already exists in previous CSS files, so it will be inherited */
 
-/* Main Reports Container */
+
+/* Main content area */
 .reports-container {
-  margin-left: 180px; /* Aligns content properly */
-  padding: 20px;
+  margin-left: 180px; /* Leave space for sidebar */
+  padding: 30px;
   width: 100%;
 }
 
 .reports-container h1 {
-  color: #003399;
-  font-size: 24px;
+  font-size: 26px;
   font-weight: bold;
-  margin-bottom: 20px;
+  color: #003399;
+  margin-bottom: 25px;
 }
 
-.resolved-reports {
+/* Individual report card */
+.review-card {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Reviewer info */
+.review-header {
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
 }
 
-.resolved-reports button {
-  padding: 10px 15px;
+.review-details h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.review-subdetails {
+  font-size: 14px;
+  color: gray;
+  margin: 0;
+}
+
+/* Star ratings */
+.review-rating {
+  margin: 8px 0;
+}
+
+/* Review text */
+.review-content h4 {
   font-size: 16px;
   font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.review-text {
+  margin: 0;
+  font-size: 15px;
+}
+
+/* Images */
+.review-images {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.review-images img {
+  max-width: 150px;
   border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  background: #b6e0ff; /* Pastel blue */
-  color: #004a73;
+  object-fit: cover;
+}
+.admin-action-buttons {
+  display: flex;
+  gap: 10px;
 }
 
-
-
-
-/* Table Styling */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-}
-
-th, td {
-  padding: 12px;
-  text-align: left;
-  border: 1px solid #ccc;
-}
-
-th {
-  background: #003399;
-  color: white;
-  font-weight: bold;
-}
-
-/* Resolve Button */
-.resolve-btn {
+/* Delete button */
+.delete-post-button {
   background-color: #fc6467;
   color: white;
   border: none;
-  padding: 8px 12px;
-  cursor: pointer;
-  border-radius: 5px;
+  padding: 8px 14px;
+  border-radius: 6px;
   font-weight: bold;
+  cursor: pointer;
 }
 
-.resolve-btn:hover {
+.delete-post-button:hover {
   background-color: #d43f44;
+}
+
+.resolve-post-button{
+  background-color: #147ee9;;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.resolve-post-button:hover {
+  background-color: #003399;
 }

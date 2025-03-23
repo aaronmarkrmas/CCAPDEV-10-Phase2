@@ -1,31 +1,40 @@
-const Report = require('../model/report'); // Import the Report model
+const Report = require('../model/report');
+const Customer = require('../model/customer'); // You need this to fetch usernames
 
 exports.getReports = async (req, res) => {
-    const { adminemail, restoemail } = req.params;  // Assuming you pass admin and resto emails in the URL
-    try {
-        // Fetch all unresolved reports from the database
-        const reports = await Report.find({ isResolved: false });  // Filter by unresolved reports
+    const { adminemail, restoemail } = req.params;
 
-        console.log("Fetched Reports:", reports); // Log the fetched reports for debugging
+    try {
+        const reports = await Report.find({ isResolved: false });
 
         if (reports.length === 0) {
-            return res.render('adminReportsTable', { reports: [], message: 'No unresolved reports found.' });
+            return res.render('adminReportsTable', {
+                reports: [],
+                message: 'No unresolved reports found.',
+                adminemail,
+                restoemail
+            });
         }
 
-        const formattedReports = reports.map(report => ({
-            reporterUsername: report.reporterUsername,
-            postId: report._id,  // Assuming the Post ID is the report's ID or another field
-            reason: report.reason || 'No reason specified',
-            dateReported: report.dateReported.toLocaleDateString(),  // Formatting the date
-            isResolved: report.isResolved ? 'Resolved' : 'Pending'
+        // Fetch reporter usernames for each report
+        const formattedReports = await Promise.all(reports.map(async (report) => {
+            const reporter = await Customer.findOne({ email: report.reporterEmail });
+
+            return {
+                reporterUsername: reporter?.username || 'Unknown',
+                postId: report.postId,
+                reason: report.reason || 'No reason specified',
+                dateReported: report.dateReported.toLocaleDateString(),
+                isResolved: report.isResolved ? 'Resolved' : 'Pending'
+            };
         }));
 
-        // Pass the formatted reports data, admin email, and restaurant email to the EJS view
-        res.render('adminReportsTable', { 
-            reports: formattedReports, 
-            adminemail: adminemail, 
-            restoemail: restoemail 
+        res.render('adminReportsTable', {
+            reports: formattedReports,
+            adminemail,
+            restoemail
         });
+
     } catch (error) {
         console.error("Error fetching reports:", error);
         res.status(500).json({ error: "Error fetching reports" });

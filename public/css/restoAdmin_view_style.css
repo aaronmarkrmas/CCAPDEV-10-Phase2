@@ -301,3 +301,18 @@ body {
 .delete-post-button:hover {
   background-color: #b02a37;
 }
+.review-images {
+  width: 100%;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.review-images img {
+  width: 230px;
+  height: 250px;
+  object-fit: cover;
+  border: 2px solid none;
+  border-radius: 12px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+

@@ -3,13 +3,15 @@ const Tag = require("../model/tag");
 // FETCH TAGS PAGE
 exports.getManageTagsPage = async (req, res) => {
     try {
-        const tags = await Tag.find({}, "_id"); // Fetch tag names only
-        res.render("adminTags", { tags, adminId: req.params.adminId }); // Pass tags & adminId
+      const tagDocs = await Tag.find({}, "_id"); // Fetch only _id
+      const tags = tagDocs.map(tag => tag._id); // Extract the string values
+  
+      res.render("adminTags", { tags, adminId: req.params.adminId });
     } catch (err) {
-        console.error("Error loading tags:", err);
-        res.status(500).send("Error loading tags.");
+      console.error("Error loading tags:", err);
+      res.status(500).send("Error loading tags.");
     }
-};
+  };
 
 // ADD A TAG
 exports.addTag = async (req, res) => {
