@@ -16,7 +16,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon main.js",
-    "postinstall": "npm rebuild bcrypt --build-from-source --unsafe-perm"
+  
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
