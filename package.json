@@ -15,8 +15,9 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon main.js"
-  },
+    "start": "nodemon main.js",
+    "postinstall": "npm rebuild bcrypt --build-from-source"  
+},
   "dependencies": {
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.7",
