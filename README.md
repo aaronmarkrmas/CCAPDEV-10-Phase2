@@ -3,12 +3,16 @@ Bloemen Bites is a site where users can explore various restaurants, read commen
 
 **Technology Stack**
 -Node.js
+-MongoDB
+-Express
+-EJS
+-Mongoose
+-Multer
+-brypt
+-dotenv
 -Deployed using Render
   - The site was deployed with the following build command and necessary permissions:
     npm install -g node-pre-gyp && npm install --legacy-peer-deps --unsafe-perm=true && npm rebuild bcrypt --build-from-source
-
-
-**Setup and Installation**
 
 
 **Accessing the Deployed Version**
